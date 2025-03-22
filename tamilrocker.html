@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tamil Rockers</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #141414;
+            color: white;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background-color: black;
+        }
+        h1 {
+            margin: 0;
+        }
+        #search-box {
+            padding: 10px;
+            width: 300px;
+            border-radius: 20px;
+            border: none;
+            outline: none;
+        }
+        #movie-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 40px;
+        }
+        .movie {
+            background: #222;
+            border-radius: 10px;
+            padding: 10px;
+            text-align: center;
+            transition: transform 0.3s;
+            cursor: pointer;
+        }
+        .movie:hover {
+            transform: scale(1.05);
+        }
+        .movie img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+        .logo {
+            max-width: 200px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <img src="WhatsApp Image 2025-03-22 at 12.46.06 PM.jpeg" alt="Tamil Rockers Logo" class="logo" width="100px">
+        <input type="text" id="search-box" placeholder="Search movies..." onkeyup="searchMovies()">
+    </header>
+    <main>
+        <div id="movie-grid"></div>
+    </main>
+    
+    <script>
+         let movieData = [
+            { title: "Nilavuku Enmel Ennadi Kobam", image: "nilavukku.jpeg", link: "https://t.me/film_filcher927/884" },
+            { title: "kingston", image: "kingstan.jpeg", link: "https://t.me/tamilben10movieben10" },
+            { title: "Officer on Duty", image: "officer.jpeg", link: "https://t.me/c/2563473009/17" },
+            { title: "Dragon", image: "drogan.jpeg", link: "https://t.me/tamilben10movieben10" },
+            { title: "Bany and Baby", image: "baby.jpeg", link: "https://t.me/c/2563473009/22" },
+            { title: "Lucifer", image: "lucifar.jpeg", link: "https://t.me/tamilben10movieben10" },
+            { title: "Badava", image: "badava.jpeg", link: "https://t.me/tamilben10movieben10" },
+            { title: "Sabdham", image: "sabtham.jpeg", link: "https://t.me/tamilben10movieben10" },
+            { title: "Ponman", image: "ponman.jpeg", link: "https://t.me/tamilben10movieben10" },
+            { title: "Agent", image: "agent.jpeg", link: "https://t.me/tamilben10movieben10" },
+            { title: "Em Magan", image: "em magan.jpeg", link: "https://t.me/tamilben10movieben10" },
+            { title: "Sivaji", image: "sivaji.jpeg", link: "https://t.me/tamilben10movieben10" },
+            { title: "Niram Marun Ulagil", image: "nira.jpeg", link: "https://t.me/tamilben10movieben10" },
+            { title: "Kudumbasthan", image: "kudumba.jpeg", link: "https://t.me/c/2563473009/3" },
+            { title: "Tandel", image: "tandel.jpeg", link: "https://t.me/c/2563473009/12" },
+            { title: "Anniyan", image: "anniyan.jpeg", link: "https://t.me/tamilben10movieben10" },
+            { title: "The Smile Man", image: "smile.jpeg", link: "https://t.me/tamilben10movieben10" },
+            { title: "Vetai", image: "vetai.jpeg", link: "https://t.me/tamilben10movieben10" },
+            { title: "Ramam Raghavam", image: "samuthragani.jpeg", link: "https://t.me/tamilben10movieben10" },
+            { title: "Rekhachithram", image: "rackach.jpeg", link: "https://t.me/c/2563473009/7" },
+            { title: "Naanum Rowdy Dhaan", image: "nanu rowdy.jpeg", link: "https://t.me/tamilben10movieben10" }
+        ];
+
+        function searchMovies() {
+            let query = document.getElementById("search-box").value.toLowerCase();
+            let filteredMovies = movieData.filter(movie => movie.title.toLowerCase().includes(query));
+            displayMovies(filteredMovies);
+        }
+
+        function displayMovies(movies) {
+            let movieGrid = document.getElementById("movie-grid");
+            movieGrid.innerHTML = "";
+
+            if (movies.length === 0) {
+                movieGrid.innerHTML = "<p style='color: white; text-align: center;'>No movies found</p>";
+                return;
+            }
+
+            movies.forEach((movie) => {
+                let movieDiv = document.createElement("div");
+                movieDiv.classList.add("movie");
+                movieDiv.innerHTML = `
+                    <img src="${movie.image}" alt="${movie.title}">
+                    <div class="movie-title"><a href="${movie.link}" target="_blank" style="color: white; text-decoration: none;">${movie.title}</a></div>
+                `;
+                movieGrid.appendChild(movieDiv);
+            });
+        }
+
+        displayMovies(movieData);
+    </script>
+</body>
+</html>
