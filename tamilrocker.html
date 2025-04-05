@@ -1,141 +1,173 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tamil Rockers</title>
-    <link rel="icon" href="WhatsApp Image 2025-03-22 at 12.46.06 PM.jpeg">
-    <link rel="stylesheet" href="styles.css">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #141414;
-            color: white;
-            margin: 0;
-            padding: 0;
-        }
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px;
-            background-color: black;
-        }
-        h1 {
-            margin: 0;
-        }
-        #search-box {
-            padding: 10px;
-            width: 300px;
-            border-radius: 20px;
-            border: none;
-            outline: none;
-        }
-        #movie-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 20px;
-            padding: 40px;
-        }
-        .movie {
-            background: #222;
-            border-radius: 10px;
-            padding: 10px;
-            text-align: center;
-            transition: transform 0.3s;
-            cursor: pointer;
-        }
-        .movie:hover {
-            transform: scale(1.05);
-        }
-        .movie img {
-            width: 100%;
-            height: 300px;
-            object-fit: cover;
-            border-radius: 10px;
-        }
-        .logo {
-            max-width: 200px;
-        }
-    </style>
+<!DOCTYPE html><html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Tamil Rockers</title>
+        <link rel="icon" href="WhatsApp Image 2025-03-22 at 12.46.06 PM.jpeg">
+        <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Oswald:wght@600&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; }
+  
+        
+    body { margin: 0; font-family: 'Roboto', sans-serif; background-color: #111; color: #fff; }
+    header {
+      background: #0f1111;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      border-bottom: 2px solid #ff9900;
+    }
+    header img { height: 45px; margin-right: 15px; }
+    header h1 {
+      font-family: 'Oswald', sans-serif;
+      font-size: 34px;
+      color: #ff9900;
+      margin: 0;
+      text-transform: uppercase;
+    }
+    .container { max-width: 1300px; margin: 30px auto; padding: 20px; }
+    .search-bar { width: 100%; margin-bottom: 30px; display: flex; justify-content: center; }
+    .search-bar input {
+      width: 100%; max-width: 500px; padding: 12px 20px;
+      font-size: 16px; border-radius: 8px;
+      border: 2px solid #ff9900;
+      background-color: #1a1a1a; color: #fff;
+      outline: none;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 25px;
+    }
+    .card {
+      background: #1c1c1c;
+      border-radius: 12px;
+      box-shadow: 0 4px 16px rgba(255, 255, 255, 0.05);
+      overflow: hidden;
+      transition: transform 0.2s, box-shadow 0.2s;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+    }
+    .card:hover { transform: scale(1.03); box-shadow: 0 6px 20px rgba(255, 255, 255, 0.15); }
+    .poster { width: 100%; height: 260px; object-fit: cover; }
+    .movie-title {
+      font-size: 18px;
+      font-weight: bold;
+      color: #ffcc66;
+      margin: 15px 0 10px;
+    }
+    .btn-group {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      padding: 15px 0 20px;
+    }
+    .download-btn {
+      background: linear-gradient(145deg, #ff9900, #e48c00);
+      color: #000;
+      padding: 10px 20px;
+      font-size: 14px;
+      font-weight: 600;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .download-btn:hover {
+      background: #ffa500;
+      transform: scale(1.05);
+    }
+    @media (max-width: 600px) {
+      header h1 { font-size: 22px; }
+      .poster { height: 200px; }
+    }
+  </style>
 </head>
 <body>
-    <header>
-        <img src="WhatsApp Image 2025-03-22 at 12.46.06 PM.jpeg" alt="Tamil Rockers Logo" class="logo" width="100px">
-        <input type="text" id="search-box" placeholder="Search movies..." onkeyup="searchMovies()">
-    </header>
-    <main>
-        <div id="movie-grid"></div>
-    </main>
-    
+  <header>
+    <img src="WhatsApp Image 2025-03-22 at 12.46.06 PM.jpeg" alt="SK Logo">
+    <h1>Sktamilrockers</h1>
+  </header>
+  <div class="container">
+    <div class="search-bar">
+      <input type="text" id="searchInput" placeholder="Search movies...">
+    </div>
+    <div class="grid" id="movie-list"></div>
+  </div>
     <script>
-         let movieData = [
-            { title: "Veera Dheera Sooran",  image: "VeeraDheeraSooran.jpg", link: "https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=134251&key=c9242a906e2c373fba0cdee139158d4f"},
-            { title: "Mr. HouseKeeping",  image: "mr house.jpeg", link: "https://www.1tamilmv.ms/applications/core/interface/file/attachment.php?id=133887&key=8964a0f7e69478bdab98c031e8f2c112"},
-            { title: "Asthram(HQ print)",  image: "astram.jpeg", link: "https://www.1tamilmv.ms/applications/core/interface/file/attachment.php?id=133852&key=ca5a5d6b7717f390d63ba10a56dff8dd"},
-            { title: "Sweetheart (HQ Print)", image: "sweetheart.jpeg", link: "https://www.1tamilmv.ms/applications/core/interface/file/attachment.php?id=133459&key=ed1d0bc905a00b4bc7808e01593de6ec" },
+           const telegramChannelLink = "https://t.me/+MgbobedvKV1iMzQ1";
+         const movies = [   
+            { title: "Test (2025) HD Tamil Movie", image: "test.jpeg", link720: "https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=134384&key=a7fcf42b030816cccbb04267620c6a17" , link1080: ""},
+            { title: "Veera Dheera Sooran (2025) PRE-HD  Tamil Movie ( Original Audio )", image: "veeran.jpeg", link720: "https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=134251&key=c9242a906e2c373fba0cdee139158d4f"},
+            { title: "Murmur (2025) HD  Tamil Movie", image: "murmur.jpeg", link720: "https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=134315&key=2d899108cba9150c4e9a56802a2c12fc"},
+            { title: "The Door (2025) HQ Real PRE-DVD  Tamil Movie", image: "door.jpeg", link720: "https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=134113&key=d2685eccb3857eb4a5d2b1a6cc13bbe8"},
+            { title: "Seruppugal Jaakirathai Season 1 (2025) HD  Tamil Web Series", image: "seruppu.jpeg", link720: "https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=134111&key=cea7d3c46e4110fec852d7bbf58b45f4"},
+            { title: "L2 Empuraan (2025) PRE-HD  Tamil Movie", image: "lucifar.jpeg", link720: "https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=133988&key=c4353bedb57571542c23318b0fe9b99a"},
+            { title: "Mufasa: The Lion King (2024) HD  Tamil Dubbed Movie ( Original Audio )", image: "mufasa.jpeg", link720: ""},
+            { title: "Mr. HouseKeeping (2025) HD Tamil Movie",  image: "mr house.jpeg", link720: "https://www.1tamilmv.ms/applications/core/interface/file/attachment.php?id=133887&key=8964a0f7e69478bdab98c031e8f2c112"},
+            { title: "Asthram(HQ print) Tamil Movie",  image: "astram.jpeg", link720: "https://www.1tamilmv.ms/applications/core/interface/file/attachment.php?id=133852&key=ca5a5d6b7717f390d63ba10a56dff8dd"},
+            { title: "Sweetheart (HQ Print)", image: "sweetheart.jpeg",link720: "https://www.1tamilmv.ms/applications/core/interface/file/attachment.php?id=133459&key=ed1d0bc905a00b4bc7808e01593de6ec" },
             { title: "Perusu (HQ Print)", image: "perusu.jpeg", link: "https://www.1tamilmv.ms/applications/core/interface/file/attachment.php?id=133465&key=762f1f305201ff7a0c1d3eef6e9e2645" },
-            { title: "Nilavuku Enmel Ennadi Kobam", image: "nilavukku.jpeg", link: "https://www.1tamilmv.ms/applications/core/interface/file/attachment.php?id=133659&key=0e840e2a9715dadda37d72fdfedbdbc5" },
-            { title: "kingston", image: "kingstan.jpeg", link: "https://www.1tamilmv.ms/applications/core/interface/file/attachment.php?id=133721&key=f4cde5d33532e4709024680453873762" },
-            { title: "Murmur(HQ print)", image: "murmur.jpeg", link: "https://www.1tamilmv.ms/applications/core/interface/file/attachment.php?id=133209&key=9e8717826f974de533f33d53ba033ac4"},
-            { title: "Kaadhal Enbadhu Podhu Udamai", image:"kaadhal enbadhu.jpeg", link:"https://www.1tamilmv.ms/applications/core/interface/file/attachment.php?id=133268&key=7373a91ebe8fbee7607452a3e7772d50"},
-            { title: "Officer on Duty", image: "officer.jpeg", link: "https://www.1tamilmv.ms/applications/core/interface/file/attachment.php?id=133595&key=12e84b59ffb5748bb28a362ba5169899" },
-            { title: "Dragon", image: "drogan.jpeg", link: "https://www.1tamilmv.ms/applications/core/interface/file/attachment.php?id=133684&key=0f073ea871e61046cf12ae557f779ccc" },
-            { title: "Aghathiyaa", image: "aghathiyaa.jpeg", link: "https://www.1tamilmv.ms/applications/core/interface/file/attachment.php?id=132919&key=80340a8dcabf9e1ed29f2c902d44f327"},
-            { title: "Bany and Baby", image: "baby.jpeg", link: "https://t.me/c/2610635753/32" },
-            { title: "2k Love Story", image: "2k love.jpeg", link: "https://www.1tamilmv.ms/applications/core/interface/file/attachment.php?id=133276&key=27a7cd1db0ed6bde3a1172eec21376f7"},
-            { title: "Konjam Kadhal Konjam Modhal (HQ print)", image: "konjam kadhal.jpeg", link: "https://www.1tamilmv.ms/applications/core/interface/file/attachment.php?id=133499&key=2d514ee364294d0205eae568b09a5616"},
-            { title: "Sankranthiki Vasthunam", image: "sangrandagi.jpeg", link: "https://www.1tamilmv.ms/applications/core/interface/file/attachment.php?id=132502&key=0f6642df8446fd5a169e034e911e24dc"},
-            { title: "Captain Americ: Brave New world", image: "captain.jpeg", link: "https://www.1tamilmv.ms/applications/core/interface/file/attachment.php?id=132340&key=421293f200b833c8f8aa0b184bf58066"},
-            { title: "Happy New (2014)", image: "happy.jpeg", link: "https://www.1tamilmv.ms/applications/core/interface/file/attachment.php?id=131854&key=7b769d9b2c9532fef4204543a4e54ce5"},
-            { title: "Vidaamuyarchi", image: "vidaamuyachi.jpeg", link: "https://www.1tamilmv.ms/applications/core/interface/file/attachment.php?id=132596&key=2f67ce59beec88bb8d81814704318e19" },
-            { title: "Lucifer", image: "lucifar.jpeg", link: "https://www.1tamilmv.ms/applications/core/interface/file/attachment.php?id=133638&key=c7b4dff2237bddf77a1d03ca84d758d5" },
-            { title: "Badava", image: "badava.jpeg", link: "https://www.1tamilmv.ms/applications/core/interface/file/attachment.php?id=133387&key=9ecbc4600bdb237318ca47b6de45a6ae" },
-            { title: "Sabdham", image: "sabtham.jpeg", link: "https://www.1tamilmv.ms/applications/core/interface/file/attachment.php?id=133382&key=ebf68d11176affb6ba0320b3962c7b73" },
-            { title: "Ponman", image: "ponman.jpeg", link: "https://t.me/tamilben10movieben10" },
-            { title: "Agent", image: "agent.jpeg", link: "https://t.me/tamilben10movieben10" },
-            { title: "Em Magan", image: "em magan.jpeg", link: "https://t.me/tamilben10movieben10" },
-            { title: "Sivaji", image: "sivaji.jpeg", link: "https://www.1tamilmv.ms/applications/core/interface/file/attachment.php?id=133038&key=2abacb1c8bb46a482c3d13b780a48fc6" },
-            { title: "Niram Marun Ulagil (HQ print)", image: "nira.jpeg", link: "https://t.me/tamilben10movieben10" },
-            { title: "Kudumbasthan", image: "kudumba.jpeg", link: "https://t.me/c/2563473009/3" },
-            { title: "Tandel", image: "tandel.jpeg", link: "https://t.me/c/2563473009/12" },
-            { title: "Anniyan", image: "anniyan.jpeg", link: "https://www.1tamilmv.ms/applications/core/interface/file/attachment.php?id=133005&key=325e7d9cf082080b8a41397a385d3ff3" },
-            { title: "The Smile Man", image: "smile.jpeg", link: "https://t.me/tamilben10movieben10" },
-            { title: "Vetai", image: "vetai.jpeg", link: "https://www.1tamilmv.ms/applications/core/interface/file/attachment.php?id=133443&key=b3b6b803b27528eb697458473c841b44" },
-            { title: "Ramam Raghavam", image: "samuthragani.jpeg", link: "https://www.1tamilmv.ms/applications/core/interface/file/attachment.php?id=133300&key=aeefa7b3a5918765df0732009318db9e" },
-            { title: "Rekhachithram", image: "rackach.jpeg", link: "https://t.me/c/2563473009/7" },
-            { title: "Naanum Rowdy Dhaan", image: "nanu rowdy.jpeg", link: "https://www.1tamilmv.ms/applications/core/interface/file/attachment.php?id=133547&key=e45a817bf142951fb7a9b16711016e14" }
-        ];
+            { title: "Nilavuku Enmel Ennadi Kobam", image: "nilavukku.jpeg", link720: "https://www.1tamilmv.ms/applications/core/interface/file/attachment.php?id=133659&key=0e840e2a9715dadda37d72fdfedbdbc5" },
+            { title: "kingston HD Tamil Movie", image: "kingstan.jpeg", link720: "https://www.1tamilmv.ms/applications/core/interface/file/attachment.php?id=133721&key=f4cde5d33532e4709024680453873762" },
+            { title: "Murmur(HQ print)", image: "murmur.jpeg", link720: "https://www.1tamilmv.ms/applications/core/interface/file/attachment.php?id=133209&key=9e8717826f974de533f33d53ba033ac4"},
+            { title: "Kaadhal Enbadhu Podhu Udamai", image:"kaadhal enbadhu.jpeg", link720:"https://www.1tamilmv.ms/applications/core/interface/file/attachment.php?id=133268&key=7373a91ebe8fbee7607452a3e7772d50"},
+            { title: "Officer on Duty HD Tamil Movie", image: "officer.jpeg", link720: "https://www.1tamilmv.ms/applications/core/interface/file/attachment.php?id=133595&key=12e84b59ffb5748bb28a362ba5169899" },
+            { title: "Dragon HD Tamil Movie", image: "drogan.jpeg", link720: "https://www.1tamilmv.ms/applications/core/interface/file/attachment.php?id=133684&key=0f073ea871e61046cf12ae557f779ccc" },
+            { title: "Aghathiyaa", image: "aghathiyaa.jpeg", link720: "https://www.1tamilmv.ms/applications/core/interface/file/attachment.php?id=132919&key=80340a8dcabf9e1ed29f2c902d44f327"},
+            { title: "Bany and Baby", image: "baby.jpeg", link720: "https://t.me/c/2610635753/32" },
+            { title: "2k Love Story", image: "2k love.jpeg", link720: "https://www.1tamilmv.ms/applications/core/interface/file/attachment.php?id=133276&key=27a7cd1db0ed6bde3a1172eec21376f7"},
+            { title: "Konjam Kadhal Konjam Modhal (HQ print)", image: "konjam kadhal.jpeg", link720: "https://www.1tamilmv.ms/applications/core/interface/file/attachment.php?id=133499&key=2d514ee364294d0205eae568b09a5616"},
+            { title: "Sankranthiki Vasthunam", image: "sangrandagi.jpeg", link720: "https://www.1tamilmv.ms/applications/core/interface/file/attachment.php?id=132502&key=0f6642df8446fd5a169e034e911e24dc"},
+            { title: "Captain Americ: Brave New world", image: "captain.jpeg", link720: "https://www.1tamilmv.ms/applications/core/interface/file/attachment.php?id=132340&key=421293f200b833c8f8aa0b184bf58066"},
+            { title: "Happy New (2014)", image: "happy.jpeg", link720: "https://www.1tamilmv.ms/applications/core/interface/file/attachment.php?id=131854&key=7b769d9b2c9532fef4204543a4e54ce5"},
+            { title: "Vidaamuyarchi", image: "vidaamuyachi.jpeg", link720: "https://www.1tamilmv.ms/applications/core/interface/file/attachment.php?id=132596&key=2f67ce59beec88bb8d81814704318e19" },
+            { title: "Lucifer", image: "lucifar.jpeg", link720: "https://www.1tamilmv.ms/applications/core/interface/file/attachment.php?id=133638&key=c7b4dff2237bddf77a1d03ca84d758d5" },
+            { title: "Badava", image: "badava.jpeg", link720: "https://www.1tamilmv.ms/applications/core/interface/file/attachment.php?id=133387&key=9ecbc4600bdb237318ca47b6de45a6ae" },
+            { title: "Sabdham", image: "sabtham.jpeg", link720: "https://www.1tamilmv.ms/applications/core/interface/file/attachment.php?id=133382&key=ebf68d11176affb6ba0320b3962c7b73" },
+            { title: "Ponman", image: "ponman.jpeg", link720: "https://t.me/tamilben10movieben10" },
+            { title: "Agent", image: "agent.jpeg", link720: "https://t.me/tamilben10movieben10" },
+            { title: "Em Magan", image: "em magan.jpeg", link720: "https://t.me/tamilben10movieben10" },
+            { title: "Sivaji", image: "sivaji.jpeg", link720: "https://www.1tamilmv.ms/applications/core/interface/file/attachment.php?id=133038&key=2abacb1c8bb46a482c3d13b780a48fc6" },
+            { title: "Niram Marun Ulagil (HQ print)", image: "nira.jpeg", link720: "https://t.me/tamilben10movieben10" },
+            { title: "Kudumbasthan", image: "kudumba.jpeg", link720: "https://t.me/c/2563473009/3" },
+            { title: "Tandel", image: "tandel.jpeg", link720: "https://t.me/c/2563473009/12" },
+            { title: "Anniyan", image: "anniyan.jpeg", link720: "https://www.1tamilmv.ms/applications/core/interface/file/attachment.php?id=133005&key=325e7d9cf082080b8a41397a385d3ff3" },
+            { title: "The Smile Man", image: "smile.jpeg", link720: "https://t.me/tamilben10movieben10" },
+            { title: "Vetai", image: "vetai.jpeg", link720: "https://www.1tamilmv.ms/applications/core/interface/file/attachment.php?id=133443&key=b3b6b803b27528eb697458473c841b44" },
+            { title: "Ramam Raghavam", image: "samuthragani.jpeg", link720: "https://www.1tamilmv.ms/applications/core/interface/file/attachment.php?id=133300&key=aeefa7b3a5918765df0732009318db9e" },
+            { title: "Rekhachithram", image: "rackach.jpeg", link720: "https://t.me/c/2563473009/7" },
+            { title: "Naanum Rowdy Dhaan", image: "nanu rowdy.jpeg", link720: "https://www.1tamilmv.ms/applications/core/interface/file/attachment.php?id=133547&key=e45a817bf142951fb7a9b16711016e14" },
+            { title: "", image: "", link720: "" , link1080: ""},
+            { title: "", image: "", link720: "", link1080: ""}
 
-        function searchMovies() {
-            let query = document.getElementById("search-box").value.toLowerCase();
-            let filteredMovies = movieData.filter(movie => movie.title.toLowerCase().includes(query));
-            displayMovies(filteredMovies);
-        }
 
-        function displayMovies(movies) {
-            let movieGrid = document.getElementById("movie-grid");
-            movieGrid.innerHTML = "";
+            ];const container = document.getElementById("movie-list");
+const searchInput = document.getElementById("searchInput");
 
-            if (movies.length === 0) {
-                movieGrid.innerHTML = "<p style='color: white; text-align: center;'>No movies found</p>";
-                return;
-            }
+function renderMovies(filter = "") {
+  container.innerHTML = "";
+  movies.filter(movie => movie.title.toLowerCase().includes(filter.toLowerCase()))
+    .forEach((movie, index) => {
+      const card = document.createElement("div");
+      card.className = "card";
+      card.innerHTML = `
+        <img src="${movie.image}" alt="${movie.title}" class="poster">
+        <div class="movie-title">${index + 1}. ${movie.title}</div>
+        <div class="btn-group">
+          <button class="download-btn" onclick="window.open('${movie.link720}', '_blank')">720p</button>
+          <button class="download-btn" onclick="window.open('${telegramChannelLink}', '_blank')">1080p</button>
+        </div>`;
+      container.appendChild(card);
+    });
+}
 
-            movies.forEach((movie) => {
-                let movieDiv = document.createElement("div");
-                movieDiv.classList.add("movie");
-                movieDiv.innerHTML = `
-                    <img src="${movie.image}" alt="${movie.title}">
-                    <div class="movie-title"><a href="${movie.link}" target="_blank" style="color: white; text-decoration: none;">${movie.title}</a></div>
-                `;
-                movieGrid.appendChild(movieDiv);
-            });
-        }
+searchInput.addEventListener("input", (e) => renderMovies(e.target.value));
+renderMovies();
 
-        displayMovies(movieData);
-    </script>
-
-    
+  </script>
 </body>
 </html>
