@@ -1,12 +1,15 @@
 <!DOCTYPE html><html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>SKTAMILROCKERS</title>
+  <title>Sktamilrockers</title>
   <style>
-       * { box-sizing: border-box; }
-       body { margin: 0; font-family: 'Roboto', sans-serif; background-color: #111; color: #fff; }
-   
-    h1 {
+    body {
+      background: #0f0f0f;
+      color: white;
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 20px;
+    }h1 {
   text-align: center;
   color: #00ffc8;
 }
@@ -15,7 +18,6 @@
   display: flex;
   justify-content: center;
   margin: 20px 0;
-  
 }
 
 .search-container input {
@@ -38,14 +40,13 @@
   border-radius: 15px;
   padding: 15px;
   width: 300px;
-  height: 500px;
   text-align: center;
   box-shadow: 0 0 10px rgba(0,255,200,0.1);
 }
 
 .poster {
   width: 100%;
-  height: 333px;
+  height: 500px;
   object-fit: cover;
   border-radius: 10px;
 }
@@ -79,15 +80,14 @@
   border-radius: 10px;
 }
 
-video {
-  width: 90%;
-  max-width: 700px;
-  margin-top: 20px;
-  border-radius: 10px;
-}
+
 
 .btns {
   margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
 }
 
   </style>
@@ -100,151 +100,153 @@ video {
     <div class="movie-grid" id="movieList"></div>
   </div>  <div id="moviePage" class="hidden">
     <div id="movieDetail" class="movie-detail"></div>
+    <div class="btns">
+      <button class="btn" onclick="goBack()">Back</button>
+    </div>
   </div>  <script>
-    const movies = {
-    
-     test:{
+    const movies = [
+    {
         title: "Test (2025) HD Tamil Movie",
-        poster: "test.jpeg",
-        video: "https://ups2up.fun/embed-6zcs9twke0o5.html",
+        image: "test.jpeg",
         link720p: "https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=134384&key=a7fcf42b030816cccbb04267620c6a17",
-        link1080p: ""
+        link1080p: "https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=134374&key=a6b3fbdb20f3308a9c1b2c38961190d6",
+        link4k: "https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=134375&key=7dfe296a64bc520a599b9e7c320d35df"
       },
-      veran:{
+      {
         title: "Veera Dheera Sooran (2025) PRE-HD Tamil Movie ",
-        poster: "veeran.jpeg",
-        video: "videoplayback (2).mp4",
+        image:  "veeran.jpeg",
         link720p: "https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=134384&key=a7fcf42b030816cccbb04267620c6a17",
-        link1080p: ""
+        link1080p: "https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=134253&key=a06816b76d899a3c59a7d21e7b860e05",
+        link4k: "https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=134250&key=ada962b571f5c4e815686aa156841821"
       },
-      murmur:{
+    {
         title: "murmur (2025) HD Tamil Movie",
-        poster: "murmur.jpeg",
-        video: "",
+        image:  "murmur.jpeg",
         link720p: "https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=134315&key=2d899108cba9150c4e9a56802a2c12fc",
-        link1080: ""
+        link1080: "https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=134319&key=44ec79cd39748f15c3afbec9b0ecaa84",
+        link4k: "https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=134321&key=985a1dd6a703ddb692c762a565145749"
       },
-      door:{
+      {
         title: "The Door (2025) HQ Real PRE-DVD  Tamil Movie",
-        poster: "door.jpeg",
-        video: "",
+        image:  "door.jpeg",
         link720p: "https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=134113&key=d2685eccb3857eb4a5d2b1a6cc13bbe8",
-        link1080p: "https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=134113&key=d2685eccb3857eb4a5d2b1a6cc13bbe8"
+        link1080p: "https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=134113&key=d2685eccb3857eb4a5d2b1a6cc13bbe8",
+        link4k: "https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=134115&key=489f10620378f2e13aa772bfef1fd92d"
       },
-      seruppu:{
+      {
         title: "Seruppugal Jaakirathai Season 1 (2025) HD  Tamil Web Series",
-        poster: "seruppu.jpeg",
-        video: "",
+        image:  "seruppu.jpeg",
         link720p: "https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=134111&key=cea7d3c46e4110fec852d7bbf58b45f4",
-        link1080p: ""
+        link1080p: "",
+        link4k: ""
       },
-      l2:{
+     {
         title: "L2 Empuraan (2025) PRE-HD  Tamil Movie",
-        poster: "lucifar.jpeg",
-        video: "",
+        image: "lucifar.jpeg",
         link720p: "https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=133988&key=c4353bedb57571542c23318b0fe9b99a",
-        link1080p: ""
+        link1080p: "",
+        link4k: ""
       },
-      aghathiyaa:{
+      {
         title: "Aghathiyaa (2025) HD Tamil Movie",
-        poster: "aghathiyaa.jpeg",
-        video: "",
+        image:  "aghathiyaa.jpeg",
         link720p: "",
-        link1080p: ""
+        link1080p: "",
+        link4k: ""
       },
-      mufasa:{
+      {
         title: "Mufasa: The Lion King (2024) HD  Tamil Dubbed Movie",
-        poster: "mufasa.jpeg",
-        video: "",
+        image:  "mufasa.jpeg",
         link720p: "",
-        link1080p: ""
+        link1080p: "",
+        link4k: ""
       },
-      kingston:{
+     {
         title: "kingston (2025) HD Tamil Movie",
-        poster: "kingstan.jpeg",
-        video: "",
+        image:  "kingstan.jpeg",
         link720p: "https://www.1tamilmv.ms/applications/core/interface/file/attachment.php?id=133721&key=f4cde5d33532e4709024680453873762",
-        link1080p: ""
+        link1080p: "",
+        link4k: ""
       },
-      drogon:{
+    {
         title: "Dragon (2025) HD Tamil Movie",
-        poster: "drogan.jpeg",
-        video: "",
+        image:  "drogan.jpeg",
         link720p: "",
-        link1080p: ""
+        link1080p: "",
+        link4k: ""
       },
-      Officer:{
+     {
         title: "Officer on Duty (2025) HD Tamil Movie",
-        poster: "officer.jpeg",
-        video: "www.1TamilMV.ms - Officer on Duty (2025) Tamil HQ HDRip - 720p - x264 - (DD+5.1 - 192Kbps & AAC) - 1.4GB - ESub.mkv",
+        image:  "officer.jpeg",
         link720p: "",
-        link1080p: ""
+        link1080p: "",
+        link4k: ""
       },
+    {
+      title: "",
+      image: "",
+      link720p: "",
+      link1080p:"",
+      link4k:""
+    },
+    {
+      title: "",
+      image: "",
+      link720p: "",
+      link1080p:"",
+      link4k:""
+    }
+
 
  
-    };
+    
    
-   
+    ];
 
     const movieList = document.getElementById('movieList');
-    const mainPage = document.getElementById('mainPage');
-    const moviePage = document.getElementById('moviePage');
     const movieDetail = document.getElementById('movieDetail');
-
-    function showMovie(id) {
-      const m = movies[id];
-      if (!m) return;
-
-      mainPage.classList.add('hidden');
-      moviePage.classList.remove('hidden');
-
-      movieDetail.innerHTML = `
-        <h1>${m.title}</h1>
-        <img src="${m.poster}" alt="${m.title}">
-        <video controls>
-          <source src="${m.video}" type="video/mp4">
-        </video>
-        <div class="btns">
-          <button class="btn" onclick="window.open('${m.link720p}', '_blank')">Download 720p</button>
-          <button class="btn" onclick="window.open('${m.link1080p}', '_blank')">Download 1080p</button>
-        </div>
-        <br><br>
-        <button class="btn" onclick="goBack()">Back</button>
-      `;
-    }
-
-    
-
-    function goBack() {
-      moviePage.classList.add('hidden');
-      mainPage.classList.remove('hidden');
-    }
-
-    function loadMovies() {
-      movieList.innerHTML = '';
-      for (let id in movies) {
-        const movie = movies[id];
-        movieList.innerHTML += `
-          <div class="card" data-title="${movie.title.toLowerCase()}">
-            <img src="${movie.poster}" class="poster">
-            <h3>${movie.title}</h3>
-            <button class="btn" onclick="showMovie('${id}')">Watch & Download</button>
-          </div>
-        `;
-      }
-    }
 
     function filterMovies() {
       const input = document.getElementById('searchInput').value.toLowerCase();
       const cards = document.querySelectorAll('.card');
       cards.forEach(card => {
         const title = card.getAttribute('data-title');
-        if (title.includes(input)) {
-          card.style.display = 'block';
-        } else {
-          card.style.display = 'none';
-        }
+        card.style.display = title.includes(input) ? 'block' : 'none';
       });
+    }
+
+    function loadMovies() {
+      movieList.innerHTML = '';
+      movies.forEach((movie, index) => {
+        movieList.innerHTML += `
+          <div class="card" data-title="${movie.title.toLowerCase()}">
+            <img src="${movie.image}" class="poster" alt="${movie.title}">
+            <h3>${movie.title}</h3>
+            <button class="btn" onclick="showMovie(${index})">Watch & Download</button>
+          </div>
+        `;
+      });
+    }
+
+    function showMovie(index) {
+      const movie = movies[index];
+      document.getElementById('mainPage').classList.add('hidden');
+      document.getElementById('moviePage').classList.remove('hidden');
+      movieDetail.innerHTML = `
+        <h2>${movie.title}</h2>
+        <img src="${movie.image}" alt="${movie.title}">
+        
+        <div class="btns">
+          <a href="${movie.link720p}" target="_blank"><button class="btn">Download 720p</button></a>
+          <a href="${movie.link1080p}" target="_blank"><button class="btn">Download 1080p</button></a>
+          <a href="${movie.link4k}" target="_blank"><button class="btn">Download 4k</button></a>
+        </div>
+      `;
+    }
+
+    function goBack() {
+      document.getElementById('mainPage').classList.remove('hidden');
+      document.getElementById('moviePage').classList.add('hidden');
     }
 
     loadMovies();
