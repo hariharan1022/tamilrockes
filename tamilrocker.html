@@ -1,113 +1,120 @@
 <!DOCTYPE html><html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Sktamilrockers</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sktamilrockers - Movie Download</title>
   <style>
     body {
-      background: #0f0f0f;
-      color: white;
-      font-family: 'Segoe UI', sans-serif;
       margin: 0;
-      padding: 20px;
-    }h1 {
-  text-align: center;
-  color: #00ffc8;
-}
-
-.search-container {
-  display: flex;
-  justify-content: center;
-  margin: 20px 0;
-}
-
-.search-container input {
-  padding: 10px;
-  font-size: 16px;
-  border-radius: 8px;
-  border: none;
-  width: 60%;
-}
-
-.movie-grid {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 20px;
-}
-
-.card {
-      background-color: #1e1e1e;
-      border-radius: 15px;
-      box-shadow: 0 0 10px #000;
-      margin-bottom: 25px;
-      padding: 20px;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #0f0f0f;
+      color: #fff;
+    }
+    h1 {
+      text-align: center;
+      font-size: 2.5em;
+      color: #00ffe1;
+      text-shadow: 0 0 10px #00ffe1;
+      margin-top: 1rem;
+    }
+    #searchInput {
+      display: block;
+      margin: 1rem auto;
+      padding: 0.5rem 1rem;
+      width: 80%;
+      max-width: 400px;
+      border-radius: 30px;
+      border: none;
+      font-size: 1rem;
+      background-color: #1c1c1c;
+      color: white;
+    }
+    .container {
       display: flex;
-      flex-direction: column;
-      align-items: center;
-}
-
-.poster {
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1rem;
+      padding: 1rem;
+    }
+    .card {
+      background-color: #1e1e1e;
+      border-radius: 20px;
+      box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
+      overflow: hidden;
+      width: 220px;
+      text-align: center;
+      transition: transform 0.3s;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+    }
+    .poster {
       width: 100%;
-      max-width: 300px;
-      border-radius: 10px;
-      margin-bottom: 15px;
-}
-
-.btn {
-  background: #0072ff;
-  color: white;
-  padding: 10px 15px;
-  border: none;
-  border-radius: 8px;
-  margin-top: 10px;
-  cursor: pointer;
-}
-
-.btn:hover {
-  background: #00c6ff;
-  color: black;
-}
-
-.hidden {
-  display: none;
-}
-
-.movie-detail {
-  text-align: center;
-  margin-top: 30px;
-}
-
-.movie-detail img {
-  width: 300px;
-  border-radius: 10px;
-}
-
-
-
-.btns {
-  margin-top: 20px;
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
+      height: 300px;
+      object-fit: cover;
+    }
+    h3 {
+      padding: 0.5rem;
+      font-size: 1rem;
+      color: #00ffe1;
+    }
+    .btn {
+      margin: 0.5rem;
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 20px;
+      background: linear-gradient(45deg, #00ffe1, #0051ff);
+      color: #000;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .btn:hover {
+      background: linear-gradient(45deg, #0051ff, #00ffe1);
+    }
+    .hidden {
+      display: none;
+    }
+    .btns {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-top: 1rem;
+    }
+    #movieDetail img {
+      width: 80%;
+      max-width: 500px;
+      border-radius: 15px;
+      display: block;
+      margin: 1rem auto;
+    }
+    #movieDetail h2 {
+      text-align: center;
+      color: #00ffe1;
+      text-shadow: 0 0 10px #00ffe1;
+    }
+    #movieDetail .btns a {
+      text-decoration: none;
+    }
+    #backBtn {
+      display: block;
+      margin: 2rem auto;
+    }
   </style>
 </head>
-<body>  <div id="mainPage">
-    <h1>Sktamilrockers</h1>
-    <div class="search-container">
-      <input type="text" id="searchInput" onkeyup="filterMovies()" placeholder="Search Sktamilrockers...">
-    </div>
-    <div class="movie-grid" id="movieList"></div>
-  </div>  <div id="moviePage" class="hidden">
-    <div id="movieDetail" class="movie-detail"></div>
-    <div class="btns">
-      <button class="btn" onclick="goBack()">Back</button>
-    </div>
+<body>
+  <h1>Sktamilrockers</h1>
+  <input type="text" id="searchInput" onkeyup="filterMovies()" placeholder="Search Movies...">
+  <div id="mainPage">
+    <div id="movieList" class="container"></div>
+  </div>
+  <div id="moviePage" class="hidden">
+    <div id="movieDetail"></div>
+    <button class="btn" id="backBtn" onclick="goBack()">Back</button>
   </div>  <script>
     const movies = [
-    {
+      {
         title: "Test (2025) HD (720p,1080p,4k quality) Tamil Movie ",
         image: "test.jpeg",
         link720p: "https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=134384&key=a7fcf42b030816cccbb04267620c6a17",
@@ -198,11 +205,7 @@
       link1080p:"",
       link4k:""
     }
-
-
- 
-    
-   
+      
     ];
 
     const movieList = document.getElementById('movieList');
@@ -237,11 +240,10 @@
       movieDetail.innerHTML = `
         <h2>${movie.title}</h2>
         <img src="${movie.image}" alt="${movie.title}">
-        
         <div class="btns">
           <a href="${movie.link720p}" target="_blank"><button class="btn">Download 720p</button></a>
           <a href="${movie.link1080p}" target="_blank"><button class="btn">Download 1080p</button></a>
-          <a href="${movie.link4k}" target="_blank"><button class="btn">Download 4k</button></a>
+          <a href="${movie.link4k}" target="_blank"><button class="btn">Download 4K</button></a>
         </div>
       `;
     }
