@@ -117,6 +117,7 @@
       {
         title: "Test (2025) HD (720p,1080p,4k quality) Tamil Movie ",
         image: "test.jpeg",
+        trailer:"https://youtu.be/D5F9edXekvU?si=4JV9e8GVNG0lAMDx"
         link720p: "https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=134384&key=a7fcf42b030816cccbb04267620c6a17",
         link1080p: "https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=134374&key=a6b3fbdb20f3308a9c1b2c38961190d6",
         link4k: "https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=134375&key=7dfe296a64bc520a599b9e7c320d35df"
@@ -240,6 +241,8 @@
       movieDetail.innerHTML = `
         <h2>${movie.title}</h2>
         <img src="${movie.image}" alt="${movie.title}">
+        <iframe src="${movie.trailer}" allowfullscreen></iframe>
+
         <div class="btns">
           <a href="${movie.link720p}" target="_blank"><button class="btn">Download 720p</button></a>
           <a href="${movie.link1080p}" target="_blank"><button class="btn">Download 1080p</button></a>
