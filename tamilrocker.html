@@ -146,7 +146,7 @@
         link720p: "https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=134660&key=0a9b783b327453eb1758aecce89cdbbd",
         link1080p: "https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=134656&key=11aec13e0b9d343c4b82d3b3e471cd6b",
         link4k: "https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=134654&key=23821a1b1230871b92964d89d5c921b1",
-        trailer: "",
+        samplevideo: "",
         
       },
           
@@ -341,7 +341,7 @@
       movieDetail.innerHTML = `
         <h2>${movie.title}</h2>
         <img src="${movie.image}" alt="${movie.title}">
-        ${movie.trailer ? `<iframe src="${movie.trailer}" allowfullscreen></iframe>` : ''}
+        ${movie.samplevideo ? `<iframe src="${movie.samplevideo}" allowfullscreen></iframe>` : ''}
         
         <div class="btns">
           ${movie.link720p ? `<a href="${movie.link720p}" target="_blank"><button class="btn">Download 720p</button></a>` : ''}
