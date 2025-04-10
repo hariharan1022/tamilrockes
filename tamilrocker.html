@@ -338,15 +338,23 @@
   const movie = movies[index];
   document.getElementById('mainPage').classList.add('hidden');
   document.getElementById('moviePage').classList.remove('hidden');
+
+  // Make sure YouTube URL has autoplay off and other clean params
+  let videoUrl = movie.samplevideo;
+  if (videoUrl && videoUrl.includes('youtube')) {
+    videoUrl += (videoUrl.includes('?') ? '&' : '?') + 'autoplay=0&rel=0&modestbranding=1';
+  }
+
   movieDetail.innerHTML = `
     <h2>${movie.title}</h2>
     <img src="${movie.image}" alt="${movie.title}">
     
     ${movie.samplevideo ? `
-  <h3 style="margin-top: 1rem; text-align: center;">Sample Video</h3>
-  <div style="text-align:center;">
-    <iframe src="${movie.samplevideo}" allowfullscreen frameborder="0"></iframe>
-  </div>` : ''}
+      <h3 style="margin-top: 1rem; text-align: center;">Sample Video</h3>
+      <div style="text-align:center;">
+        <iframe src="${videoUrl}" allowfullscreen frameborder="0"></iframe>
+      </div>` : ''}
+
     <div class="btns">
       ${movie.link720p ? `<a href="${movie.link720p}" target="_blank"><button class="btn">Download 720p</button></a>` : ''}
       ${movie.link1080p ? `<a href="${movie.link1080p}" target="_blank"><button class="btn">Download 1080p</button></a>` : ''}
