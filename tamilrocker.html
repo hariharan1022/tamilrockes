@@ -113,6 +113,17 @@
       margin-left: auto;
       margin-right: auto;
     }
+    .screenshots {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .screenshots img {
+      width: 200px;
+      border-radius: 10px;
+    }
   </style>
 </head>
 <body>
@@ -128,13 +139,16 @@
 
   <script>
     const movies = [
-    {
-      title: "Ak's Good Bad Ugly (coming zoon...) [720p,1080p,4k]",
-      image: "gbu.jpeg",
-      link720p: "",
-      link1080p:"",
-      link4k:""
-    },
+      {
+        title: "Ak's Good Bad Ugly (coming zoon...) [720p,1080p,4k]",
+        image: "gbu.jpeg",
+        link720p: "",
+        link1080p: "",
+        link4k: "",
+        trailer: "",
+        screenshots: ["ss1.jpg", "ss2.jpg", "ss3.jpg"]
+      },
+          
 
       {
         title: "Test (2025) HD (720p,1080p,4k quality) Tamil Movie ",
@@ -332,6 +346,11 @@
           ${movie.link1080p ? `<a href="${movie.link1080p}" target="_blank"><button class="btn">Download 1080p</button></a>` : ''}
           ${movie.link4k ? `<a href="${movie.link4k}" target="_blank"><button class="btn">Download 4K</button></a>` : ''}
         </div>
+        ${movie.screenshots && movie.screenshots.length ? `
+          <h3 style="text-align:center;margin-top:2rem;">Screenshots</h3>
+          <div class="screenshots">
+            ${movie.screenshots.map(src => `<img src="${src}" alt="Screenshot">`).join('')}
+          </div>` : ''}
       `;
     }
 
