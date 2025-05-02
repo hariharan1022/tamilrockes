@@ -1,14 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sktamilrockers - Movie Download</title>
-  
-  <!-- other head content -->
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5755024838228586"
-     crossorigin="anonymous"></script>
-  
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sk tamilrockers</title>
   <style>
     body {
       margin: 0;
@@ -35,34 +30,91 @@
       background-color: #1c1c1c;
       color: white;
     }
-    .container {
+    .category-row {
+      margin-bottom: 40px;
+    }
+    .row-header {
       display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 1rem;
-      padding: 1rem;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 20px;
     }
-    .card {
-      background-color: #1e1e1e;
+    .scroll-btns {
+      display: flex;
+      gap: 10px;
+    }
+    .scroll-btns button {
+      margin: 0.5rem;
+      padding: 0.5rem 1rem;
+      border: none;
       border-radius: 20px;
-      box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
+      background: linear-gradient(45deg, #00ffe1, #0051ff);
+      color: #000;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .movie-list {
+      display: flex;
+      overflow-x: auto;
+      gap: 15px;
+      scroll-behavior: smooth;
+      padding: 10px 20px;
+    }
+    .movie-list::-webkit-scrollbar {
+      height: 8px;
+    }
+    .movie-list::-webkit-scrollbar-thumb {
+      background: #00ffe1;
+      border-radius: 10px;
+    }
+    .movie-card {
+      flex: 0 0 auto;
+      width: 180px;
+      background: #222;
+      border-radius: 10px;
       overflow: hidden;
-      width: 220px;
-      text-align: center;
-      transition: transform 0.3s;
     }
-    .card:hover {
-      transform: translateY(-5px);
-    }
-    .poster {
+    .movie-card img {
       width: 100%;
-      height: 300px;
+      height: 250px;
       object-fit: cover;
     }
-    h3 {
-      padding: 0.5rem;
-      font-size: 1rem;
+    .movie-card-title {
+      padding: 8px;
+      text-align: center;
+      font-size: 14px;
       color: #00ffe1;
+    }
+    @media (max-width: 600px) {
+      .movie-card {
+        width: 140px;
+      }
+      .movie-card img {
+        height: 200px;
+      }
+    }
+    .hidden {
+      display: none;
+    }
+    #movieDetail img {
+      width: 80%;
+      max-width: 500px;
+      border-radius: 15px;
+      display: block;
+      margin: 1rem auto;
+    }
+    #movieDetail h2 {
+      text-align: center;
+      color: #00ffe1;
+      text-shadow: 0 0 10px #00ffe1;
+    }
+    .btns {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-top: 1rem;
     }
     .btn {
       margin: 0.5rem;
@@ -77,35 +129,6 @@
     }
     .btn:hover {
       background: linear-gradient(45deg, #0051ff, #00ffe1);
-    }
-    .hidden {
-      display: none;
-    }
-    .btns {
-      display: flex;
-      justify-content: center;
-      gap: 1rem;
-      flex-wrap: wrap;
-      margin-top: 1rem;
-    }
-    #movieDetail img {
-      width: 80%;
-      max-width: 500px;
-      border-radius: 15px;
-      display: block;
-      margin: 1rem auto;
-    }
-    #movieDetail h2 {
-      text-align: center;
-      color: #00ffe1;
-      text-shadow: 0 0 10px #00ffe1;
-    }
-    #movieDetail .btns a {
-      text-decoration: none;
-    }
-    #backBtn {
-      display: block;
-      margin: 2rem auto;
     }
     iframe {
       margin-top: 20px;
@@ -129,23 +152,69 @@
       width: 200px;
       border-radius: 10px;
     }
+    #backBtn {
+      display: block;
+      margin: 2rem auto;
+    }
   </style>
 </head>
 <body>
-  <h1>Sktamilrockers</h1>
-  <input type="text" id="searchInput" onkeyup="filterMovies()" placeholder="Search Movies...">
+
+  <h1>🎬 Sk tamilrockers</h1>
+  <input type="text" id="searchInput" placeholder="Search for a movie..." onkeyup="filterMovies()"/>
+
   <div id="mainPage">
-    <div id="movieList" class="container"></div>
+    <!-- Category Rows -->
+    <div class="category-row">
+      <div class="row-header"><h2>Recent</h2><div class="scroll-btns">
+        <button onclick="scrollRow('recentRow', -1)">⬅</button>
+        <button onclick="scrollRow('recentRow', 1)">➡</button>
+      </div></div>
+      <div class="movie-list" id="recentRow"></div>
+    </div>
+
+    <div class="category-row">
+      <div class="row-header"><h2>Action</h2><div class="scroll-btns">
+        <button onclick="scrollRow('actionRow', -1)">⬅</button>
+        <button onclick="scrollRow('actionRow', 1)">➡</button>
+      </div></div>
+      <div class="movie-list" id="actionRow"></div>
+    </div>
+
+    <div class="category-row">
+      <div class="row-header"><h2>Comedy</h2><div class="scroll-btns">
+        <button onclick="scrollRow('comedyRow', -1)">⬅</button>
+        <button onclick="scrollRow('comedyRow', 1)">➡</button>
+      </div></div>
+      <div class="movie-list" id="comedyRow"></div>
+    </div>
+
+    <div class="category-row">
+      <div class="row-header"><h2>Romantic movies</h2><div class="scroll-btns">
+        <button onclick="scrollRow('romanticRow', -1)">⬅</button>
+        <button onclick="scrollRow('romanticRow', 1)">➡</button>
+      </div></div>
+      <div class="movie-list" id="romanticRow"></div>
+    </div>
+
+    <div class="category-row">
+      <div class="row-header"><h2>Crime Thriller</h2><div class="scroll-btns">
+        <button onclick="scrollRow('thrillerRow', -1)">⬅</button>
+        <button onclick="scrollRow('thrillerRow', 1)">➡</button>
+      </div></div>
+      <div class="movie-list" id="thrillerRow"></div>
+    </div>
   </div>
+
   <div id="moviePage" class="hidden">
     <div id="movieDetail"></div>
-    <button class="btn" id="backBtn" onclick="goBack()">Back</button>
+    <button id="backBtn" class="btn" onclick="goBack()">⬅ Back to Home</button>
   </div>
 
   <script>
     const movies = [
-
-        {
+     
+      {
         title: " Tourists Family (2025) Tamil HQ Print [720p,1080p,4k]",
         image: "family.jpg",
         description: ["A quirky Sri Lankan family seeking a fresh start in India transforms a disconnected neighborhood into a vibrant community with their infectious love and kindness.Director - Abishan Jeevinth  Writer - Abishan Jeevinth"],
@@ -154,6 +223,7 @@
         link1080p: "",
         link4k: "",
         samplevideo: "",
+        categories: ["recent", "comedy"]
         
       },
 
@@ -165,6 +235,7 @@
         link1080p: "",
         link4k: "",
         samplevideo: "",
+        categories: ["recent", "action", "thriller"]
         
       },
 
@@ -180,6 +251,7 @@
         link4k: "https://link.vipurl.in/x0tIL",
         linkv: "https://ups2up.fun/embed-7tppo9ddexnz.html", 
         samplevideo: "",
+        categories: ["recent", "action"]
         
       },
       {
@@ -190,6 +262,7 @@
         link1080p: "https://link.vipurl.in/AuFSssA4",
         link4k: "https://link.vipurl.in/DD4x0jt",
         samplevideo: "gbu.mp4",
+        categories: ["recent", "action"]
         
       },
           
@@ -199,147 +272,168 @@
         image: "test.jpeg",
         link720p: "https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=134384&key=a7fcf42b030816cccbb04267620c6a17",
         link1080p: "https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=134374&key=a6b3fbdb20f3308a9c1b2c38961190d6",
-        link4k: "https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=134375&key=7dfe296a64bc520a599b9e7c320d35df"
+        link4k: "https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=134375&key=7dfe296a64bc520a599b9e7c320d35df",
+        categories: ["action"]
       },
       {
         title: "Veera Dheera Sooran (2025) PRE-HD (720p,1080p,4k quality) Tamil Movie ",
         image:  "veeran.jpeg",
         link720p: "https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=134384&key=a7fcf42b030816cccbb04267620c6a17",
         link1080p: "https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=134253&key=a06816b76d899a3c59a7d21e7b860e05",
-        link4k: "https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=134250&key=ada962b571f5c4e815686aa156841821"
+        link4k: "https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=134250&key=ada962b571f5c4e815686aa156841821",
+        categories: ["recent", "action"]
       },
     {
         title: "murmur (2025) HD Tamil Movie  (720p,1080p,4k quality) ",
         image:  "murmur.jpeg",
         link720p: "https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=134315&key=2d899108cba9150c4e9a56802a2c12fc",
         link1080: "https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=134319&key=44ec79cd39748f15c3afbec9b0ecaa84",
-        link4k: "https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=134321&key=985a1dd6a703ddb692c762a565145749"
+        link4k: "https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=134321&key=985a1dd6a703ddb692c762a565145749",
+        categories: ["thriller"]
       },
       {
         title: "The Door (2025) HQ Real PRE-DVD  (720p,1080p,4k quality)  Tamil Movie",
         image:  "door.jpeg",
         link720p: "https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=134113&key=d2685eccb3857eb4a5d2b1a6cc13bbe8",
         link1080p: "https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=134113&key=d2685eccb3857eb4a5d2b1a6cc13bbe8",
-        link4k: "https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=134115&key=489f10620378f2e13aa772bfef1fd92d"
+        link4k: "https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=134115&key=489f10620378f2e13aa772bfef1fd92d",
+        categories: ["thriller"]
       },
       {
         title: "Seruppugal Jaakirathai Season 1 (2025) HD  (720p,1080p,4k quality)  Tamil Web Series",
         image:  "seruppu.jpeg",
         link720p: "https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=134111&key=cea7d3c46e4110fec852d7bbf58b45f4",
         link1080p: "",
-        link4k: ""
+        link4k: "", 
+        categories: ["comedy"]
       },
      {
         title: "L2 Empuraan (2025) PRE-HD  (720p,1080p,4k quality)  Tamil Movie",
         image: "lucifar.jpeg",
         link720p: "https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=133988&key=c4353bedb57571542c23318b0fe9b99a",
         link1080p: "https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=133988&key=c4353bedb57571542c23318b0fe9b99a",
-        link4k: "https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=133982&key=73a9870b11a94f8eeaec44f1d516e51f"
+        link4k: "https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=133982&key=73a9870b11a94f8eeaec44f1d516e51f",
+        categories: ["recent", "action", "thriller"]
       },
       {
         title: "Aghathiyaa (2025) HD (720p,1080p,4k quality) Tamil Movie",
         image:  "aghathiyaa.jpeg",
         link720p: "https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=134008&key=404c9ae8b2f5dcf0b3ed1a76fdd9a217",
         link1080p: "https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=134007&key=f5b3bd39809ab6c91202426bb4a8acb1",
-        link4k: "https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=134011&key=f0fe24333b7886e0f1a00d59844be4c6"
+        link4k: "https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=134011&key=f0fe24333b7886e0f1a00d59844be4c6",
+        categories: ["recent","thriller"]
       },
       {
         title: "Mufasa: The Lion King (2024) HD  (720p,1080p,4k quality)  Tamil Dubbed Movie",
         image:  "mufasa.jpeg",
         link720p: "https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=133943&key=025799334d078b1b7c44ca4527e2afd1",
         link1080p: "https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=133941&key=11e0faec3b6cd4eab859c07449ab9dee",
-        link4k: "https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=133942&key=e68d864d595d8cbbde28a7786ed37e17"
+        link4k: "https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=133942&key=e68d864d595d8cbbde28a7786ed37e17",
+        categories: ["comedy"]
       },
      {
         title: "kingston (2025) HD  (720p,1080p,4k quality) Tamil Movie",
         image:  "kingstan.jpeg",
         link720p: "https://www.1tamilmv.ms/applications/core/interface/file/attachment.php?id=133721&key=f4cde5d33532e4709024680453873762",
         link1080p: "https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=133719&key=4862dd2dc2654dca4f4aaa48ba8b8d0c",
-        link4k: "https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=133720&key=4faaa753184224bc1f6966cc9b304721"
+        link4k: "https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=133720&key=4faaa753184224bc1f6966cc9b304721",
+        categories: ["recent", "thriller"]
       },
     {
         title: "Dragon (2025) HD  (720p,1080p,4k quality) Tamil Movie",
         image:  "drogan.jpeg",
         link720p: "https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=133696&key=30e174670e9ea854a15c3344dc88808b",
         link1080p: "https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=133679&key=510844b442dbcac9474142c278012cfa",
-        link4k: "https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=133663&key=c51cceabd5f15fe5c3f18cb6c12307ed"
+        link4k: "https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=133663&key=c51cceabd5f15fe5c3f18cb6c12307ed",
+        categories: ["recent", "action", "romantic"]
       },
      {
         title: "Officer on Duty (2025) HD (720p,1080p,4k quality)  Tamil Movie",
         image:  "officer.jpeg",
         link720p: "https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=133598&key=6dbf173093e155efeb68077d753632ed",
         link1080p: "https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=133602&key=a5c9368b9d5053c10e330b26524c5189",
-        link4k: "https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=133583&key=5055dc929eb13ec989259b49f901c29b"
+        link4k: "https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=133583&key=5055dc929eb13ec989259b49f901c29b",
+        categories: [ "action", "thriller"]
       },
     {
       title: "Leg Piece (2025) Tamil HD- [4K, 1080p & 720p]",
       image: "lek pice.jpeg",
       link720p: "https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=134132&key=3158b903118e22bd33a9bdf0d7e8fb2c",
       link1080p:"https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=134133&key=88a6881600220e4b17c0c8dafa524331",
-      link4k:"https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=134130&key=169102de6cb2db1ab80c20d60c8bff86"
+      link4k:"https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=134130&key=169102de6cb2db1ab80c20d60c8bff86",
+      categories: ["comedy"]
     },
     {
       title: "Sweetheart (2025) HQ Real PRE-DVD Tamil Movie [720p,1080p,4k]",
       image: "sweetheart.jpeg",
       link720p: "https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=133460&key=83ac2df6341c4e64028f78829de0a2d2",
       link1080p:"https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=133459&key=ed1d0bc905a00b4bc7808e01593de6ec",
-      link4k:"https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=133461&key=5b4c4524d435663f02ed4db5445c2141"
+      link4k:"https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=133461&key=5b4c4524d435663f02ed4db5445c2141",
+      categories: ["romantic"]
     },
     {
       title: ".Badava (2025) HQ Real PRE-DVD Tamil Movie [720p,1080p,4k]",
       image: "badava.jpeg",
       link720p: "https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=133389&key=f2e4b3a1a0902860e439b7f2f5d32efa",
       link1080p:"https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=133387&key=9ecbc4600bdb237318ca47b6de45a6ae",
-      link4k:"https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=133388&key=0006ad455ffd140462b1aeef87331a1f"
+      link4k:"https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=133388&key=0006ad455ffd140462b1aeef87331a1f",
+      categories: ["comedy"]
     },
     {
       title: "Perusu (2025) HQ Real PRE-DVD  Tamil Movie  ( Clean Best Audio ) [720p,1080p,4k]",
       image: "perusu.jpeg",
       link720p: "https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=133466&key=c3b39288ea68ece61b12300f1e572384",
       link1080p:"https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=133465&key=762f1f305201ff7a0c1d3eef6e9e2645",
-      link4k:"https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=133467&key=9866f92f0bb150989e839961f8277740"
+      link4k:"https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=133467&key=9866f92f0bb150989e839961f8277740",
+      categories: ["comedy"]
     },
     {
       title: "Sabdham (2025) HD Tamil Movie [720p,1080p,4k]",
       image: "sabtham.jpeg",
       link720p: "https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=133384&key=f594b054dc8738a72bbfa9b24c907580",
       link1080p:"https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=133382&key=ebf68d11176affb6ba0320b3962c7b73",
-      link4k:"https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=133383&key=77f0d8fab2d1d8772837b637adc55f27"
+      link4k:"https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=133383&key=77f0d8fab2d1d8772837b637adc55f27",
+      categories: ["thriller"]
     },
     {
       title: "Ramam Raghavam (2025) HD Tamil Movie [720p,1080p,4k]",
       image: "samuthragani.jpeg",
       link720p: "https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=133299&key=2a79fa5562a6d92811d574eff4027334",
       link1080p:"https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=133300&key=aeefa7b3a5918765df0732009318db9e",
-      link4k:"https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=133338&key=fc87a10cae283d37f26b9d78d1bb5434"
+      link4k:"https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=133338&key=fc87a10cae283d37f26b9d78d1bb5434",
+      categories: ["action"]
     },
     {
       title: "Thandel (2025) TRUE HD  Tamil Movie [720p,1080p,4k]",
       image: "tandel.jpeg",
       link720p: "https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=132857&key=0d1bd4566bbe586f397eaf4fe44310a2",
       link1080p:"https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=132858&key=9783124e4912599e7b29be9868e3ab28",
-      link4k:"https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=132810&key=672d9db7b1921611ba3cfd1a05fa8682"
+      link4k:"https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=132810&key=672d9db7b1921611ba3cfd1a05fa8682",
+      categories: ["romantic", "action"]
     },
     {
       title: "Kuzhanthaigal Munnetra Kazhagam (2025) TRUE HD Tamil Movie",
       image: "kmk.jpeg",
       link720p: "https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=132791&key=4b60b81aab0f609e7a72be423a6109c4",
       link1080p:"https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=132789&key=e3869b54a65029a226cba85f2e6422ee",
-      link4k:"https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=132788&key=9eb9e04196a96a06e9208bdeefefa259"
+      link4k:"https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=132788&key=9eb9e04196a96a06e9208bdeefefa259",
+      categories: ["comedy"]
     },
     {
       title: "Vidaamuyarchi (2025) TRUE HD Tamil Movie [720p,1080p,4k]",
       image: "vidaamuyachi.jpeg",
       link720p: "https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=132593&key=f12a879ade3d784450afe1fa3887e46e",
       link1080p:"https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=132596&key=2f67ce59beec88bb8d81814704318e19",
-      link4k:"https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=132595&key=fd6cfe8056ce50ea5055ca6654435049"
+      link4k:"https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=132595&key=fd6cfe8056ce50ea5055ca6654435049",
+      categories: [ "action"]
     },
     {
       title: ".Daaku Maharaaj (2025) HD Tamil Movie [720p,1080p,4k]",
       image: "daaku.jpeg",
       link720p: "https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=131972&key=680c4eba526fdbfe64b25b59d1bef1da",
       link1080p:"https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=131955&key=b46977946379036220a9bcbb8a30d6fe",
-      link4k:"https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=131940&key=1c1e0f01f23c253f9c76b6d2101b71ed"
+      link4k:"https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=131940&key=1c1e0f01f23c253f9c76b6d2101b71ed",
+      categories: [ "action", "thriller"]
     },
    
     {
@@ -349,11 +443,42 @@
       link1080p:"",
       link4k:""
     }
-    
     ];
 
-    const movieList = document.getElementById('movieList');
-    const movieDetail = document.getElementById('movieDetail');
+    const categoryIds = {
+      recent: "recentRow",
+      action: "actionRow",
+      comedy: "comedyRow",
+      romantic: "romanticRow",
+      thriller: "thrillerRow"
+    };
+
+    function scrollRow(rowId, direction) {
+      const container = document.getElementById(rowId);
+      const scrollAmount = container.clientWidth;
+      container.scrollBy({ left: direction * scrollAmount, behavior: 'smooth' });
+    }
+
+    function loadMovies() {
+      Object.values(categoryIds).forEach(id => {
+        document.getElementById(id).innerHTML = '';
+      });
+
+      movies.forEach((movie, index) => {
+        movie.categories.forEach(cat => {
+          const row = document.getElementById(categoryIds[cat]);
+          row.innerHTML += `
+            <div class="movie-card card" data-title="${movie.title.toLowerCase()}">
+              <img src="${movie.image}" />
+              <div class="movie-card-title">${movie.title}</div>
+              <div style="text-align:center;">
+                <button class="btn" onclick="showMovie(${index})">Watch & Download</button>
+              </div>
+            </div>
+          `;
+        });
+      });
+    }
 
     function filterMovies() {
       const input = document.getElementById('searchInput').value.toLowerCase();
@@ -364,54 +489,31 @@
       });
     }
 
-    function loadMovies() {
-      movieList.innerHTML = '';
-      movies.forEach((movie, index) => {
-        movieList.innerHTML += `
-          <div class="card" data-title="${movie.title.toLowerCase()}">
-            <img src="${movie.image}" class="poster" alt="${movie.title}">
-            <h3>${movie.title}</h3>
-            <button class="btn" onclick="showMovie(${index})">Watch & Download</button>
-          </div>
-        `;
-      });
-    }
-
     function showMovie(index) {
-  const movie = movies[index];
-  document.getElementById('mainPage').classList.add('hidden');
-  document.getElementById('moviePage').classList.remove('hidden');
+      const movie = movies[index];
+      document.getElementById('mainPage').classList.add('hidden');
+      document.getElementById('moviePage').classList.remove('hidden');
 
-  // Make sure YouTube URL has autoplay off and other clean params
-  let videoUrl = movie.samplevideo;
-  if (videoUrl && videoUrl.includes('youtube')) {
-    videoUrl += (videoUrl.includes('?') ? '&' : '?') + 'autoplay=0&rel=0&modestbranding=1';
-  }
-      
-  movieDetail.innerHTML = `
-    <h2>${movie.title}</h2>
-    <img src="${movie.image}" alt="${movie.title}">
-     <p>${movie.description}</p>
-    
-    ${movie.samplevideo ? `
-      <h3 style="margin-top: 1rem; text-align: center;">Sample Video</h3>
-      <div style="text-align:center;">
-        <iframe src="${videoUrl}" allowfullscreen frameborder="0"></iframe>
-      </div>` : ''}
+      let videoUrl = movie.samplevideo;
+      if (videoUrl.includes('youtube')) {
+        videoUrl += (videoUrl.includes('?') ? '&' : '?') + 'autoplay=0&rel=0&modestbranding=1';
+      }
 
-    <div class="btns">
-      ${movie.link720p ? `<a href="${movie.link720p}" target="_blank"><button class="btn">Download 720p</button></a>` : ''}
-      ${movie.link1080p ? `<a href="${movie.link1080p}" target="_blank"><button class="btn">Download 1080p</button></a>` : ''}
-      ${movie.link4k ? `<a href="${movie.link4k}" target="_blank"><button class="btn">Download 4K</button></a>` : ''}
-       ${movie.linkv ? `<a href="${movie.linkv}" target="_blank"><button class="btn">watch</button></a>` : ''}
-    </div>
-
-    ${movie.screenshots && movie.screenshots.length ? `
-      <h3 style="text-align:center;margin-top:2rem;">Screenshots</h3>
-      <div class="screenshots">
-        ${movie.screenshots.map(src => `<img src="${src}" alt="Screenshot">`).join('')}
-      </div>` : ''}
-  `;
+      document.getElementById('movieDetail').innerHTML = `
+        <h2>${movie.title}</h2>
+        <img src="${movie.image}" alt="${movie.title}">
+        <p style="text-align:center;">${movie.description}</p>
+        ${movie.samplevideo ? `<h3 style="text-align: center;">Sample Video</h3>
+        <iframe src="${videoUrl}" allowfullscreen></iframe>` : ''}
+        <div class="btns">
+          ${movie.link720p ? `<a href="${movie.link720p}" target="_blank"><button class="btn">Download 720p</button></a>` : ''}
+          ${movie.link1080p ? `<a href="${movie.link1080p}" target="_blank"><button class="btn">Download 1080p</button></a>` : ''}
+          ${movie.link4k ? `<a href="${movie.link4k}" target="_blank"><button class="btn">Download 4K</button></a>` : ''}
+          ${movie.linkv ? `<a href="${movie.linkv}" target="_blank"><button class="btn">Watch</button></a>` : ''}
+        </div>
+        ${movie.screenshots.length ? `<h3 style="text-align:center;margin-top:2rem;">Screenshots</h3>
+        <div class="screenshots">${movie.screenshots.map(src => `<img src="${src}" alt="Screenshot">`).join('')}</div>` : ''}
+      `;
     }
 
     function goBack() {
