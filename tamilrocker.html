@@ -3,20 +3,21 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Sk tamilrockers</title>
+  <title>SK Tamilrockers</title>
   <style>
+    * { box-sizing: border-box; }
     body {
       margin: 0;
       font-family: 'Segoe UI', sans-serif;
-      background-color: #0f0f0f;
-      color: #fff;
+      background: #111;
+      color: white;
     }
     h1 {
       text-align: center;
-      font-size: 2.5em;
       color: #00ffe1;
-      text-shadow: 0 0 10px #00ffe1;
       margin-top: 1rem;
+      font-size: 2.2rem;
+      text-shadow: 2px 2px 5px #000;
     }
     #searchInput {
       display: block;
@@ -30,220 +31,137 @@
       background-color: #1c1c1c;
       color: white;
     }
-    .category-row {
-      margin-bottom: 40px;
+    h2 {
+      margin-left: 20px;
+      margin-top: 30px;
+      color: #00ffe1;
+      font-size: 1.5rem;
     }
-    .row-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0 20px;
-    }
-    .scroll-btns {
-      display: flex;
-      gap: 10px;
-    }
-    .scroll-btns button {
-      margin: 0.5rem;
-      padding: 0.5rem 1rem;
-      border: none;
-      border-radius: 20px;
-      background: linear-gradient(45deg, #00ffe1, #0051ff);
-      color: #000;
-      font-weight: bold;
-      cursor: pointer;
-      transition: background 0.3s;
-    }
-    .movie-list {
+    .movie-row {
       display: flex;
       overflow-x: auto;
+      padding: 20px;
       gap: 15px;
-      scroll-behavior: smooth;
-      padding: 10px 20px;
     }
-    .movie-list::-webkit-scrollbar {
+    .movie-row::-webkit-scrollbar {
       height: 8px;
     }
-    .movie-list::-webkit-scrollbar-thumb {
-      background: #00ffe1;
-      border-radius: 10px;
+    .movie-row::-webkit-scrollbar-thumb {
+      background: #444;
+      border-radius: 4px;
     }
     .movie-card {
       flex: 0 0 auto;
-      width: 180px;
-      background: #222;
-      border-radius: 10px;
-      overflow: hidden;
+      width: 160px;
+      cursor: pointer;
+      transition: transform 0.3s;
     }
     .movie-card img {
       width: 100%;
-      height: 250px;
-      object-fit: cover;
+      border-radius: 10px;
     }
-    .movie-card-title {
-      padding: 8px;
-      text-align: center;
-      font-size: 14px;
-      color: #00ffe1;
+    .movie-card:hover {
+      transform: scale(1.05);
     }
-    @media (max-width: 600px) {
-      .movie-card {
-        width: 140px;
-      }
-      .movie-card img {
-        height: 200px;
-      }
-    }
-    .hidden {
+    #moviePage {
       display: none;
-    }
-    #movieDetail img {
-      width: 80%;
-      max-width: 500px;
-      border-radius: 15px;
-      display: block;
-      margin: 1rem auto;
-    }
-    #movieDetail h2 {
+      padding: 20px;
       text-align: center;
-      color: #00ffe1;
-      text-shadow: 0 0 10px #00ffe1;
     }
-    .btns {
-      display: flex;
-      justify-content: center;
-      gap: 1rem;
-      flex-wrap: wrap;
+    #movieTitle {
+      font-size: 2rem;
+      color: #00ffe1;
+    }
+    #mainPoster {
+      width: 80%;
+      max-width: 400px;
+      border-radius: 12px;
       margin-top: 1rem;
     }
+    .btns {
+      margin: 15px 0;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+    }
     .btn {
-      margin: 0.5rem;
-      padding: 0.5rem 1rem;
+      padding: 10px 20px;
       border: none;
-      border-radius: 20px;
+      border-radius: 25px;
       background: linear-gradient(45deg, #00ffe1, #0051ff);
-      color: #000;
+      color: black;
       font-weight: bold;
       cursor: pointer;
-      transition: background 0.3s;
-    }
-    .btn:hover {
-      background: linear-gradient(45deg, #0051ff, #00ffe1);
     }
     iframe {
-      margin-top: 20px;
-      width: 100%;
+      width: 90%;
       max-width: 560px;
       height: 315px;
       border: none;
       border-radius: 10px;
-      display: block;
-      margin-left: auto;
-      margin-right: auto;
+      margin: 1rem 0;
     }
     .screenshots {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      gap: 1rem;
-      margin-bottom: 2rem;
+      gap: 10px;
     }
     .screenshots img {
       width: 200px;
       border-radius: 10px;
     }
-    #backBtn {
-      display: block;
-      margin: 2rem auto;
+    .back-btn {
+      margin-top: 20px;
     }
   </style>
 </head>
 <body>
 
-  <h1>🎬 Sk tamilrockers</h1>
-  <input type="text" id="searchInput" placeholder="Search for a movie..." onkeyup="filterMovies()"/>
+  <h1>SK Tamilrockers</h1>
+  <input type="text" id="searchInput" placeholder="Search movies..." onkeyup="searchMovies()">
 
   <div id="mainPage">
-    <!-- Category Rows -->
-    <div class="category-row">
-      <div class="row-header"><h2>Recent Movies</h2><div class="scroll-btns">
-        <button onclick="scrollRow('recentRow', -1)">⬅</button>
-        <button onclick="scrollRow('recentRow', 1)">➡</button>
-      </div></div>
-      <div class="movie-list" id="recentRow"></div>
-    </div>
+    <h2>Recent Movies</h2>
+    <div class="movie-row" id="recent"></div>
 
-    <div class="category-row">
-      <div class="row-header"><h2>Action Movies</h2><div class="scroll-btns">
-        <button onclick="scrollRow('actionRow', -1)">⬅</button>
-        <button onclick="scrollRow('actionRow', 1)">➡</button>
-      </div></div>
-      <div class="movie-list" id="actionRow"></div>
-    </div>
+    <h2>Action Movies</h2>
+    <div class="movie-row" id="action"></div>
 
-    <div class="category-row">
-      <div class="row-header"><h2>Comedy Movies</h2><div class="scroll-btns">
-        <button onclick="scrollRow('comedyRow', -1)">⬅</button>
-        <button onclick="scrollRow('comedyRow', 1)">➡</button>
-      </div></div>
-      <div class="movie-list" id="comedyRow"></div>
-    </div>
+    <h2>Comedy Movies</h2>
+    <div class="movie-row" id="comedy"></div>
 
-    <div class="category-row">
-      <div class="row-header"><h2>Romantic movies</h2><div class="scroll-btns">
-        <button onclick="scrollRow('romanticRow', -1)">⬅</button>
-        <button onclick="scrollRow('romanticRow', 1)">➡</button>
-      </div></div>
-      <div class="movie-list" id="romanticRow"></div>
-    </div>
+    <h2>Romantic Movies</h2>
+    <div class="movie-row" id="romantic"></div>
 
-    <div class="category-row">
-      <div class="row-header"><h2>Crime & Thriller</h2><div class="scroll-btns">
-        <button onclick="scrollRow('thrillerRow', -1)">⬅</button>
-        <button onclick="scrollRow('thrillerRow', 1)">➡</button>
-      </div></div>
-      <div class="movie-list" id="thrillerRow"></div>
-    </div>
+    <h2>Crime & Thriller</h2>
+    <div class="movie-row" id="crime"></div>
+
+    <h2>Old Movies</h2>
+    <div class="movie-row" id="old"></div>
+
+    <h2>Web Series</h2>
+    <div class="movie-row" id="webseries"></div>
+
+    <h2>Tamil Dubbed Movies</h2>
+    <div class="movie-row" id="tamil"></div>
   </div>
 
-  <div class="category-row">
-    <div class="row-header"><h2>Web Series</h2><div class="scroll-btns">
-      <button onclick="scrollRow('webRow', -1)">⬅</button>
-      <button onclick="scrollRow('webRow', 1)">➡</button>
-    </div></div>
-    <div class="movie-list" id="webRow"></div>
-  </div>
-</div>
+  <div id="moviePage">
+    <h2 id="movieTitle"></h2>
+    <img id="mainPoster" src="" alt="Poster">
+    <p id="movieDesc"></p>
 
-<div class="category-row">
-  <div class="row-header"><h2>Tamil Dubbed Movies</h2><div class="scroll-btns">
-    <button onclick="scrollRow('dubbedRow', -1)">⬅</button>
-    <button onclick="scrollRow('dubbedRow', 1)">➡</button>
-  </div></div>
-  <div class="movie-list" id="dubbedRow"></div>
-</div>
-</div>
+    <div id="videoContainer"></div>
+    <div class="btns" id="downloadButtons"></div>
+    <div class="screenshots" id="screenshotsContainer"></div>
 
-<div class="category-row">
-  <div class="row-header"><h2>Old Movies</h2><div class="scroll-btns">
-    <button onclick="scrollRow('oldRow', -1)">⬅</button>
-    <button onclick="scrollRow('oldRow', 1)">➡</button>
-  </div></div>
-  <div class="movie-list" id="oldRow"></div>
-</div>
-</div>
-
-
-
-
-  <div id="moviePage" class="hidden">
-    <div id="movieDetail"></div>
-    <button id="backBtn" class="btn" onclick="goBack()">⬅ Back to Home</button>
+    <button class="btn back-btn" onclick="goBack()">⬅ Back</button>
   </div>
 
   <script>
     const movies = [
-     
       {
         title: " Tourists Family (2025) Tamil HQ Print [720p,1080p,4k]",
         image: "family.jpg",
@@ -529,86 +447,59 @@
     },
     ];
 
-    const categoryIds = {
-      recent: "recentRow",
-      action: "actionRow",
-      comedy: "comedyRow",
-      romantic: "romanticRow",
-      thriller: "thrillerRow",
-      web: "webRow",
-      dubbed: "dubbedRow",
-      old: "oldRow"
-    };
-
-    function scrollRow(rowId, direction) {
-      const container = document.getElementById(rowId);
-      const scrollAmount = container.clientWidth;
-      container.scrollBy({ left: direction * scrollAmount, behavior: 'smooth' });
-    }
-
-    function loadMovies() {
-      Object.values(categoryIds).forEach(id => {
-        document.getElementById(id).innerHTML = '';
-      });
-
-      movies.forEach((movie, index) => {
-        movie.categories.forEach(cat => {
-          const row = document.getElementById(categoryIds[cat]);
-          row.innerHTML += `
-            <div class="movie-card card" data-title="${movie.title.toLowerCase()}">
-              <img src="${movie.image}" />
-              <div class="movie-card-title">${movie.title}</div>
-              <div style="text-align:center;">
-                <button class="btn" onclick="showMovie(${index})">Watch & Download</button>
-              </div>
-            </div>
-          `;
+    function loadMovies(filtered = null) {
+      const categories = ["recent", "action", "comedy", "romantic", "crime", "old", "webseries", "tamil"];
+      categories.forEach(cat => {
+        const row = document.getElementById(cat);
+        row.innerHTML = '';
+        const data = filtered || movies;
+        data.filter(m => m.categories.includes(cat)).forEach((movie, index) => {
+          const card = document.createElement("div");
+          card.className = "movie-card";
+          card.innerHTML = `<img src="${movie.image}" alt="${movie.title}" onclick="showMovie(${movies.indexOf(movie)})">`;
+          row.appendChild(card);
         });
       });
     }
 
-    function filterMovies() {
-      const input = document.getElementById('searchInput').value.toLowerCase();
-      const cards = document.querySelectorAll('.card');
-      cards.forEach(card => {
-        const title = card.getAttribute('data-title');
-        card.style.display = title.includes(input) ? 'block' : 'none';
-      });
+    function searchMovies() {
+      const query = document.getElementById("searchInput").value.toLowerCase();
+      const filtered = movies.filter(m => m.title.toLowerCase().includes(query));
+      loadMovies(filtered);
     }
 
     function showMovie(index) {
-      const movie = movies[index];
-      document.getElementById('mainPage').classList.add('hidden');
-      document.getElementById('moviePage').classList.remove('hidden');
+      const m = movies[index];
+      document.getElementById("mainPage").style.display = "none";
+      document.getElementById("moviePage").style.display = "block";
+      document.getElementById("movieTitle").textContent = m.title;
+      document.getElementById("mainPoster").src = m.image;
+      document.getElementById("movieDesc").textContent = m.description;
 
-      let videoUrl = movie.samplevideo;
-      if (videoUrl.includes('youtube')) {
-        videoUrl += (videoUrl.includes('?') ? '&' : '?') + 'autoplay=0&rel=0&modestbranding=1';
-      }
+      const video = document.getElementById("videoContainer");
+      video.innerHTML = m.samplevideo ? `<iframe src="${m.samplevideo}?rel=0" allowfullscreen></iframe>` : '';
 
-      document.getElementById('movieDetail').innerHTML = `
-        <h2>${movie.title}</h2>
-        <img src="${movie.image}" alt="${movie.title}">
-        <p style="text-align:center;">${movie.description}</p>
-        ${movie.samplevideo ? `<h3 style="text-align: center;">Sample Video</h3>
-        <iframe src="${videoUrl}" allowfullscreen></iframe>` : ''}
-        <div class="btns">
-          ${movie.link720p ? `<a href="${movie.link720p}" target="_blank"><button class="btn">Download 720p</button></a>` : ''}
-          ${movie.link1080p ? `<a href="${movie.link1080p}" target="_blank"><button class="btn">Download 1080p</button></a>` : ''}
-          ${movie.link4k ? `<a href="${movie.link4k}" target="_blank"><button class="btn">Download 4K</button></a>` : ''}
-          ${movie.linkv ? `<a href="${movie.linkv}" target="_blank"><button class="btn">Watch</button></a>` : ''}
-        </div>
-        ${movie.screenshots.length ? `<h3 style="text-align:center;margin-top:2rem;">Screenshots</h3>
-        <div class="screenshots">${movie.screenshots.map(src => `<img src="${src}" alt="Screenshot">`).join('')}</div>` : ''}
-      `;
+      const btns = document.getElementById("downloadButtons");
+      btns.innerHTML = '';
+      if (m.link720p) btns.innerHTML += `<a href="${m.link720p}" target="_blank"><button class="btn">720p</button></a>`;
+      if (m.link1080p) btns.innerHTML += `<a href="${m.link1080p}" target="_blank"><button class="btn">1080p</button></a>`;
+      if (m.link4k) btns.innerHTML += `<a href="${m.link4k}" target="_blank"><button class="btn">4K</button></a>`;
+      if (m.linkv) btns.innerHTML += `<a href="${m.linkv}" target="_blank"><button class="btn">Watch</button></a>`;
+
+      const shots = document.getElementById("screenshotsContainer");
+      shots.innerHTML = '';
+      m.screenshots.forEach(src => {
+        shots.innerHTML += `<img src="${src}">`;
+      });
     }
 
     function goBack() {
-      document.getElementById('mainPage').classList.remove('hidden');
-      document.getElementById('moviePage').classList.add('hidden');
+      document.getElementById("moviePage").style.display = "none";
+      document.getElementById("mainPage").style.display = "block";
     }
 
     loadMovies();
   </script>
 </body>
 </html>
+
