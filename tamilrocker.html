@@ -172,16 +172,16 @@
     <div class="movie-row" id="romantic"></div>
 
     <h2>Crime & Thriller</h2>
-    <div class="movie-row" id="crime"></div>
+    <div class="movie-row" id="thriller"></div>
 
     <h2>Old Movies</h2>
     <div class="movie-row" id="old"></div>
 
     <h2>Web Series</h2>
-    <div class="movie-row" id="webseries"></div>
+    <div class="movie-row" id="webs"></div>
 
     <h2>Tamil Dubbed Movies</h2>
-    <div class="movie-row" id="tamil"></div>
+    <div class="movie-row" id="dubbed"></div>
   </div>
 
   <div id="moviePage">
@@ -484,7 +484,7 @@
     ];
 
     function loadMovies(filtered = null) {
-      const categories = ["recent", "action", "comedy", "romantic", "crime", "old", "webseries", "tamil"];
+      const categories = ["recent", "action", "comedy", "romantic", "dubbed", "old", "web"];
       categories.forEach(cat => {
         const row = document.getElementById(cat);
         row.innerHTML = '';
