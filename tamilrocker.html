@@ -39,7 +39,6 @@
       margin-left: 20px;
       margin-top: 30px;
       color: #00ffe1;
-      
       padding-left: 10px;
       font-size: 1.5rem;
       text-shadow: 0 0 5px #00ffe1;
@@ -72,7 +71,6 @@
       transform: scale(1.08);
       box-shadow: 0 0 20px rgba(0,255,255,0.4);
     }
-
     #moviePage {
       display: none;
       padding: 20px;
@@ -131,28 +129,22 @@
 <body>
   <h1>🎬 SK TamilRockers</h1>
   <input type="text" id="searchInput" placeholder="Search movies...">
+
   <div id="mainPage">
     <h2>Recent Movies</h2>
     <div class="movie-row" id="recent"></div>
-
     <h2>Action Movies</h2>
     <div class="movie-row" id="action"></div>
-
     <h2>Comedy Movies</h2>
     <div class="movie-row" id="comedy"></div>
-
     <h2>Romantic Movies</h2>
     <div class="movie-row" id="romantic"></div>
-
     <h2>Crime & Thriller Movies</h2>
     <div class="movie-row" id="thriller"></div>
-
     <h2>Old Movies</h2>
     <div class="movie-row" id="old"></div>
-
     <h2>Web Series</h2>
     <div class="movie-row" id="web"></div>
-
     <h2>Tamil Dubbed Movies</h2>
     <div class="movie-row" id="dubbed"></div>
   </div>
@@ -161,19 +153,14 @@
     <h2 id="movieTitle"></h2>
     <img id="mainPoster" class="main-poster" src="" alt="Poster">
     <p id="movieDesc"></p>
-
     <div id="videoContainer"></div>
-
     <div class="btns" id="downloadButtons"></div>
-
     <div class="screenshots" id="screenshotsContainer"></div>
-
     <button class="btn back-btn" onclick="goBack()">⬅ Back</button>
   </div>
-
-  <script>
+    <script>
     const movies = [
-    {
+      {
         title: " Tourists Family (2025) Tamil HQ Print [720p,1080p,4k]",
         image: "family.jpg",
         description: ["A quirky Sri Lankan family seeking a fresh start in India transforms a disconnected neighborhood into a vibrant community with their infectious love and kindness.Director - Abishan Jeevinth  Writer - Abishan Jeevinth"],
@@ -190,9 +177,9 @@
         title: " Hit 3 (2025) Tamil PRE-HD Print [720p,1080p,4k]",
         image: "HIT3.jpeg",
         screenshots: ["hit1.jpeg","hit2.jpeg","hit4.jpeg","hit5.jpeg",],
-        link720p: "https://link.vipurl.in/UE8z",
-        link1080p: "https://link.vipurl.in/v6X1mDjS",
-        link4k: "https://link.vipurl.in/fGv2OGrG",
+        link720p: "",
+        link1080p: "",
+        link4k: "",
         samplevideo: "",
         categories: ["recent", "action", "thriller","dubbed"]
         
@@ -456,39 +443,41 @@
       link4k:"",
       categories: [ "thriller","web","old"]
     },
-    ];
+        ];
 
     function loadMovies() {
       const categories = ["recent", "action", "comedy", "romantic", "thriller", "old", "web", "dubbed"];
       categories.forEach(cat => {
         const row = document.getElementById(cat);
         row.innerHTML = '';
-        movies.filter(m => m.categories.includes(cat)).forEach((movie, index) => {
+        movies.filter(m => m.categories.includes(cat)).forEach(movie => {
           const card = document.createElement("div");
           card.className = "movie-card";
-          card.innerHTML = `<img src="${movie.image}" alt="${movie.title}" onclick="showMovie(${index})">`;
+          card.innerHTML = `
+            <img src="${movie.image}" alt="${movie.title}" onclick="showMovieByTitle('${movie.title.replace(/'/g, "\\'")}')">
+          `;
           row.appendChild(card);
         });
       });
     }
 
-    function showMovie(index) {
-      const m = movies[index];
+    function showMovieByTitle(title) {
+      const m = movies.find(movie => movie.title === title);
+      if (!m) return;
       document.getElementById("mainPage").style.display = "none";
       document.getElementById("moviePage").style.display = "block";
       document.getElementById("movieTitle").textContent = m.title;
       document.getElementById("mainPoster").src = m.image;
-      document.getElementById("movieDesc").textContent = m.description;
+      document.getElementById("movieDesc").textContent = m.description || "";
 
       const video = document.getElementById("videoContainer");
-      video.innerHTML = m.samplevideo ? `<iframe src="${m.samplevideo}?rel=0" allowfullscreen></iframe>` : '';
+      video.innerHTML = m.linkv ? `<iframe src="${m.linkv}?rel=0" allowfullscreen></iframe>` : '';
 
       const btns = document.getElementById("downloadButtons");
       btns.innerHTML = '';
       if (m.link720p) btns.innerHTML += `<a href="${m.link720p}" target="_blank"><button class="btn">720p</button></a>`;
       if (m.link1080p) btns.innerHTML += `<a href="${m.link1080p}" target="_blank"><button class="btn">1080p</button></a>`;
       if (m.link4k) btns.innerHTML += `<a href="${m.link4k}" target="_blank"><button class="btn">4K</button></a>`;
-      if (m.linkv) btns.innerHTML += `<a href="${m.linkv}" target="_blank"><button class="btn">Watch</button></a>`;
 
       const shots = document.getElementById("screenshotsContainer");
       shots.innerHTML = '';
@@ -506,5 +495,3 @@
   </script>
 </body>
 </html>
-
-
