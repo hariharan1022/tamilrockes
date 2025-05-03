@@ -71,6 +71,7 @@
       transform: scale(1.08);
       box-shadow: 0 0 20px rgba(0,255,255,0.4);
     }
+
     #moviePage {
       display: none;
       padding: 20px;
@@ -127,26 +128,17 @@
   </style>
 </head>
 <body>
-  <h1>🎬 SK TamilRockers</h1>
+  <h1>SK TamilRockers</h1>
   <input type="text" id="searchInput" placeholder="Search movies...">
-
   <div id="mainPage">
-    <h2>Recent Movies</h2>
-    <div class="movie-row" id="recent"></div>
-    <h2>Action Movies</h2>
-    <div class="movie-row" id="action"></div>
-    <h2>Comedy Movies</h2>
-    <div class="movie-row" id="comedy"></div>
-    <h2>Romantic Movies</h2>
-    <div class="movie-row" id="romantic"></div>
-    <h2>Crime & Thriller Movies</h2>
-    <div class="movie-row" id="thriller"></div>
-    <h2>Old Movies</h2>
-    <div class="movie-row" id="old"></div>
-    <h2>Web Series</h2>
-    <div class="movie-row" id="web"></div>
-    <h2>Tamil Dubbed Movies</h2>
-    <div class="movie-row" id="dubbed"></div>
+    <h2>Recent Movies</h2><div class="movie-row" id="recent"></div>
+    <h2>Action Movies</h2><div class="movie-row" id="action"></div>
+    <h2>Comedy Movies</h2><div class="movie-row" id="comedy"></div>
+    <h2>Romantic Movies</h2><div class="movie-row" id="romantic"></div>
+    <h2>Crime & Thriller Movies</h2><div class="movie-row" id="thriller"></div>
+    <h2>Old Movies</h2><div class="movie-row" id="old"></div>
+    <h2>Web Series</h2><div class="movie-row" id="web"></div>
+    <h2>Tamil Dubbed Movies</h2><div class="movie-row" id="dubbed"></div>
   </div>
 
   <div id="moviePage">
@@ -158,9 +150,10 @@
     <div class="screenshots" id="screenshotsContainer"></div>
     <button class="btn back-btn" onclick="goBack()">⬅ Back</button>
   </div>
-    <script>
+
+  <script>
     const movies = [
-      {
+       {
         title: " Tourists Family (2025) Tamil HQ Print [720p,1080p,4k]",
         image: "family.jpg",
         description: ["A quirky Sri Lankan family seeking a fresh start in India transforms a disconnected neighborhood into a vibrant community with their infectious love and kindness.Director - Abishan Jeevinth  Writer - Abishan Jeevinth"],
@@ -442,21 +435,21 @@
       link4k:"",
       categories: [ "thriller","web","old"]
     },
-        ];
+    ];
 
-    function loadMovies() {
+    function loadMovies(filter = "") {
       const categories = ["recent", "action", "comedy", "romantic", "thriller", "old", "web", "dubbed"];
       categories.forEach(cat => {
         const row = document.getElementById(cat);
         row.innerHTML = '';
-        movies.filter(m => m.categories.includes(cat)).forEach(movie => {
-          const card = document.createElement("div");
-          card.className = "movie-card";
-          card.innerHTML = `
-            <img src="${movie.image}" alt="${movie.title}" onclick="showMovieByTitle('${movie.title.replace(/'/g, "\\'")}')">
-          `;
-          row.appendChild(card);
-        });
+        movies
+          .filter(m => m.categories.includes(cat) && m.title.toLowerCase().includes(filter.toLowerCase()))
+          .forEach(movie => {
+            const card = document.createElement("div");
+            card.className = "movie-card";
+            card.innerHTML = `<img src="${movie.image}" alt="${movie.title}" onclick="showMovieByTitle('${movie.title.replace(/'/g, "\\'")}')">`;
+            row.appendChild(card);
+          });
       });
     }
 
@@ -467,7 +460,7 @@
       document.getElementById("moviePage").style.display = "block";
       document.getElementById("movieTitle").textContent = m.title;
       document.getElementById("mainPoster").src = m.image;
-      document.getElementById("movieDesc").textContent = m.description || "";
+      document.getElementById("movieDesc").textContent = m.description;
 
       const video = document.getElementById("videoContainer");
       video.innerHTML = m.linkv ? `<iframe src="${m.linkv}?rel=0" allowfullscreen></iframe>` : '';
@@ -489,6 +482,10 @@
       document.getElementById("moviePage").style.display = "none";
       document.getElementById("mainPage").style.display = "block";
     }
+
+    document.getElementById("searchInput").addEventListener("input", function () {
+      loadMovies(this.value);
+    });
 
     loadMovies();
   </script>
