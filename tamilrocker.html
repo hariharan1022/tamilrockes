@@ -166,7 +166,7 @@
   <div id="mainPage">
     <!-- Category Rows -->
     <div class="category-row">
-      <div class="row-header"><h2>Recent</h2><div class="scroll-btns">
+      <div class="row-header"><h2>Recent Movies</h2><div class="scroll-btns">
         <button onclick="scrollRow('recentRow', -1)">⬅</button>
         <button onclick="scrollRow('recentRow', 1)">➡</button>
       </div></div>
@@ -174,7 +174,7 @@
     </div>
 
     <div class="category-row">
-      <div class="row-header"><h2>Action</h2><div class="scroll-btns">
+      <div class="row-header"><h2>Action Movies</h2><div class="scroll-btns">
         <button onclick="scrollRow('actionRow', -1)">⬅</button>
         <button onclick="scrollRow('actionRow', 1)">➡</button>
       </div></div>
@@ -182,7 +182,7 @@
     </div>
 
     <div class="category-row">
-      <div class="row-header"><h2>Comedy</h2><div class="scroll-btns">
+      <div class="row-header"><h2>Comedy Movies</h2><div class="scroll-btns">
         <button onclick="scrollRow('comedyRow', -1)">⬅</button>
         <button onclick="scrollRow('comedyRow', 1)">➡</button>
       </div></div>
@@ -198,13 +198,43 @@
     </div>
 
     <div class="category-row">
-      <div class="row-header"><h2>Crime Thriller</h2><div class="scroll-btns">
+      <div class="row-header"><h2>Crime & Thriller</h2><div class="scroll-btns">
         <button onclick="scrollRow('thrillerRow', -1)">⬅</button>
         <button onclick="scrollRow('thrillerRow', 1)">➡</button>
       </div></div>
       <div class="movie-list" id="thrillerRow"></div>
     </div>
   </div>
+
+  <div class="category-row">
+    <div class="row-header"><h2>Web Series</h2><div class="scroll-btns">
+      <button onclick="scrollRow('webRow', -1)">⬅</button>
+      <button onclick="scrollRow('webRow', 1)">➡</button>
+    </div></div>
+    <div class="movie-list" id="webRow"></div>
+  </div>
+</div>
+
+<div class="category-row">
+  <div class="row-header"><h2>Tamil Dubbed Movies</h2><div class="scroll-btns">
+    <button onclick="scrollRow('dubbedRow', -1)">⬅</button>
+    <button onclick="scrollRow('dubbedRow', 1)">➡</button>
+  </div></div>
+  <div class="movie-list" id="dubbedRow"></div>
+</div>
+</div>
+
+<div class="category-row">
+  <div class="row-header"><h2>Old Movies</h2><div class="scroll-btns">
+    <button onclick="scrollRow('oldRow', -1)">⬅</button>
+    <button onclick="scrollRow('oldRow', 1)">➡</button>
+  </div></div>
+  <div class="movie-list" id="oldRow"></div>
+</div>
+</div>
+
+
+
 
   <div id="moviePage" class="hidden">
     <div id="movieDetail"></div>
@@ -235,12 +265,9 @@
         link1080p: "",
         link4k: "",
         samplevideo: "",
-        categories: ["recent", "action", "thriller"]
+        categories: ["recent", "action", "thriller","dubbed"]
         
       },
-
-
-     
 
        {
         title: "Retro (2025) Tamil HQ Print [720p,1080p,4k]",
@@ -254,6 +281,23 @@
         categories: ["recent", "action"]
         
       },
+       {
+      title: "Gangers (2025) Tamil HQ Print",
+      image: "gangers.jpeg",
+      link720p: "https://link.vipurl.in/gmAC",
+      link1080p:"https://link.vipurl.in/3UZTJo1K",
+      link4k:"https://link.vipurl.in/HkM8",
+      categories: [ "recent","comedy"]
+    },   
+    {
+      title: "Sumo (2025) Tamil HQ Print",
+      image: "sumo.jpeg",
+      link720p: "https://link.vipurl.in/I8xf",
+      link1080p:"https://link.vipurl.in/SHZaVD",
+      link4k:"https://link.vipurl.in/6mhy",
+      categories: ["recent","comedy"]
+    },   
+
       {
         title: "Good Bad Ugly (2025) Tamil HD [720p,1080p,4k]",
         image: "gbu.jpeg",
@@ -265,7 +309,6 @@
         categories: ["recent", "action"]
         
       },
-          
 
       {
         title: "Test (2025) HD (720p,1080p,4k quality) Tamil Movie ",
@@ -305,7 +348,7 @@
         link720p: "https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=134111&key=cea7d3c46e4110fec852d7bbf58b45f4",
         link1080p: "",
         link4k: "", 
-        categories: ["comedy"]
+        categories: ["comedy", "web"]
       },
      {
         title: "L2 Empuraan (2025) PRE-HD  (720p,1080p,4k quality)  Tamil Movie",
@@ -313,7 +356,7 @@
         link720p: "https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=133988&key=c4353bedb57571542c23318b0fe9b99a",
         link1080p: "https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=133988&key=c4353bedb57571542c23318b0fe9b99a",
         link4k: "https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=133982&key=73a9870b11a94f8eeaec44f1d516e51f",
-        categories: ["recent", "action", "thriller"]
+        categories: ["recent", "action", "thriller","dubbed"]
       },
       {
         title: "Aghathiyaa (2025) HD (720p,1080p,4k quality) Tamil Movie",
@@ -329,7 +372,7 @@
         link720p: "https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=133943&key=025799334d078b1b7c44ca4527e2afd1",
         link1080p: "https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=133941&key=11e0faec3b6cd4eab859c07449ab9dee",
         link4k: "https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=133942&key=e68d864d595d8cbbde28a7786ed37e17",
-        categories: ["comedy"]
+        categories: ["comedy","dubbed"]
       },
      {
         title: "kingston (2025) HD  (720p,1080p,4k quality) Tamil Movie",
@@ -353,7 +396,7 @@
         link720p: "https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=133598&key=6dbf173093e155efeb68077d753632ed",
         link1080p: "https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=133602&key=a5c9368b9d5053c10e330b26524c5189",
         link4k: "https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=133583&key=5055dc929eb13ec989259b49f901c29b",
-        categories: [ "action", "thriller"]
+        categories: [ "action", "thriller","dubbed"]
       },
     {
       title: "Leg Piece (2025) Tamil HD- [4K, 1080p & 720p]",
@@ -401,7 +444,7 @@
       link720p: "https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=133299&key=2a79fa5562a6d92811d574eff4027334",
       link1080p:"https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=133300&key=aeefa7b3a5918765df0732009318db9e",
       link4k:"https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=133338&key=fc87a10cae283d37f26b9d78d1bb5434",
-      categories: ["action"]
+      categories: ["action","dubbed"]
     },
     {
       title: "Thandel (2025) TRUE HD  Tamil Movie [720p,1080p,4k]",
@@ -409,7 +452,7 @@
       link720p: "https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=132857&key=0d1bd4566bbe586f397eaf4fe44310a2",
       link1080p:"https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=132858&key=9783124e4912599e7b29be9868e3ab28",
       link4k:"https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=132810&key=672d9db7b1921611ba3cfd1a05fa8682",
-      categories: ["romantic", "action"]
+      categories: ["romantic", "action","dubbed"]
     },
     {
       title: "Kuzhanthaigal Munnetra Kazhagam (2025) TRUE HD Tamil Movie",
@@ -435,14 +478,55 @@
       link4k:"https://www.1tamilmv.day/applications/core/interface/file/attachment.php?id=131940&key=1c1e0f01f23c253f9c76b6d2101b71ed",
       categories: [ "action", "thriller"]
     },
-   
     {
-      title: "",
-      image: "",
+      title: "Suzhal 2 The Vortex (2025) EP(01-08)",
+      image: "suzhal2.jpeg",
       link720p: "",
       link1080p:"",
-      link4k:""
-    }
+      link4k:"",
+      categories: [ "action", "thriller","web"]
+    },
+    {
+      title: "Hit (2020) HD ",
+      image: "hit.jpeg",
+      link720p: "https://link.vipurl.in/rlIe9SG",
+      link1080p:"https://link.vipurl.in/Pijx",
+      link4k:"https://link.vipurl.in/EXH3l5sJ",
+      categories: [ "action", "thriller","old"]
+    },
+   
+    {
+      title: "Suzhal The Vortex (2022) EP(01-08)",
+      image: "suzhal.jpeg",
+      link720p: "",
+      link1080p:"",
+      link4k:"",
+      categories: [ "action", "thriller","web","old"]
+    },
+    {
+      title: "Hit The Second Case (2022) HD ",
+      image: "hitc2.jpeg",
+      link720p: "https://link.vipurl.in/Zzlmt",
+      link1080p:"https://link.vipurl.in/Rj3Qrx",
+      link4k:"https://link.vipurl.in/sEeOJ",
+      categories: [ "action", "thriller","old"]
+    },
+    {
+      title: "Vilangu (2022) EP",
+      image: "vilangu.jpeg",
+      link720p: "",
+      link1080p:"",
+      link4k:"",
+      categories: [ "action", "thriller","web","old"]
+    },
+    {
+      title: "Vadhandhi The Fable of Velonie (2022) EP",
+      image: "vadhandhi.jpej",
+      link720p: "",
+      link1080p:"",
+      link4k:"",
+      categories: [ "thriller","web","old"]
+    },
     ];
 
     const categoryIds = {
@@ -450,7 +534,10 @@
       action: "actionRow",
       comedy: "comedyRow",
       romantic: "romanticRow",
-      thriller: "thrillerRow"
+      thriller: "thrillerRow",
+      web: "webRow",
+      dubbed: "dubbedRow",
+      old: "oldRow"
     };
 
     function scrollRow(rowId, direction) {
