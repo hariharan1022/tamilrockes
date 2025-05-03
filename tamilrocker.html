@@ -3,16 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>SK Tamilrockers</title>
+  <title>SK TamilRockers</title>
   <style>
     body {
       margin: 0;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(to bottom, #0f0f0f, #1c1c1c);
-      color: #fff;
-      scroll-behavior: smooth;
+      background: #111;
+      color: white;
     }
-
     h1 {
       text-align: center;
       margin-top: 1rem;
@@ -24,83 +22,69 @@
       letter-spacing: 2px;
       text-shadow: 0 0 15px #00ffe1;
     }
-
     #searchInput {
       display: block;
       margin: 1rem auto;
-      padding: 0.6rem 1.2rem;
+      padding: 0.5rem 1rem;
       width: 80%;
       max-width: 400px;
       border-radius: 30px;
       border: none;
       font-size: 1rem;
-      background-color: #222;
+      background-color: #1c1c1c;
       color: white;
-      outline: none;
-      box-shadow: 0 0 10px rgba(0,255,255,0.2);
+      box-shadow: 0 0 5px #00ffe1;
     }
-
     h2 {
       margin-left: 20px;
       margin-top: 30px;
       color: #00ffe1;
+      
       padding-left: 10px;
       font-size: 1.5rem;
       text-shadow: 0 0 5px #00ffe1;
     }
-
     .movie-row {
       display: flex;
       overflow-x: auto;
       padding: 20px;
       gap: 15px;
-      scroll-snap-type: x mandatory;
     }
-
     .movie-row::-webkit-scrollbar {
       height: 8px;
     }
-
     .movie-row::-webkit-scrollbar-thumb {
-      background: #00ffe1;
+      background: #888;
       border-radius: 4px;
     }
-
     .movie-card {
       flex: 0 0 auto;
-      width: 160px;
+      width: 140px;
       cursor: pointer;
-      transition: transform 0.3s ease;
-      scroll-snap-align: start;
-      border-radius: 10px;
-      overflow: hidden;
     }
-
-    .movie-card:hover {
-      transform: scale(1.1);
-    }
-
     .movie-card img {
       width: 100%;
-      height: 240px;
-      object-fit: cover;
       border-radius: 10px;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 0 10px rgba(0,255,255,0.2);
+    }
+    .movie-card img:hover {
+      transform: scale(1.08);
+      box-shadow: 0 0 20px rgba(0,255,255,0.4);
     }
 
-    /* Movie Page */
     #moviePage {
       display: none;
       padding: 20px;
       text-align: center;
     }
-
     #moviePage img.main-poster {
-      width: 80%;
-      max-width: 400px;
-      border-radius: 12px;
-      box-shadow: 0 0 20px rgba(0,255,255,0.4);
+      width: 100px;
+      max-width: 50vw;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0, 255, 255, 0.4);
+      margin-bottom: 15px;
     }
-
     .btns {
       margin: 15px 0;
       display: flex;
@@ -108,24 +92,19 @@
       justify-content: center;
       gap: 10px;
     }
-
     .btn {
       padding: 10px 20px;
       border: none;
       border-radius: 25px;
       background: linear-gradient(45deg, #00ffe1, #0051ff);
-      color: #000;
+      color: black;
       font-weight: bold;
       cursor: pointer;
-      transition: 0.3s ease;
-      box-shadow: 0 0 10px #00ffe1;
+      transition: transform 0.2s;
     }
-
     .btn:hover {
-      background: linear-gradient(45deg, #0051ff, #00ffe1);
       transform: scale(1.05);
     }
-
     iframe {
       width: 90%;
       max-width: 560px;
@@ -134,30 +113,24 @@
       border-radius: 10px;
       margin: 1rem 0;
     }
-
     .screenshots {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
       gap: 10px;
     }
-
     .screenshots img {
       width: 200px;
       border-radius: 10px;
-      box-shadow: 0 0 10px rgba(255,255,255,0.1);
     }
-
     .back-btn {
       margin-top: 20px;
     }
   </style>
 </head>
 <body>
-
-  <h1>🎬 SK Tamilrockers</h1>
-  <input type="text" id="searchInput" placeholder="Search movies..." onkeyup="searchMovies()">
-
+  <h1>🎬 SK TamilRockers</h1>
+  <input type="text" id="searchInput" placeholder="Search movies...">
   <div id="mainPage">
     <h2>Recent Movies</h2>
     <div class="movie-row" id="recent"></div>
@@ -171,14 +144,14 @@
     <h2>Romantic Movies</h2>
     <div class="movie-row" id="romantic"></div>
 
-    <h2>Crime & Thriller</h2>
+    <h2>Crime & Thriller Movies</h2>
     <div class="movie-row" id="thriller"></div>
 
     <h2>Old Movies</h2>
     <div class="movie-row" id="old"></div>
 
     <h2>Web Series</h2>
-    <div class="movie-row" id="webs"></div>
+    <div class="movie-row" id="web"></div>
 
     <h2>Tamil Dubbed Movies</h2>
     <div class="movie-row" id="dubbed"></div>
@@ -186,11 +159,13 @@
 
   <div id="moviePage">
     <h2 id="movieTitle"></h2>
-    <img id="mainPoster" src="" alt="Poster">
+    <img id="mainPoster" class="main-poster" src="" alt="Poster">
     <p id="movieDesc"></p>
 
     <div id="videoContainer"></div>
+
     <div class="btns" id="downloadButtons"></div>
+
     <div class="screenshots" id="screenshotsContainer"></div>
 
     <button class="btn back-btn" onclick="goBack()">⬅ Back</button>
@@ -198,7 +173,7 @@
 
   <script>
     const movies = [
-      {
+    {
         title: " Tourists Family (2025) Tamil HQ Print [720p,1080p,4k]",
         image: "family.jpg",
         description: ["A quirky Sri Lankan family seeking a fresh start in India transforms a disconnected neighborhood into a vibrant community with their infectious love and kindness.Director - Abishan Jeevinth  Writer - Abishan Jeevinth"],
@@ -483,25 +458,18 @@
     },
     ];
 
-    function loadMovies(filtered = null) {
-      const categories = ["recent", "action", "comedy", "romantic", "dubbed", "old", "web"];
+    function loadMovies() {
+      const categories = ["recent", "action", "comedy", "romantic", "thriller", "old", "web", "dubbed"];
       categories.forEach(cat => {
         const row = document.getElementById(cat);
         row.innerHTML = '';
-        const data = filtered || movies;
-        data.filter(m => m.categories.includes(cat)).forEach((movie, index) => {
+        movies.filter(m => m.categories.includes(cat)).forEach((movie, index) => {
           const card = document.createElement("div");
           card.className = "movie-card";
-          card.innerHTML = `<img src="${movie.image}" alt="${movie.title}" onclick="showMovie(${movies.indexOf(movie)})">`;
+          card.innerHTML = `<img src="${movie.image}" alt="${movie.title}" onclick="showMovie(${index})">`;
           row.appendChild(card);
         });
       });
-    }
-
-    function searchMovies() {
-      const query = document.getElementById("searchInput").value.toLowerCase();
-      const filtered = movies.filter(m => m.title.toLowerCase().includes(query));
-      loadMovies(filtered);
     }
 
     function showMovie(index) {
@@ -538,4 +506,5 @@
   </script>
 </body>
 </html>
+
 
