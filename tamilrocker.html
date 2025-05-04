@@ -73,7 +73,6 @@
       transform: scale(1.08);
       box-shadow: 0 0 20px rgba(0,255,255,0.4);
     }
-
     #moviePage {
       display: none;
       padding: 20px;
@@ -154,11 +153,11 @@
   </div>
 
   <script>
-    const movies = [
+   const movies = [
        {
         title: " Tourists Family (2025) Tamil HQ Print [720p,1080p,4k]",
         image: "family.jpg",
-        screenshots: "",
+        screenshots: "https://ups2up.fun/embed-azud2v03y14w.html",
         link720p: "https://link.vipurl.in/NKAx",
         link1080p: "https://link.vipurl.in/xMqHlkzI",
         link4k: "https://link.vipurl.in/iVtB",
@@ -171,11 +170,11 @@
         title: " Hit 3 (2025) Tamil PRE-HD Print [720p,1080p,4k]",
         image: "HIT3.jpeg",
         screenshots: ["hit1.jpeg","hit2.jpeg","hit4.jpeg","hit5.jpeg",],
-      
+        samplevideo: "https://ups2up.fun/embed-lyjfikxnvnth.html",
         link720p: "https://linkpays.in/a4MXA",
         link1080p: "https://link.vipurl.in/v6X1mDjS",
         link4k: "https://link.vipurl.in/fGv2OGrG",
-        samplevideo: "",
+      
         categories: ["recent", "action", "thriller","dubbed"]
         
       },
@@ -471,10 +470,12 @@
       document.getElementById("moviePage").style.display = "block";
       document.getElementById("movieTitle").textContent = m.title;
       document.getElementById("mainPoster").src = m.image;
-      document.getElementById("movieDesc").textContent = m.description;
+      document.getElementById("movieDesc").textContent = m.description || "";
 
       const video = document.getElementById("videoContainer");
-      video.innerHTML = m.linkv ? `<iframe src="${m.linkv}?rel=0" allowfullscreen></iframe>` : '';
+      video.innerHTML = m.samplevideo
+        ? `<iframe src="${m.samplevideo}" allowfullscreen></iframe>`
+        : '';
 
       const btns = document.getElementById("downloadButtons");
       btns.innerHTML = '';
@@ -484,7 +485,7 @@
 
       const shots = document.getElementById("screenshotsContainer");
       shots.innerHTML = '';
-      m.screenshots.forEach(src => {
+      (m.screenshots || []).forEach(src => {
         shots.innerHTML += `<img src="${src}">`;
       });
     }
