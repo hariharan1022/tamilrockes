@@ -11,17 +11,31 @@
       background: #111;
       color: white;
     }
+    header { /* Added a header to group logo and title */
+      display: flex;
+      align-items: center;
+      justify-content: center; /* Center the entire header content */
+      margin-top: 1rem;
+      position: relative; /* For absolute positioning of logo */
+    }
+    #siteLogo { /* Style for the new logo image */
+      position: absolute;
+      left: 20px; /* Adjust as needed for spacing from the left */
+      top: 50%;
+      transform: translateY(-50%);
+      height: 60px; /* Adjust height as needed */
+      width: auto;
+    }
     h1 {
       text-align: center;
-      margin-top: 1rem;
       font-size: 2.5rem;
       background: linear-gradient( #ff0000);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       font-weight: 800;
       letter-spacing: 2px;
-     
-      
+      margin: 0; /* Remove default margin to align with logo */
+      padding-left: 80px; /* Add padding to make space for the logo */
     }
 
     @keyframes neonGlow {
@@ -59,7 +73,7 @@
       color: red;
       padding-left: 10px;
       font-size: 1.5rem;
-      
+
     }
     .movie-row {
       display: flex;
@@ -95,6 +109,7 @@
       display: none;
       padding: 20px;
       text-align: center;
+      position: relative; /* Added for back button positioning */
     }
     #moviePage img.main-poster {
       width: 500px;
@@ -227,7 +242,7 @@
       transition: background-color 0.2s ease;
     }
 
-   
+
 
     .modal-link-info {
       flex: 1;
@@ -271,10 +286,26 @@
       padding-top: 15px;
       border-top: 1px dashed #333;
     }
+
+    /* Back button style */
+    #backButton {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      background: none;
+      border: none;
+      color: #ff0000;
+      font-size: 2rem;
+      cursor: pointer;
+      z-index: 10; /* Ensure it's above other elements */
+    }
   </style>
 </head>
 <body>
-  <h1>SK TamilRockers</h1>
+  <header>
+    <img src="sk logo.jpeg" alt="SK Logo" id="siteLogo">
+    <h2>SK TamilRockers</h2>
+  </header>
   <input type="text" id="searchInput" placeholder="Search movies...">
   <div id="mainPage">
     <h2>Recent Movies</h2><div class="movie-row" id="recent"></div>
@@ -288,6 +319,7 @@
   </div>
 
   <div id="moviePage">
+    <button id="backButton" onclick="goBackToMainPage()">&#8592;</button>
     <h2 id="movieTitle"></h2>
     <img id="mainPoster" class="main-poster" src="" alt="Poster">
     <p id="movieDesc"></p>
@@ -312,332 +344,537 @@
       </p>
     </div>
   </div>
+  <script>
 
- <script>
-    const movies = [
-        {
-            title: "Tourists Family (2025) Tamil HQ Print [720p,1080p,4k]",
-            image: "family.jpg",
-            screenshots: [], // No screenshots provided in original, assuming empty array is fine
-            samplevideo: "https://ups2up.fun/embed-azud2v03y14w.html",
-            categories: ["recent", "comedy"]
-        },
-        {
-            title: "Hit 3 (2025) Tamil PRE-HD Print [720p,1080p,4k]",
-            image: "HIT3.jpeg",
-            screenshots: ["hit1.jpeg", "hit2.jpeg", "hit4.jpeg", "hit5.jpeg"],
-            samplevideo: "https://ups2up.fun/embed-lyjfikxnvnth.html",
-            categories: ["recent", "action", "thriller", "dubbed"]
-        },
-        {
-            title: "Retro (2025) Tamil HQ Print [720p,1080p,4k]",
-            image: "retro-3.jpg",
-            screenshots: ["retro1.png", "retro2.png", "retro3.png", "retro4.png", "retro5.png"],
-            samplevideo: "",
-            categories: ["recent", "action"]
-        },
-        {
-            title: "Gangers (2025) Tamil HQ Print",
-            image: "gangers.jpeg",
-            categories: ["recent", "comedy"]
-        },
-        {
-            title: "Sumo (2025) Tamil HQ Print",
-            image: "sumo.jpeg",
-            categories: ["recent", "comedy"]
-        },
-        {
-            title: "Good Bad Ugly (2025) Tamil HD [720p,1080p,4k]",
-            image: "gbu.jpeg",
-            screenshots: ["GBU-29.md.png", "GBU-18.md.png", "GBU-14.md.png", "GBU-19.md.png", "GBU-13.md.png", "GBU-20.md.png", "GBU-17.md.png"],
-            samplevideo: "gbu.mp4",
-            categories: ["recent", "action"]
-        },
-        {
-            title: "Court (2025) Tamil HD Print",
-            image: "court.jpeg",
-            categories: ["recent", "thriller"]
-        },
-        {
-            title: "Test (2025) HD (720p,1080p,4k quality) Tamil Movie ",
-            image: "test.jpeg",
-            categories: ["action"]
-        },
-        {
-            title: "Veera Dheera Sooran (2025) PRE-HD (720p,1080p,4k quality) Tamil Movie ",
-            image: "veeran.jpeg",
-            categories: ["recent", "action"]
-        },
-        {
-            title: "murmur (2025) HD Tamil Movie (720p,1080p,4k quality) ",
-            image: "murmur.jpeg",
-            categories: ["thriller"]
-        },
-        {
-            title: "The Door (2025) HQ Real PRE-DVD (720p,1080p,4k quality) Tamil Movie",
-            image: "door.jpeg",
-            categories: ["thriller"]
-        },
-        {
-            title: "Seruppugal Jaakirathai Season 1 (2025) HD (720p,1080p,4k quality) Tamil Web Series",
-            image: "seruppu.jpeg",
-            categories: ["comedy", "web"]
-        },
-        {
-            title: "L2 Empuraan (2025) PRE-HD (720p,1080p,4k quality) Tamil Movie",
-            image: "lucifar.jpeg",
-            categories: ["recent", "action", "thriller", "dubbed"]
-        },
-        {
-            title: "Aghathiyaa (2025) HD (720p,1080p,4k quality) Tamil Movie",
-            image: "aghathiyaa.jpeg",
-            categories: ["recent", "thriller"]
-        },
-        {
-            title: "Mufasa: The Lion King (2024) HD (720p,1080p,4k quality) Tamil Dubbed Movie",
-            image: "mufasa.jpeg",
-            categories: ["comedy", "dubbed"]
-        },
-        {
-            title: "kingston (2025) HD (720p,1080p,4k quality) Tamil Movie",
-            image: "kingstan.jpeg",
-            categories: ["recent", "thriller"]
-        },
-        {
-            title: "Dragon (2025) HD (720p,1080p,4k quality) Tamil Movie",
-            image: "drogan.jpeg",
-            categories: ["recent", "action", "romantic"]
-        },
-        {
-            title: "Officer on Duty (2025) HD (720p,1080p,4k quality) Tamil Movie",
-            image: "officer.jpeg",
-            categories: ["action", "thriller", "dubbed"]
-        },
-        {
-            title: "Leg Piece (2025) Tamil HD- [4K, 1080p & 720p]",
-            image: "lek pice.jpeg",
-            categories: ["comedy"]
-        },
-        {
-            title: "Sweetheart (2025) HQ Real PRE-DVD Tamil Movie [720p,1080p,4k]",
-            image: "sweetheart.jpeg",
-            categories: ["romantic"]
-        },
-        {
-            title: ".Badava (2025) HQ Real PRE-DVD Tamil Movie [720p,1080p,4k]",
-            image: "badava.jpeg",
-            categories: ["comedy"]
-        },
-        {
-            title: "Perusu (2025) HQ Real PRE-DVD Tamil Movie ( Clean Best Audio ) [720p,1080p,4k]",
-            image: "perusu.jpeg",
-            categories: ["comedy"]
-        },
-        {
-            title: "Sabdham (2025) HD Tamil Movie [720p,1080p,4k]",
-            image: "sabtham.jpeg",
-            categories: ["thriller"]
-        },
-        {
-            title: "Ramam Raghavam (2025) HD Tamil Movie [720p,1080p,4k]",
-            image: "samuthragani.jpeg",
-            categories: ["action", "dubbed"]
-        },
-        {
-            title: "Thandel (2025) TRUE HD Tamil Movie [720p,1080p,4k]",
-            image: "tandel.jpeg",
-            categories: ["romantic", "action", "dubbed"]
-        },
-        {
-            title: "Kuzhanthaigal Munnetra Kazhagam (2025) TRUE HD Tamil Movie",
-            image: "kmk.jpeg",
-            categories: ["comedy"]
-        },
-        {
-            title: "Vidaamuyarchi (2025) TRUE HD Tamil Movie [720p,1080p,4k]",
-            image: "vidaamuyachi.jpeg",
-            categories: ["action"]
-        },
-        {
-            title: ".Daaku Maharaaj (2025) HD Tamil Movie [720p,1080p,4k]",
-            image: "daaku.jpeg",
-            categories: ["action", "thriller"]
-        },
-        {
-            title: "Suzhal 2 The Vortex (2025) EP(01-08)",
-            image: "suzhal2.jpeg",
-            categories: ["action", "thriller", "web"]
-        },
-        {
-            title: "Hit (2020) HD ",
-            image: "hit.jpeg",
-            categories: ["action", "thriller", "old"]
-        },
-        {
-            title: "Suzhal The Vortex (2022) EP(01-08)",
-            image: "suzhal.jpeg",
-            categories: ["action", "thriller", "web", "old"]
-        },
-        {
-            title: "Hit The Second Case (2022) HD ",
-            image: "hitc2.jpeg",
-            categories: ["action", "thriller", "old"]
-        },
-        {
-            title: "Vilangu (2022) EP",
-            image: "vilangu.jpeg",
-            categories: ["action", "thriller", "web", "old"]
-        },
-        {
-            title: "Vadhandhi The Fable of Velonie (2022) EP",
-            image: "vadhandhi.jpeg",
-            categories: ["thriller", "web", "old"]
-        },
-    ];
+ const movies = [
+    {
+        title: "Tourists Family (2025) Tamil HQ Print [720p,1080p,4k]",
+        image: "family.jpg",
+        categories: ["recent", "comedy"]
+    },
+    {
+        title: "Hit 3 (2025) Tamil PRE-HD Print [720p,1080p,4k]",
+        image: "HIT3.jpeg",
+        categories: ["recent", "action", "thriller", "dubbed"]
+    },
+    {
+        title: "Retro (2025) Tamil HQ Print [720p,1080p,4k]",
+        image: "retro-3.jpg",
+        categories: ["recent", "action"]
+    },
+    {
+        title: "Gangers (2025) Tamil HQ Print",
+        image: "gangers.jpeg",
+        categories: ["recent", "comedy"]
+    },
+    {
+        title: "Sumo (2025) Tamil HQ Print",
+        image: "sumo.jpeg",
+        categories: ["recent", "comedy"]
+    },
+    {
+        title: "Good Bad Ugly (2025) Tamil HD [720p,1080p,4k]",
+        image: "gbu.jpeg",
+        categories: ["recent", "action"]
+    },
+    {
+        title: "Court (2025) Tamil HD Print",
+        image: "court.jpeg",
+        categories: ["recent", "thriller"]
+    },
+    {
+        title: "Test (2025) HD (720p,1080p,4k quality) Tamil Movie ",
+        image: "test.jpeg",
+        categories: ["action"]
+    },
+    {
+        title: "Veera Dheera Sooran (2025) PRE-HD (720p,1080p,4k quality) Tamil Movie ",
+        image: "veeran.jpeg",
+        categories: ["recent", "action"]
+    },
+    {
+        title: "murmur (2025) HD Tamil Movie (720p,1080p,4k quality) ",
+        image: "murmur.jpeg",
+        categories: ["thriller"]
+    },
+    {
+        title: "The Door (2025) HQ Real PRE-DVD (720p,1080p,4k quality) Tamil Movie",
+        image: "door.jpeg",
+        categories: ["thriller"]
+    },
+    {
+        title: "Seruppugal Jaakirathai Season 1 (2025) HD (720p,1080p,4k quality) Tamil Web Series",
+        image: "seruppu.jpeg",
+        categories: ["comedy", "web"]
+    },
+    {
+        title: "L2 Empuraan (2025) PRE-HD (720p,1080p,4k quality) Tamil Movie",
+        image: "lucifar.jpeg",
+        categories: ["recent", "action", "thriller", "dubbed"]
+    },
+    {
+        title: "Aghathiyaa (2025) HD (720p,1080p,4k quality) Tamil Movie",
+        image: "aghathiyaa.jpeg",
+        categories: ["recent", "thriller"]
+    },
+    {
+        title: "Mufasa: The Lion King (2024) HD (720p,1080p,4k quality) Tamil Dubbed Movie",
+        image: "mufasa.jpeg",
+        categories: ["comedy", "dubbed"]
+    },
+    {
+        title: "kingston (2025) HD (720p,1080p,4k quality) Tamil Movie",
+        image: "kingstan.jpeg",
+        categories: ["recent", "thriller"]
+    },
+    {
+        title: "Dragon (2025) HD (720p,1080p,4k quality) Tamil Movie",
+        image: "drogan.jpeg",
+        categories: ["recent", "action", "romantic"]
+    },
+    {
+        title: "Officer on Duty (2025) HD (720p,1080p,4k quality) Tamil Movie",
+        image: "officer.jpeg",
+        categories: ["action", "thriller", "dubbed"]
+    },
+    {
+        title: "Leg Piece (2025) Tamil HD- [4K, 1080p & 720p]",
+        image: "lek pice.jpeg",
+        categories: ["comedy"]
+    },
+    {
+        title: "Sweetheart (2025) HQ Real PRE-DVD Tamil Movie [720p,1080p,4k]",
+        image: "sweetheart.jpeg",
+        categories: ["romantic"]
+    },
+    {
+        title: ".Badava (2025) HQ Real PRE-DVD Tamil Movie [720p,1080p,4k]",
+        image: "badava.jpeg",
+        categories: ["comedy"]
+    },
+    {
+        title: "Perusu (2025) HQ Real PRE-DVD Tamil Movie ( Clean Best Audio ) [720p,1080p,4k]",
+        image: "perusu.jpeg",
+        categories: ["comedy"]
+    },
+    {
+        title: "Sabdham (2025) HD Tamil Movie [720p,1080p,4k]",
+        image: "sabtham.jpeg",
+        categories: ["thriller"]
+    },
+    {
+        title: "Ramam Raghavam (2025) HD Tamil Movie [720p,1080p,4k]",
+        image: "samuthragani.jpeg",
+        categories: ["action", "dubbed"]
+    },
+    {
+        title: "Thandel (2025) TRUE HD Tamil Movie [720p,1080p,4k]",
+        image: "tandel.jpeg",
+        categories: ["romantic", "action", "dubbed"]
+    },
+    {
+        title: "Kuzhanthaigal Munnetra Kazhagam (2025) TRUE HD Tamil Movie",
+        image: "kmk.jpeg",
+        categories: ["comedy"]
+    },
+    {
+        title: "Vidaamuyarchi (2025) TRUE HD Tamil Movie [720p,1080p,4k]",
+        image: "vidaamuyachi.jpeg",
+        categories: ["action"]
+    },
+    {
+        title: ".Daaku Maharaaj (2025) HD Tamil Movie [720p,1080p,4k]",
+        image: "daaku.jpeg",
+        categories: ["action", "thriller"]
+    },
+    {
+        title: "Suzhal 2 The Vortex (2025) EP(01-08)",
+        image: "suzhal2.jpeg",
+        categories: ["action", "thriller", "web"]
+    },
+    {
+        title: "Hit (2020) HD ",
+        image: "hit.jpeg",
+        categories: ["action", "thriller", "old"]
+    },
+    {
+        title: "Suzhal The Vortex (2022) EP(01-08)",
+        image: "suzhal.jpeg",
+        categories: ["action", "thriller", "web", "old"]
+    },
+    {
+        title: "Hit The Second Case (2022) HD ",
+        image: "hitc2.jpeg",
+        categories: ["action", "thriller", "old"]
+    },
+    {
+        title: "Vilangu (2022) EP",
+        image: "vilangu.jpeg",
+        categories: ["action", "thriller", "web", "old"]
+    },
+    {
+        title: "Vadhandhi The Fable of Velonie (2022) EP",
+        image: "vadhandhi.jpeg",
+        categories: ["thriller", "web", "old"]
+    },
+];
 
-    // New array to store the download link details for the modal
-    // Only include movies that have *different* download links than the default
-    const movieDownloadDetails = {
-        // Example if "Tourists Family" had unique links
-        // "Tourists Family (2025) Tamil HQ Print [720p,1080p,4k]": [
-        //   { quality: 'Custom 4K', size: '10 GB', telegramLink: 'https://t.me/custom_tamil_mob' },
-        // ],
+// New array to store the download link details for the modal
+// Only include movies that have different download links than the default
+
+ const movieDownloadDetails = {
+      " Tourists Family (2025) Tamil HQ Print [720p,1080p,4k]": [
+        { quality: '4K UHD', size: '8.2 GB', telegramLink: 'https://t.me/tamil_new_mob' },
+        { quality: '1080p', size: '2.1 GB', telegramLink: 'https://t.me/tamil_new_mob' },
+        { quality: '720p', size: '1.2 GB', telegramLink: 'https://t.me/tamil_new_mob' },
+        { quality: '480p', size: '800 MB', telegramLink: 'https://t.me/tamil_new_mob' }
+      ],
+      " Hit 3 (2025) Tamil PRE-HD Print [720p,1080p,4k]": [
+        { quality: '4K UHD', size: '8.2 GB', telegramLink: 'https://t.me/tamil_new_mob' },
+        { quality: '1080p', size: '2.1 GB', telegramLink: 'https://t.me/tamil_new_mob' },
+        { quality: '720p', size: '1.2 GB', telegramLink: 'https://t.me/tamil_new_mob' },
+        { quality: '480p', size: '800 MB', telegramLink: 'https://t.me/tamil_new_mob' }
+      ],
+      "Retro (2025) Tamil HQ Print [720p,1080p,4k]": [
+        { quality: '4K UHD', size: '8.2 GB', telegramLink: 'https://t.me/tamil_new_mob' },
+        { quality: '1080p', size: '2.1 GB', telegramLink: 'https://t.me/tamil_new_mob' },
+        { quality: '720p', size: '1.2 GB', telegramLink: 'https://t.me/tamil_new_mob' },
+        { quality: '480p', size: '800 MB', telegramLink: 'https://t.me/tamil_new_mob' }
+      ],
+      "Gangers (2025) Tamil HQ Print": [
+        { quality: '4K UHD', size: '8.2 GB', telegramLink: 'https://t.me/tamil_new_mob' },
+        { quality: '1080p', size: '2.1 GB', telegramLink: 'https://t.me/tamil_new_mob' },
+        { quality: '720p', size: '1.2 GB', telegramLink: 'https://t.me/tamil_new_mob' },
+        { quality: '480p', size: '800 MB', telegramLink: 'https://t.me/tamil_new_mob' }
+      ],
+      "Sumo (2025) Tamil HQ Print": [
+        { quality: '4K UHD', size: '8.2 GB', telegramLink: 'https://t.me/tamil_new_mob' },
+        { quality: '1080p', size: '2.1 GB', telegramLink: 'https://t.me/tamil_new_mob' },
+        { quality: '720p', size: '1.2 GB', telegramLink: 'https://t.me/tamil_new_mob' },
+        { quality: '480p', size: '800 MB', telegramLink: 'https://t.me/tamil_new_mob' }
+      ],
+      "Good Bad Ugly (2025) Tamil HD [720p,1080p,4k]": [
+        { quality: '4K UHD', size: '8.2 GB', telegramLink: 'https://t.me/tamil_new_mob' },
+        { quality: '1080p', size: '2.1 GB', telegramLink: 'https://t.me/tamil_new_mob' },
+        { quality: '720p', size: '1.2 GB', telegramLink: 'https://t.me/tamil_new_mob' },
+        { quality: '480p', size: '800 MB', telegramLink: 'https://t.me/tamil_new_mob' }
+      ],
+      "Court (2025) Tamil HD Print": [
+        { quality: '4K UHD', size: '8.2 GB', telegramLink: 'https://t.me/tamil_new_mob' },
+        { quality: '1080p', size: '2.1 GB', telegramLink: 'https://t.me/tamil_new_mob' },
+        { quality: '720p', size: '1.2 GB', telegramLink: 'https://t.me/tamil_new_mob' },
+        { quality: '480p', size: '800 MB', telegramLink: 'https://t.me/tamil_new_mob' }
+      ],
+      "Test (2025) HD (720p,1080p,4k quality) Tamil Movie ": [
+        { quality: '4K UHD', size: '8.2 GB', telegramLink: 'https://t.me/tamil_new_mob' },
+        { quality: '1080p', size: '2.1 GB', telegramLink: 'https://t.me/tamil_new_mob' },
+        { quality: '720p', size: '1.2 GB', telegramLink: 'https://t.me/tamil_new_mob' },
+        { quality: '480p', size: '800 MB', telegramLink: 'https://t.me/tamil_new_mob' }
+      ],
+      "Veera Dheera Sooran (2025) PRE-HD (720p,1080p,4k quality) Tamil Movie ": [
+        { quality: '4K UHD', size: '8.2 GB', telegramLink: 'https://t.me/tamil_new_mob' },
+        { quality: '1080p', size: '2.1 GB', telegramLink: 'https://t.me/tamil_new_mob' },
+        { quality: '720p', size: '1.2 GB', telegramLink: 'https://t.me/tamil_new_mob' },
+        { quality: '480p', size: '800 MB', telegramLink: 'https://t.me/tamil_new_mob' }
+      ],
+      "murmur (2025) HD Tamil Movie  (720p,1080p,4k quality) ": [
+        { quality: '4K UHD', size: '8.2 GB', telegramLink: 'https://t.me/tamil_new_mob' },
+        { quality: '1080p', size: '2.1 GB', telegramLink: 'https://t.me/tamil_new_mob' },
+        { quality: '720p', size: '1.2 GB', telegramLink: 'https://t.me/tamil_new_mob' },
+        { quality: '480p', size: '800 MB', telegramLink: 'https://t.me/tamil_new_mob' }
+      ],
+      "The Door (2025) HQ Real PRE-DVD  (720p,1080p,4k quality)  Tamil Movie": [
+        { quality: '4K UHD', size: '8.2 GB', telegramLink: 'https://t.me/tamil_new_mob' },
+        { quality: '1080p', size: '2.1 GB', telegramLink: 'https://t.me/tamil_new_mob' },
+        { quality: '720p', size: '1.2 GB', telegramLink: 'https://t.me/tamil_new_mob' },
+        { quality: '480p', size: '800 MB', telegramLink: 'https://t.me/tamil_new_mob' }
+      ],
+      "Seruppugal Jaakirathai Season 1 (2025) HD  (720p,1080p,4k quality)  Tamil Web Series": [
+        { quality: '4K UHD', size: '8.2 GB', telegramLink: 'https://t.me/tamil_new_mob' },
+        { quality: '1080p', size: '2.1 GB', telegramLink: 'https://t.me/tamil_new_mob' },
+        { quality: '720p', size: '1.2 GB', telegramLink: 'https://t.me/tamil_new_mob' },
+        { quality: '480p', size: '800 MB', telegramLink: 'https://t.me/tamil_new_mob' }
+      ],
+      "L2 Empuraan (2025) PRE-HD  (720p,1080p,4k quality)  Tamil Movie": [
+        { quality: '4K UHD', size: '8.2 GB', telegramLink: 'https://t.me/tamil_new_mob' },
+        { quality: '1080p', size: '2.1 GB', telegramLink: 'https://t.me/tamil_new_mob' },
+        { quality: '720p', size: '1.2 GB', telegramLink: 'https://t.me/tamil_new_mob' },
+        { quality: '480p', size: '800 MB', telegramLink: 'https://t.me/tamil_new_mob' }
+      ],
+      "Aghathiyaa (2025) HD (720p,1080p,4k quality) Tamil Movie": [
+        { quality: '4K UHD', size: '8.2 GB', telegramLink: 'https://t.me/tamil_new_mob' },
+        { quality: '1080p', size: '2.1 GB', telegramLink: 'https://t.me/tamil_new_mob' },
+        { quality: '720p', size: '1.2 GB', telegramLink: 'https://t.me/tamil_new_mob' },
+        { quality: '480p', size: '800 MB', telegramLink: 'https://t.me/tamil_new_mob' }
+      ],
+      "Mufasa: The Lion King (2024) HD  (720p,1080p,4k quality)  Tamil Dubbed Movie": [
+        { quality: '4K UHD', size: '8.2 GB', telegramLink: 'https://t.me/tamil_new_mob' },
+        { quality: '1080p', size: '2.1 GB', telegramLink: 'https://t.me/tamil_new_mob' },
+        { quality: '720p', size: '1.2 GB', telegramLink: 'https://t.me/tamil_new_mob' },
+        { quality: '480p', size: '800 MB', telegramLink: 'https://t.me/tamil_new_mob' }
+      ],
+      "kingston (2025) HD  (720p,1080p,4k quality) Tamil Movie": [
+        { quality: '4K UHD', size: '8.2 GB', telegramLink: 'https://t.me/tamil_new_mob' },
+        { quality: '1080p', size: '2.1 GB', telegramLink: 'https://t.me/tamil_new_mob' },
+        { quality: '720p', size: '1.2 GB', telegramLink: 'https://t.me/tamil_new_mob' },
+        { quality: '480p', size: '800 MB', telegramLink: 'https://t.me/tamil_new_mob' }
+      ],
+      "Dragon (2025) HD  (720p,1080p,4k quality) Tamil Movie": [
+        { quality: '4K UHD', size: '8.2 GB', telegramLink: 'https://t.me/tamil_new_mob' },
+        { quality: '1080p', size: '2.1 GB', telegramLink: 'https://t.me/tamil_new_mob' },
+        { quality: '720p', size: '1.2 GB', telegramLink: 'https://t.me/tamil_new_mob' },
+        { quality: '480p', size: '800 MB', telegramLink: 'https://t.me/tamil_new_mob' }
+      ],
+      "Officer on Duty (2025) HD (720p,1080p,4k quality)  Tamil Movie": [
+        { quality: '4K UHD', size: '8.2 GB', telegramLink: 'https://t.me/tamil_new_mob' },
+        { quality: '1080p', size: '2.1 GB', telegramLink: 'https://t.me/tamil_new_mob' },
+        { quality: '720p', size: '1.2 GB', telegramLink: 'https://t.me/tamil_new_mob' },
+        { quality: '480p', size: '800 MB', telegramLink: 'https://t.me/tamil_new_mob' }
+      ],
+      "Leg Piece (2025) Tamil HD- [4K, 1080p & 720p]": [
+        { quality: '4K UHD', size: '8.2 GB', telegramLink: 'https://t.me/tamil_new_mob' },
+        { quality: '1080p', size: '2.1 GB', telegramLink: 'https://t.me/tamil_new_mob' },
+        { quality: '720p', size: '1.2 GB', telegramLink: 'https://t.me/tamil_new_mob' },
+        { quality: '480p', size: '800 MB', telegramLink: 'https://t.me/tamil_new_mob' }
+      ],
+      "Sweetheart (2025) HQ Real PRE-DVD Tamil Movie [720p,1080p,4k]": [
+        { quality: '4K UHD', size: '8.2 GB', telegramLink: 'https://t.me/tamil_new_mob' },
+        { quality: '1080p', size: '2.1 GB', telegramLink: 'https://t.me/tamil_new_mob' },
+        { quality: '720p', size: '1.2 GB', telegramLink: 'https://t.me/tamil_new_mob' },
+        { quality: '480p', size: '800 MB', telegramLink: 'https://t.me/tamil_new_mob' }
+      ],
+      ".Badava (2025) HQ Real PRE-DVD Tamil Movie [720p,1080p,4k]": [
+        { quality: '4K UHD', size: '8.2 GB', telegramLink: 'https://t.me/tamil_new_mob' },
+        { quality: '1080p', size: '2.1 GB', telegramLink: 'https://t.me/tamil_new_mob' },
+        { quality: '720p', size: '1.2 GB', telegramLink: 'https://t.me/tamil_new_mob' },
+        { quality: '480p', size: '800 MB', telegramLink: 'https://t.me/tamil_new_mob' }
+      ],
+      "Perusu (2025) HQ Real PRE-DVD  Tamil Movie  ( Clean Best Audio ) [720p,1080p,4k]": [
+        { quality: '4K UHD', size: '8.2 GB', telegramLink: 'https://t.me/tamil_new_mob' },
+        { quality: '1080p', size: '2.1 GB', telegramLink: 'https://t.me/tamil_new_mob' },
+        { quality: '720p', size: '1.2 GB', telegramLink: 'https://t.me/tamil_new_mob' },
+        { quality: '480p', size: '800 MB', telegramLink: 'https://t.me/tamil_new_mob' }
+      ],
+      "Sabdham (2025) HD Tamil Movie [720p,1080p,4k]": [
+        { quality: '4K UHD', size: '8.2 GB', telegramLink: 'https://t.me/tamil_new_mob' },
+        { quality: '1080p', size: '2.1 GB', telegramLink: 'https://t.me/tamil_new_mob' },
+        { quality: '720p', size: '1.2 GB', telegramLink: 'https://t.me/tamil_new_mob' },
+        { quality: '480p', size: '800 MB', telegramLink: 'https://t.me/tamil_new_mob' }
+      ],
+      "Ramam Raghavam (2025) HD Tamil Movie [720p,1080p,4k]": [
+        { quality: '4K UHD', size: '8.2 GB', telegramLink: 'https://t.me/tamil_new_mob' },
+        { quality: '1080p', size: '2.1 GB', telegramLink: 'https://t.me/tamil_new_mob' },
+        { quality: '720p', size: '1.2 GB', telegramLink: 'https://t.me/tamil_new_mob' },
+        { quality: '480p', size: '800 MB', telegramLink: 'https://t.me/tamil_new_mob' }
+      ],
+      "Thandel (2025) TRUE HD  Tamil Movie [720p,1080p,4k]": [
+        { quality: '4K UHD', size: '8.2 GB', telegramLink: 'https://t.me/tamil_new_mob' },
+        { quality: '1080p', size: '2.1 GB', telegramLink: 'https://t.me/tamil_new_mob' },
+        { quality: '720p', size: '1.2 GB', telegramLink: 'https://t.me/tamil_new_mob' },
+        { quality: '480p', size: '800 MB', telegramLink: 'https://t.me/tamil_new_mob' }
+      ],
+      "Kuzhanthaigal Munnetra Kazhagam (2025) TRUE HD Tamil Movie": [
+        { quality: '4K UHD', size: '8.2 GB', telegramLink: 'https://t.me/tamil_new_mob' },
+        { quality: '1080p', size: '2.1 GB', telegramLink: 'https://t.me/tamil_new_mob' },
+        { quality: '720p', size: '1.2 GB', telegramLink: 'https://t.me/tamil_new_mob' },
+        { quality: '480p', size: '800 MB', telegramLink: 'https://t.me/tamil_new_mob' }
+      ],
+      "Vidaamuyarchi (2025) TRUE HD Tamil Movie [720p,1080p,4k]": [
+        { quality: '4K UHD', size: '8.2 GB', telegramLink: 'https://t.me/tamil_new_mob' },
+        { quality: '1080p', size: '2.1 GB', telegramLink: 'https://t.me/tamil_new_mob' },
+        { quality: '720p', size: '1.2 GB', telegramLink: 'https://t.me/tamil_new_mob' },
+        { quality: '480p', size: '800 MB', telegramLink: 'https://t.me/tamil_new_mob' }
+      ],
+      ".Daaku Maharaaj (2025) HD Tamil Movie [720p,1080p,4k]": [
+        { quality: '4K UHD', size: '8.2 GB', telegramLink: 'https://t.me/tamil_new_mob' },
+        { quality: '1080p', size: '2.1 GB', telegramLink: 'https://t.me/tamil_new_mob' },
+        { quality: '720p', size: '1.2 GB', telegramLink: 'https://t.me/tamil_new_mob' },
+        { quality: '480p', size: '800 MB', telegramLink: 'https://t.me/tamil_new_mob' }
+      ],
+      "Suzhal 2 The Vortex (2025) EP(01-08)": [
+        { quality: '4K UHD', size: '8.2 GB', telegramLink: 'https://t.me/tamil_new_mob'},
+        { quality: '1080p', size: '2.1 GB', telegramLink: 'https://t.me/tamil_new_mob' },
+        { quality: '720p', size: '1.2 GB', telegramLink: 'https://t.me/tamil_new_mob' },
+        { quality: '480p', size: '800 MB', telegramLink: 'https://t.me/tamil_new_mob' }
+      ],
+      "Hit (2020) HD ": [
+        { quality: '4K UHD', size: '8.2 GB', telegramLink: 'https://t.me/tamil_new_mob' },
+        { quality: '1080p', size: '2.1 GB', telegramLink: 'https://t.me/tamil_new_mob' },
+        { quality: '720p', size: '1.2 GB', telegramLink: 'https://t.me/tamil_new_mob' },
+        { quality: '480p', size: '800 MB', telegramLink: 'https://t.me/tamil_new_mob' }
+      ],
+      "Suzhal The Vortex (2022) EP(01-08)": [
+        { quality: '4K UHD', size: '8.2 GB', telegramLink: 'https://t.me/tamil_new_mob' },
+        { quality: '1080p', size: '2.1 GB', telegramLink: 'https://t.me/tamil_new_mob' },
+        { quality: '720p', size: '1.2 GB', telegramLink: 'https://t.me/tamil_new_mob' },
+        { quality: '480p', size: '800 MB', telegramLink: 'https://t.me/tamil_new_mob' }
+      ],
+      "Hit The Second Case (2022) HD ": [
+        { quality: '4K UHD', size: '8.2 GB', telegramLink: 'https://t.me/tamil_new_mob' },
+        { quality: '1080p', size: '2.1 GB', telegramLink: 'https://t.me/tamil_new_mob' },
+        { quality: '720p', size: '1.2 GB', telegramLink: 'https://t.me/tamil_new_mob' },
+        { quality: '480p', size: '800 MB', telegramLink: 'https://t.me/tamil_new_mob' }
+      ],
+      "Vilangu (2022) EP": [
+        { quality: '4K UHD', size: '8.2 GB', telegramLink: 'https://t.me/tamil_new_mob' },
+        { quality: '1080p', size: '2.1 GB', telegramLink: 'https://t.me/tamil_new_mob' },
+        { quality: '720p', size: '1.2 GB', telegramLink: 'https://t.me/tamil_new_mob' },
+        { quality: '480p', size: '800 MB', telegramLink: 'https://t.me/tamil_new_mob' }
+      ],
+      "Vadhandhi The Fable of Velonie (2022) EP": [
+        { quality: '4K UHD', size: '8.2 GB', telegramLink: 'https://t.me/tamil_new_mob' },
+        { quality: '1080p', size: '2.1 GB', telegramLink: 'https://t.me/tamil_new_mob' },
+        { quality: '720p', size: '1.2 GB', telegramLink: 'https://t.me/tamil_new_mob' },
+        { quality: '480p', size: '800 MB', telegramLink: 'https://t.me/tamil_new_mob' }
+      ],
+      // Add more movies here with their specific download details if they differ from the default
+      // For any movie not listed here, the modal will use the default "downloadLinks" array.
     };
 
-    const TELEGRAM_CHANNEL_LINK = 'https://t.me/tamil_new_mob';
 
-    function loadMovies(filter = "") {
-        const categories = ["recent", "action", "comedy", "romantic", "thriller", "old", "web", "dubbed"];
-        categories.forEach(cat => {
-            const row = document.getElementById(cat);
-            if (row) { // Ensure the element exists before trying to manipulate it
-                row.innerHTML = ''; // Clear previous content
-                movies
-                    .filter(m => m.categories.includes(cat) && m.title.toLowerCase().includes(filter.toLowerCase()))
-                    .forEach(movie => {
-                        const card = document.createElement("div");
-                        card.className = "movie-card";
+const TELEGRAM_CHANNEL_LINK = 'https://t.me/tamil_new_mob';
 
-                        const img = document.createElement("img");
-                        img.src = movie.image;
-                        img.alt = movie.title;
-                        img.addEventListener('click', () => showMovieByTitle(movie.title));
+function loadMovies(filter = "") {
+    const categories = ["recent", "action", "comedy", "romantic", "thriller", "old", "web", "dubbed"];
+    categories.forEach(cat => {
+        const row = document.getElementById(cat);
+        if (row) { // Ensure the element exists before trying to manipulate it
+            row.innerHTML = ''; // Clear previous content
+            movies
+                .filter(m => m.categories.includes(cat) && m.title.toLowerCase().includes(filter.toLowerCase()))
+                .forEach(movie => {
+                    const card = document.createElement("div");
+                    card.className = "movie-card";
 
-                        card.appendChild(img);
-                        row.appendChild(card);
-                    });
-            }
-        });
-    }
+                    const img = document.createElement("img");
+                    img.src = movie.image;
+                    img.alt = movie.title;
+                    img.addEventListener('click', () => showMovieByTitle(movie.title));
 
-    function showMovieByTitle(title) {
-        const m = movies.find(movie => movie.title === title);
-        if (!m) return;
-
-        document.getElementById("mainPage").style.display = "none";
-        document.getElementById("moviePage").style.display = "block";
-        document.getElementById("movieTitle").textContent = m.title;
-        document.getElementById("mainPoster").src = m.image;
-        document.getElementById("movieDesc").textContent = m.description || "";
-
-        const video = document.getElementById("videoContainer");
-        video.innerHTML = ''; // Clear previous video
-        if (m.samplevideo) {
-            const iframe = document.createElement("iframe");
-            iframe.src = m.samplevideo;
-            iframe.allowFullscreen = true;
-            video.appendChild(iframe);
+                    card.appendChild(img);
+                    row.appendChild(card);
+                });
         }
-
-        const btns = document.getElementById("downloadButtons");
-        btns.innerHTML = ''; // Clear previous buttons
-
-        const downloadBtn = document.createElement("button");
-        downloadBtn.className = "btn";
-        downloadBtn.textContent = "Download";
-        downloadBtn.addEventListener('click', () => openDownloadModal(m.title));
-        btns.appendChild(downloadBtn);
-
-        const shots = document.getElementById("screenshotsContainer");
-        shots.innerHTML = ''; // Clear previous screenshots
-        (m.screenshots || []).forEach(src => {
-            const img = document.createElement("img");
-            img.src = src;
-            shots.appendChild(img);
-        });
-    }
-
-    document.getElementById("searchInput").addEventListener("input", function () {
-        loadMovies(this.value);
     });
+}
 
-    // --- Modal Functions ---
-    const downloadModal = document.getElementById('downloadModal');
-    const modalMovieTitle = document.getElementById('modalMovieTitle');
-    const modalDownloadLinks = document.getElementById('modalDownloadLinks');
+function showMovieByTitle(title) {
+    const m = movies.find(movie => movie.title === title);
+    if (!m) return;
 
-    // Default download links if a movie doesn't have specific ones defined
-    const defaultDownloadLinks = [
-        { quality: '4K UHD', size: '8.2 GB', telegramLink: TELEGRAM_CHANNEL_LINK },
-        { quality: '1080p', size: '2.1 GB', telegramLink: TELEGRAM_CHANNEL_LINK },
-        { quality: '720p', size: '1.2 GB', telegramLink: TELEGRAM_CHANNEL_LINK },
-        { quality: '480p', size: '800 MB', telegramLink: TELEGRAM_CHANNEL_LINK }
-    ];
+    document.getElementById("mainPage").style.display = "none";
+    document.getElementById("moviePage").style.display = "block";
+    document.getElementById("movieTitle").textContent = m.title;
+    document.getElementById("mainPoster").src = m.image;
+    document.getElementById("movieDesc").textContent = m.description || ""; // Assuming 'description' might not always be present
 
-    function openDownloadModal(title) {
-        modalMovieTitle.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-download"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg> Download ${title}`;
-        downloadModal.style.display = 'flex';
-        setTimeout(() => {
-            downloadModal.classList.add('show');
-        }, 10);
-
-        modalDownloadLinks.innerHTML = ''; // Clear previous links
-
-        const currentMovieLinks = movieDownloadDetails[title] || defaultDownloadLinks;
-
-        currentMovieLinks.forEach(link => {
-            const linkItem = document.createElement('div');
-            linkItem.className = 'modal-link-item';
-
-            const infoDiv = document.createElement('div');
-            infoDiv.className = 'modal-link-info';
-
-            const qualityDiv = document.createElement('div');
-            qualityDiv.className = 'modal-link-quality';
-            qualityDiv.textContent = link.quality;
-            infoDiv.appendChild(qualityDiv);
-
-            const detailsDiv = document.createElement('div');
-            detailsDiv.className = 'modal-link-details';
-            detailsDiv.textContent = link.size;
-            infoDiv.appendChild(detailsDiv);
-
-            linkItem.appendChild(infoDiv);
-
-            const telegramButton = document.createElement('button');
-            telegramButton.className = 'modal-telegram-btn';
-            telegramButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-external-link"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M7 21H3a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h4"/></svg> Telegram`;
-            telegramButton.addEventListener('click', () => handleTelegramClick(link.telegramLink));
-            linkItem.appendChild(telegramButton);
-
-            modalDownloadLinks.appendChild(linkItem);
-        });
+    const video = document.getElementById("videoContainer");
+    video.innerHTML = ''; // Clear previous video
+    if (m.samplevideo) {
+        const iframe = document.createElement("iframe");
+        iframe.src = m.samplevideo;
+        iframe.allowFullscreen = true;
+        video.appendChild(iframe);
     }
 
-    function closeDownloadModal() {
-        downloadModal.classList.remove('show');
-        downloadModal.addEventListener('transitionend', function handler() {
-            downloadModal.style.display = 'none';
-            downloadModal.removeEventListener('transitionend', handler);
-        });
-    }
+    const btns = document.getElementById("downloadButtons");
+    btns.innerHTML = ''; // Clear previous buttons
 
-    function handleTelegramClick(link) {
-        window.open(link, '_blank');
-    }
+    const downloadBtn = document.createElement("button");
+    downloadBtn.className = "btn";
+    downloadBtn.textContent = "Download";
+    downloadBtn.addEventListener('click', () => openDownloadModal(m.title));
+    btns.appendChild(downloadBtn);
 
-    // Initial load
-    loadMovies();
+    const shots = document.getElementById("screenshotsContainer");
+    shots.innerHTML = ''; // Clear previous screenshots
+    (m.screenshots || []).forEach(src => {
+        const img = document.createElement("img");
+        img.src = src;
+        shots.appendChild(img);
+    });
+}
+
+document.getElementById("searchInput").addEventListener("input", function () {
+    loadMovies(this.value);
+});
+
+// --- Modal Functions ---
+const downloadModal = document.getElementById('downloadModal');
+const modalMovieTitle = document.getElementById('modalMovieTitle');
+const modalDownloadLinks = document.getElementById('modalDownloadLinks');
+
+// Default download links if a movie doesn't have specific ones defined
+const defaultDownloadLinks = [
+    { quality: '4K UHD', size: '8.2 GB', telegramLink: TELEGRAM_CHANNEL_LINK },
+    { quality: '1080p', size: '2.1 GB', telegramLink: TELEGRAM_CHANNEL_LINK },
+    { quality: '720p', size: '1.2 GB', telegramLink: TELEGRAM_CHANNEL_LINK },
+    { quality: '480p', size: '800 MB', telegramLink: TELEGRAM_CHANNEL_LINK }
+];
+
+function openDownloadModal(title) {
+    // ERROR: This line is attempting to use a template literal directly within innerHTML without backticks.
+    // It also has an SVG inline which is valid, but the template literal syntax is incorrect.
+    modalMovieTitle.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-download"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg> Download ${title}`;
+    downloadModal.style.display = 'flex';
+    setTimeout(() => {
+        downloadModal.classList.add('show');
+    }, 10);
+
+    modalDownloadLinks.innerHTML = ''; // Clear previous links
+
+    const currentMovieLinks = movieDownloadDetails[title] || defaultDownloadLinks;
+
+    currentMovieLinks.forEach(link => {
+        const linkItem = document.createElement('div');
+        linkItem.className = 'modal-link-item';
+
+        const infoDiv = document.createElement('div');
+        infoDiv.className = 'modal-link-info';
+
+        const qualityDiv = document.createElement('div');
+        qualityDiv.className = 'modal-link-quality';
+        qualityDiv.textContent = link.quality;
+        infoDiv.appendChild(qualityDiv);
+
+        const detailsDiv = document.createElement('div');
+        detailsDiv.className = 'modal-link-details';
+        detailsDiv.textContent = link.size;
+        infoDiv.appendChild(detailsDiv);
+
+        linkItem.appendChild(infoDiv);
+
+        const telegramButton = document.createElement('button');
+        telegramButton.className = 'modal-telegram-btn';
+        // ERROR: Similar to the above, template literal syntax is incorrect.
+        telegramButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-external-link"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M7 21H3a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h4"/></svg> Telegram`;
+        telegramButton.addEventListener('click', () => handleTelegramClick(link.telegramLink));
+        linkItem.appendChild(telegramButton);
+
+        modalDownloadLinks.appendChild(linkItem);
+    });
+}
+
+function closeDownloadModal() {
+    downloadModal.classList.remove('show');
+    downloadModal.addEventListener('transitionend', function handler() {
+        downloadModal.style.display = 'none';
+        downloadModal.removeEventListener('transitionend', handler);
+    });
+}
+
+function handleTelegramClick(link) {
+    window.open(link, '_blank');
+}
+
+// Function to go back to the main page
+function goBackToMainPage() {
+    document.getElementById("moviePage").style.display = "none";
+    document.getElementById("mainPage").style.display = "block";
+}
+
+// Initial load
+loadMovies();
 </script>
 </body>
 </html>
