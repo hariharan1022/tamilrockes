@@ -11,32 +11,21 @@
       background: #111;
       color: white;
     }
-    header { /* Added a header to group logo and title */
-      display: flex;
-      align-items: center;
-      justify-content: center; /* Center the entire header content */
-      margin-top: 1rem;
-      position: relative; /* For absolute positioning of logo */
+    header {
+      display: flex; /* Use flexbox for layout */
+      justify-content: space-between; /* Push logo to left, search to right */
+      align-items: center; /* Vertically align items */
+      padding: 1rem 20px; /* Add some padding to the header */
+      margin-top: 0; /* Remove top margin from the original header */
+      position: relative; /* Keep if needed for other elements, but not for logo/search bar */
     }
-    #siteLogo { /* Style for the new logo image */
-      position: absolute;
-      left: 20px; /* Adjust as needed for spacing from the left */
-      top: 50%;
-      transform: translateY(-50%);
+    #siteLogo {
+      /* No absolute positioning needed here */
       height: 60px; /* Adjust height as needed */
       width: auto;
+      /* Remove left, top, transform properties */
     }
-    h1 {
-      text-align: center;
-      font-size: 2.5rem;
-      background: linear-gradient( #ff0000);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      font-weight: 800;
-      letter-spacing: 2px;
-      margin: 0; /* Remove default margin to align with logo */
-      padding-left: 80px; /* Add padding to make space for the logo */
-    }
+    /* Removed h1 styles as it's not present */
 
     @keyframes neonGlow {
       from {
@@ -48,23 +37,21 @@
     }
 
     #searchInput {
-      display: block;
-      margin: 1rem auto;
+      /* Removed display: block and margin: auto */
       padding: 0.5rem 1rem;
-      width: 80%;
-      max-width: 400px;
+      width: 250px; /* Adjust width as needed for the search bar */
       border-radius: 30px;
       border: none;
       font-size: 1rem;
       background-color: #1c1c1c;
       color: white;
       box-shadow: 0 0 5px #ff0000;
-      transition: box-shadow 0.3s ease, width 0.3s ease; /* Added transition */
+      transition: box-shadow 0.3s ease, width 0.3s ease;
     }
     #searchInput:focus {
       outline: none;
-      box-shadow: 0 0 10px #ff0000, 0 0 20px rgba(0, 255, 255, 0.4); /* Enhanced focus effect */
-      width: 85%; /* Slightly expand on focus */
+      box-shadow: 0 0 10px #ff0000, 0 0 20px rgba(0, 255, 255, 0.4);
+      width: 270px; /* Slightly expand on focus */
     }
 
     h2 {
@@ -80,15 +67,9 @@
       padding: 20px;
       gap: 15px;
     }
-    /* Removed custom scrollbar styles for .movie-row */
     .movie-row::-webkit-scrollbar {
-      display: none; /* This hides the scrollbar */
+      display: none;
     }
-    /* You can also remove the following if no scrollbar styling is desired at all: */
-    /* .movie-row::-webkit-scrollbar-thumb {
-      background: #ff0000;
-      border-radius: 4px;
-    } */
 
     .movie-card {
       flex: 0 0 auto;
@@ -111,7 +92,7 @@
       display: none;
       padding: 20px;
       text-align: center;
-      position: relative; /* Added for back button positioning */
+      position: relative;
     }
     #moviePage img.main-poster {
       width: 500px;
@@ -147,7 +128,7 @@
       border: none;
       border-radius: 10px;
       margin: 1rem 0;
-      box-shadow: 0 0 15px rgb(255, 0, 0); /* Added shadow for iframe */
+      box-shadow: 0 0 15px rgb(255, 0, 0);
     }
     .screenshots {
       display: flex;
@@ -158,7 +139,7 @@
     .screenshots img {
       width: 200px;
       border-radius: 10px;
-      box-shadow: 0 0 10px rgb(255, 0, 0); /* Added shadow for screenshots */
+      box-shadow: 0 0 10px rgb(255, 0, 0);
       transition: transform 0.2s;
     }
     .screenshots img:hover {
@@ -167,7 +148,7 @@
 
     /* Modal Styles */
     .modal-overlay {
-      display: none; /* Hidden by default */
+      display: none;
       position: fixed;
       top: 0;
       left: 0;
@@ -177,10 +158,10 @@
       justify-content: center;
       align-items: center;
       z-index: 1000;
-      opacity: 0; /* Initial opacity for fade-in */
-      transition: opacity 0.3s ease; /* Transition for fade-in */
+      opacity: 0;
+      transition: opacity 0.3s ease;
     }
-    .modal-overlay.show { /* Class to trigger fade-in */
+    .modal-overlay.show {
         opacity: 1;
     }
 
@@ -192,12 +173,12 @@
       max-width: 450px;
       box-shadow: 0 0 20px rgb(255, 0, 0);
       position: relative;
-      transform: translateY(-50px); /* Initial position for slide-in */
-      transition: transform 0.3s ease, opacity 0.3s ease; /* Transition for slide-in */
-      opacity: 0; /* Initial opacity for slide-in */
+      transform: translateY(-50px);
+      transition: transform 0.3s ease, opacity 0.3s ease;
+      opacity: 0;
     }
 
-    .modal-overlay.show .modal-content { /* Class to trigger slide-in */
+    .modal-overlay.show .modal-content {
       transform: translateY(0);
       opacity: 1;
     }
@@ -244,8 +225,6 @@
       transition: background-color 0.2s ease;
     }
 
-
-
     .modal-link-info {
       flex: 1;
     }
@@ -265,7 +244,7 @@
       padding: 8px 15px;
       border: none;
       border-radius: 20px;
-      background: linear-gradient( #ff0000); /* Blue tones for Telegram */
+      background: linear-gradient( #ff0000);
       color: white;
       font-weight: bold;
       cursor: pointer;
@@ -299,14 +278,26 @@
       color: #ff0000;
       font-size: 2rem;
       cursor: pointer;
-      z-index: 10; /* Ensure it's above other elements */
+      z-index: 10;
+    }
+
+    /* Media query for smaller screens to adjust search bar width */
+    @media (max-width: 600px) {
+      #searchInput {
+        width: 150px; /* Smaller width for mobile */
+      }
+      #searchInput:focus {
+        width: 170px; /* Adjust focus width accordingly */
+      }
     }
   </style>
+</head>
+<body>
   <header>
     <img src="sk hari.jpeg" alt="SK Logo" id="siteLogo">
-    <h2>SK TamilRockers</h2>
+    <input type="text" id="searchInput" placeholder="Search movies...">
   </header>
-  <input type="text" id="searchInput" placeholder="Search movies...">
+
   <div id="mainPage">
     <h2>Recent Movies</h2><div class="movie-row" id="recent"></div>
     <h2>Action Movies</h2><div class="movie-row" id="action"></div>
@@ -824,8 +815,6 @@ const defaultDownloadLinks = [
 ];
 
 function openDownloadModal(title) {
-    // ERROR: This line is attempting to use a template literal directly within innerHTML without backticks.
-    // It also has an SVG inline which is valid, but the template literal syntax is incorrect.
     modalMovieTitle.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-download"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg> Download ${title}`;
     downloadModal.style.display = 'flex';
     setTimeout(() => {
@@ -857,7 +846,6 @@ function openDownloadModal(title) {
 
         const telegramButton = document.createElement('button');
         telegramButton.className = 'modal-telegram-btn';
-        // ERROR: Similar to the above, template literal syntax is incorrect.
         telegramButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-external-link"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M7 21H3a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h4"/></svg> Telegram`;
         telegramButton.addEventListener('click', () => handleTelegramClick(link.telegramLink));
         linkItem.appendChild(telegramButton);
@@ -889,3 +877,6 @@ loadMovies();
 </script>
 </body>
 </html>
+
+
+
