@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>SK TamilRockers</title>
   <style>
-    body {
+   body {
       margin: 0;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       background: #111;
@@ -73,7 +73,6 @@
       color: red;
       padding-left: 10px;
       font-size: 1.5rem;
-
     }
     .movie-row {
       display: flex;
@@ -81,13 +80,16 @@
       padding: 20px;
       gap: 15px;
     }
+    /* Removed custom scrollbar styles for .movie-row */
     .movie-row::-webkit-scrollbar {
-      height: 8px;
+      display: none; /* This hides the scrollbar */
     }
-    .movie-row::-webkit-scrollbar-thumb {
+    /* You can also remove the following if no scrollbar styling is desired at all: */
+    /* .movie-row::-webkit-scrollbar-thumb {
       background: #ff0000;
       border-radius: 4px;
-    }
+    } */
+
     .movie-card {
       flex: 0 0 auto;
       width: 140px;
@@ -300,10 +302,8 @@
       z-index: 10; /* Ensure it's above other elements */
     }
   </style>
-</head>
-<body>
   <header>
-    <img src="sk logo.jpeg" alt="SK Logo" id="siteLogo">
+    <img src="sk hari.jpeg" alt="SK Logo" id="siteLogo">
     <h2>SK TamilRockers</h2>
   </header>
   <input type="text" id="searchInput" placeholder="Search movies...">
@@ -316,6 +316,7 @@
     <h2>Old Movies</h2><div class="movie-row" id="old"></div>
     <h2>Web Series</h2><div class="movie-row" id="web"></div>
     <h2>Tamil Dubbed Movies</h2><div class="movie-row" id="dubbed"></div>
+    <h2>Kids Tamil</h2><div class="movie-row" id="kids"></div>
   </div>
 
   <div id="moviePage">
@@ -735,7 +736,7 @@
 const TELEGRAM_CHANNEL_LINK = 'https://t.me/tamil_new_mob';
 
 function loadMovies(filter = "") {
-    const categories = ["recent", "action", "comedy", "romantic", "thriller", "old", "web", "dubbed"];
+    const categories = ["recent", "action", "comedy", "romantic", "thriller", "old", "web", "dubbed","kids"];
     categories.forEach(cat => {
         const row = document.getElementById(cat);
         if (row) { // Ensure the element exists before trying to manipulate it
