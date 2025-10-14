@@ -59,7 +59,9 @@
         .movie-row {padding:20px 0;}
         .row-title {font-size:1.2em; margin-bottom:15px; padding-left:10px; font-weight:bold;}
         .movie-list {
-            display:flex; overflow-x:scroll; gap:10px; padding:5px 10px;
+            display:flex;
+            overflow-x:scroll; /* Ensure Horizontal Scrolling */
+            gap:10px; padding:5px 10px;
             scrollbar-width:none;
         }
         .movie-list::-webkit-scrollbar {display:none;}
@@ -171,15 +173,16 @@
     </nav>
 
     <script>
-    const IMAGE_BASE_URL = '';
-        const movies = [
+        const IMAGE_BASE_URL = '';
+        // --- Movie Data Array ---
+       const movies = [
             { 
               title: "BIGG BOSS (Tamil) S09", 
             description: "", 
             categories: ["recent", "top10"], 
             rank: 1, 
             image: "bigg boss.jpeg", 
-            telegramLink: "https://t.me/movie_downloads_channel/link_for_ace"
+            telegramLink: "https://tnseries.com/KZRKV"
            },
           { 
               title: "Rambo (2025) Tamil", 
@@ -187,7 +190,7 @@
             categories: ["recent", "action", "top10"], 
             rank: 2, 
             image: "rambo.jpeg", 
-            telegramLink: "https://t.me/movie_downloads_channel/link_for_ace"
+            telegramLink: "https://tnseries.com/z0hu4Q7"
            },
            { 
               title: "Mirai (2025) Tamil", 
@@ -203,7 +206,7 @@
             categories: ["recent","comedy","top10"], 
             rank: 4, 
             image: "bomb.jpeg", 
-            telegramLink: "https://t.me/movie_downloads_channel/link_for_ace"
+            telegramLink: "https://tnseries.com/MkVwsq"
            },
            { 
               title: "Police Police (2025) S01 EP", 
@@ -235,7 +238,7 @@
             categories: ["recent", "action", "top10"], 
             rank: 8, 
             image: "war2.jpeg", 
-            telegramLink: "https://t.me/movie_downloads_channel/link_for_ace"
+            telegramLink: "https://tnseries.com/wmlMPz"
            },
            { 
               title: "Heart Beat (2025) S02 EP", 
@@ -259,7 +262,7 @@
             categories: ["recent", "action", ], 
             rank: 0, 
             image: "kantara.jpeg", 
-            telegramLink: "https://t.me/movie_downloads_channel/link_for_ace"
+            telegramLink: "https://tnseries.com/4p8vT"
            },
            { 
               title: "Idli Kadai (2025) Tamil HQ PreDVD", 
@@ -275,7 +278,7 @@
             categories: ["recent", "comedy", ], 
             rank: 0, 
             image: "gandhi kannadi.jpeg", 
-            telegramLink: "https://t.me/movie_downloads_channel/link_for_ace"
+            telegramLink: "https://tnseries.com/HDD6eGx"
            },
            { 
               title: "House Mates (2025)", 
@@ -291,7 +294,7 @@
             categories: ["anime",], 
             rank: 0, 
             image: "naruto sip.jpeg", 
-            telegramLink: "https://t.me/movie_downloads_channel/link_for_ace"
+            telegramLink: "https://tnseries.com/XTlpt87"
            },
            { 
               title: "Naruto", 
@@ -299,7 +302,7 @@
             categories: ["anime" ], 
             rank: 0, 
             image: "naruto.jpeg", 
-            telegramLink: "https://t.me/movie_downloads_channel/link_for_ace"
+            telegramLink: "https://tnseries.com/aSzlvtgl"
            },
            { 
               title: "Attack On Titan", 
@@ -315,7 +318,7 @@
             categories: ["cartoon"], 
             rank: 0, 
             image: "ben10s1.jpeg", 
-            telegramLink: "https://t.me/movie_downloads_channel/link_for_ace"
+            telegramLink: "https://tnseries.com/LmO2F"
            },
            { 
               title: "Ben 10 Classic Season 2", 
@@ -323,7 +326,7 @@
             categories: ["cartoon", ], 
             rank: 0, 
             image: "ben10s2.jpeg", 
-            telegramLink: "https://t.me/movie_downloads_channel/link_for_ace"
+            telegramLink: "https://tnseries.com/rxossuic"
            },
            { 
               title: "Ben 10 Classic Season 3", 
@@ -331,7 +334,7 @@
             categories: ["cartoon", ], 
             rank: 0, 
             image: "ben10s3.jpeg", 
-            telegramLink: "https://t.me/movie_downloads_channel/link_for_ace"
+            telegramLink: "https://tnseries.com/Vf5hXqzq"
            },
            { 
               title: "Ben 10 Classic Season 4", 
@@ -339,7 +342,7 @@
             categories: ["cartoon", ], 
             rank: 0, 
             image: "ben10s4.jpeg", 
-            telegramLink: "https://t.me/movie_downloads_channel/link_for_ace"
+            telegramLink: "https://tnseries.com/TAwPuq"
            },
            { 
               title: "Krishna and Balaram season 1", 
@@ -347,15 +350,15 @@
             categories: ["cartoon", ], 
             rank: 0, 
             image: "krishna.jpeg", 
-            telegramLink: "https://t.me/movie_downloads_channel/link_for_ace"
+            telegramLink: "https://tnseries.com/8G38ccI"
            },
            { 
-              title: "Krishna and Balaram season 1", 
+              title: "Krishna and Balaram season 2", 
             description: "", 
             categories: ["cartoon",], 
             rank: 0, 
             image: "krishna.jpeg", 
-            telegramLink: "https://t.me/movie_downloads_channel/link_for_ace"
+            telegramLink: "https://tnseries.com/sZbrn7C"
            },
            { 
               title: "Krishna Brith Tamil", 
@@ -363,7 +366,7 @@
             categories: ["cartoon"], 
             rank: 0, 
             image: "krishna birth.jpeg", 
-            telegramLink: "https://t.me/movie_downloads_channel/link_for_ace"
+            telegramLink: "https://tnseries.com/5Gxu3"
            },
            { 
               title: "Krishna Makhan chor", 
@@ -371,7 +374,7 @@
             categories: ["cartoon",], 
             rank: 0, 
             image: "krishna chor.jpeg", 
-            telegramLink: "https://t.me/movie_downloads_channel/link_for_ace"
+            telegramLink: "https://tnseries.com/ZQg38wq"
            },
            { 
               title: "Krishna in Vrindavan", 
@@ -379,7 +382,7 @@
             categories: ["cartoon", ], 
             rank: 0, 
             image: "vrindavan.jpeg", 
-            telegramLink: "https://t.me/movie_downloads_channel/link_for_ace"
+            telegramLink: "https://tnseries.com/tkfn"
            },
            { 
               title: "Krishna and Balaram Kalavakra ", 
@@ -387,7 +390,7 @@
             categories: ["cartoon",], 
             rank: 0, 
             image: "kalvakra.jpeg", 
-            telegramLink: "https://t.me/movie_downloads_channel/link_for_ace"
+            telegramLink: "https://tnseries.com/Rpfri"
            },
            { 
               title: "Krishna and Balaram the warrior Princess", 
@@ -395,7 +398,7 @@
             categories: ["cartoon", ], 
             rank: 0, 
             image: "warrior.jpeg", 
-            telegramLink: "https://t.me/movie_downloads_channel/link_for_ace"
+            telegramLink: "https://tnseries.com/rd5KP"
            },
            { 
               title: "", 
@@ -446,66 +449,92 @@
             telegramLink: "https://t.me/movie_downloads_channel/link_for_ace"
            },
         ];
+        // --- End of Movie Data Array ---
 
         const categories = [
-            { key:'top10', label:'⭐ Top 10 Movies Today' },
+            { key:'top10', label:'⭐ Top 10 Today' },
             { key:'recent', label:'🔥 Recent Releases' },
+            { key:'movies', label:'🎬 Full Movies' },
             { key:'action', label:'💥 Action Thrillers' },
             { key:'comedy', label:'😂 Family Comedies' },
             { key:'romance', label:'💖 Romance Dramas' },
             { key:'thriller', label:'🕵️ Crime Thriller' },
-             { key:'webseries', label:'📺 Webseries' },
-            { key:'anime', label:'💥 Anime'},
-            { key:'cartoon', label:'😂 Cartoons' },
-            {key:'horror', label:'👻 Horror' }
+            { key:'webseries', label:'📺 Webseries' },
+            { key:'anime', label:'🎌 Anime' },
+            { key:'cartoon', label:'👶 Cartoons' },
+            { key:'horror', label:'👻 Horror' }
         ];
 
         const views = ['home-page','search-page','download-page'];
 
         // Helper function to create a movie item element
-        function createMovieItem(movie,isTop10,rank){
+        function createMovieItem(movie, isTop10, rank){
             const link=document.createElement('a');
             link.href="#"; link.className=isTop10?'top-10-item':'movie-item';
             link.onclick=(e)=>{e.preventDefault();openDownloadPage(movie);};
             const imgSrc=IMAGE_BASE_URL+movie.image;
             link.innerHTML=isTop10?
-                `<span class="top-10-number">${rank}</span><img src="${imgSrc}" class="top-10-poster">`:
+                `<span class="top-10-number">${rank}</span><img src="${imgSrc}" class="${isTop10 ? 'top-10-poster' : 'poster'}">`:
                 `<img src="${imgSrc}" class="poster">`;
             return link;
         }
 
-        // 🆕 New function: Renders specific categories without the Hero section
+        // Renders content for specific category tabs (Movies, Anime, Cartoon, Webseries)
         function renderCategoryView(keys) {
             const contentDiv = document.getElementById('movie-content');
             contentDiv.innerHTML = '';
-            
+           
             keys.forEach(key => {
                 const cat = categories.find(c => c.key === key);
-                // Also check for 'anime', 'cartoon', 'webseries' keys which aren't in categories array
                 const catLabel = cat ? cat.label : (key === 'anime' ? '🏯 Anime' : (key === 'cartoon' ? '📺 Cartoons' : (key === 'webseries' ? '🎬 Webseries' : null)));
-                if (!catLabel && !cat) return;
+                if (!catLabel) return;
 
                 let catMovies = movies.filter(m => m.categories.includes(key));
-                if (key === 'top10') catMovies = catMovies.sort((a, b) => a.rank - b.rank);
-                
+                if (key === 'top10') catMovies = catMovies.filter(m => m.rank > 0).sort((a, b) => a.rank - b.rank);
+               
+                // For a dedicated view, we render a larger grid if there are many items
+                const isDedicatedView = keys.length === 1;
+
                 if (catMovies.length) {
                     const sec = document.createElement('section');
                     sec.className = 'movie-row';
                     sec.innerHTML = `<h2 class='row-title'>${catLabel}</h2>`;
+
                     const list = document.createElement('div');
                     list.className = 'movie-list';
-                    catMovies.forEach((m, i) => list.appendChild(createMovieItem(m, key === 'top10', m.rank || i + 1)));
+                   
+                    // If it's a dedicated category view, use a grid layout instead of horizontal scroll for better browsing
+                    if(isDedicatedView && catMovies.length > 5){
+                        list.className = ''; // Remove movie-list class to disable scroll
+                        list.style.display = 'grid';
+                        list.style.gridTemplateColumns = 'repeat(auto-fill, minmax(110px, 1fr))';
+                        list.style.gap = '15px 10px';
+                        list.style.padding = '10px 10px';
+                       
+                        catMovies.forEach((m, i) => {
+                            const item = document.createElement('a');
+                            item.href = '#';
+                            item.className = 'search-result-item'; // Reusing search styles for grid display
+                            item.onclick = (e) => { e.preventDefault(); openDownloadPage(m); };
+                            item.innerHTML = `<img src="${IMAGE_BASE_URL + m.image}" class="poster"><span>${m.title}</span>`;
+                            list.appendChild(item);
+                        });
+                    } else {
+                        // Use horizontal scroll for rows (Top 10, Recent, etc.)
+                        catMovies.forEach((m, i) => list.appendChild(createMovieItem(m, key === 'top10', m.rank || i + 1)));
+                    }
+
                     sec.appendChild(list);
                     contentDiv.appendChild(sec);
                 }
             });
         }
 
-        // Refactored: Renders the default 'Home' view (Hero + all main categories)
+        // Renders the default 'Home' view (Hero + all main categories)
         function renderHomePage(){
             const contentDiv=document.getElementById('movie-content');
             contentDiv.innerHTML='';
-            
+           
             // 1. Render Hero Section
             const featuredMovie=movies.find(m=>m.rank===1);
             const heroSection=document.createElement('section');
@@ -527,10 +556,18 @@
                     </div>`;
             }
             contentDiv.appendChild(heroSection);
-            
+           
             // 2. Render all main category rows
-            categories.forEach(cat=>{
-                const catMovies=movies.filter(m=>m.categories.includes(cat.key));
+            // Use only the primary categories for the Home view rows
+            const homeCategories = ['top10', 'recent', 'action', 'comedy', 'horror', 'thriller'];
+           
+            homeCategories.forEach(key=>{
+                const cat = categories.find(c => c.key === key);
+                if (!cat) return;
+               
+                let catMovies=movies.filter(m=>m.categories.includes(cat.key));
+                if (key === 'top10') catMovies = catMovies.filter(m => m.rank > 0).sort((a, b) => a.rank - b.rank);
+
                 if(catMovies.length){
                     const row=document.createElement('section');
                     row.className='movie-row';
@@ -543,32 +580,32 @@
             });
         }
 
-        // Refactored: Central View Router
+        // Central View Router
         function showView(viewId, navCategory='home') {
+            // Hide all views, then show the current one
             views.forEach(id => document.getElementById(id).style.display = (id===viewId)?'block':'none');
-            
+           
             if (viewId === 'home-page') {
                 if (navCategory === 'home') {
-                    // Default home view (with Hero and all categories)
                     renderHomePage();
                 } else if (navCategory === 'movies') {
-                    // Movies view (all major movie categories, no Hero)
-                    renderCategoryView(['top10','recent','action','comedy','romance','thriller']);
+                    // Movies view: Show key movie categories
+                    renderCategoryView(['movies', 'top10', 'recent', 'action', 'comedy', 'romance', 'thriller']);
                 } else if (navCategory === 'anime') {
-                    // Anime view
-                    renderCategoryView(['anime', 'top10']); // Included top10 since Naruto is in it
+                    // Anime view: Dedicated anime content
+                    renderCategoryView(['anime']);
                 } else if (navCategory === 'cartoon') {
-                    // Cartoon view
+                    // Cartoon view: Dedicated cartoon content
                     renderCategoryView(['cartoon']);
                 } else if (navCategory === 'webseries') {
-                    // Webseries view (only webseries category)
-                    renderCategoryView(['webseries']); 
+                    // Webseries view: Dedicated webseries content
+                    renderCategoryView(['webseries']);
                 }
-            } else if (viewId === 'search-page'){ 
-                document.getElementById('search-input').value = ''; 
-                filterMovies(); 
+            } else if (viewId === 'search-page'){
+                document.getElementById('search-input').value = '';
+                filterMovies();
             }
-            
+           
             // Set active state for bottom navigation item
             document.querySelectorAll('.nav-item').forEach(item=>{
                 item.classList.remove('active');
@@ -577,7 +614,7 @@
         }
 
         function openDownloadPage(movie){
-            showView('download-page','none'); // Use 'none' or a temporary category to prevent nav highlight
+            showView('download-page','none'); // Use 'none' to prevent nav highlight
             document.getElementById('download-movie-img').src=IMAGE_BASE_URL+movie.image;
             document.getElementById('download-movie-name').textContent=movie.title;
             document.getElementById('download-movie-desc').textContent=movie.description;
@@ -603,7 +640,7 @@
         }
 
         document.addEventListener('DOMContentLoaded',()=>{
-            // All footer items now rely on the generic event listener and showView router
+            // Attach event listeners for bottom navigation
             document.querySelectorAll('.bottom-nav .nav-item').forEach(item=>{
                 item.addEventListener('click',(e)=>{
                     e.preventDefault();
@@ -613,6 +650,7 @@
                 });
             });
 
+            // Search input listener
             const search=document.getElementById('search-input');
             if(search) search.addEventListener('input',filterMovies);
 
