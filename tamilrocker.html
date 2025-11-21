@@ -63,14 +63,14 @@
     #hero-section {
       background-size: cover;
       background-position: center top;
-      height: 50vh;
+      height: 80vh;
       display: flex;
+      transition: background-image 1s ease-in-out;
       flex-direction: column;
       justify-content: flex-end;
       padding: 20px;
       position: relative;
     }
-
     #hero-section::before {
       content: '';
       position: absolute;
@@ -80,8 +80,8 @@
       bottom: 0;
       background: linear-gradient(to top, var(--background-color) 0%, transparent 100%);
     }
-
     .hero-content {
+      transition: opacity 0.5s ease-in-out;
       z-index: 1;
     }
 
@@ -104,14 +104,18 @@
       text-decoration: none;
     }
 
-    .play-btn {
-      background-color: var(--text-color);
-      color: var(--nav-bg);
-    }
-
     .info-btn {
       background-color: rgba(109, 109, 110, 0.7);
       color: var(--text-color);
+      backdrop-filter: blur(5px);
+      transition: background-color 0.3s;
+    }
+
+    .play-btn {
+      background-color: rgba(109, 109, 110, 0.7);
+      color: var(--text-color);
+      backdrop-filter: blur(5px);
+      transition: background-color 0.3s;
     }
 
     /* --- Movie Rows --- */
@@ -372,8 +376,8 @@
       <i class="material-icons">search</i><span>Search</span>
     </a>
   </nav>
-
   <script>
+    let heroInterval; // To hold the interval for the hero slideshow
     const IMAGE_BASE_URL = '';
     // --- Movie Data Array ---
      const movies = [
@@ -388,7 +392,7 @@
       {
         title: "Friends (2001) HD Print Tamil",
         description: "",
-        categories: ["recent", "comedy","action", ],
+        categories: ["recent", "comedy","action"],
         rank: 0,
         image: "friend.jpeg",
         telegramLink: "https://tnseries.com/Rdbx9ND"
@@ -460,7 +464,7 @@
       {
         title: "BIGG BOSS (Tamil) S09",
         description: "",
-        categories: ["recent",],
+        categories: ["recent"],
         rank: 0,
         image: "bigg boss.jpeg",
         telegramLink: "https://tnseries.com/KZRKV",
@@ -538,7 +542,7 @@
       {
         title: "Iru Mugan (2016) Tamil",
         description: "",
-        categories: ["action",],
+        categories: ["action"],
         rank: 0,
         image: "irumugan.jpeg",
         telegramLink: "https://tnseries.com/8EpwgK"
@@ -546,7 +550,7 @@
       {
         title: " Tamil Rockerz (2022) S01 EP (01-08) [Tamil + Telugu + Hindi + Malayalam + Kannada]",
         description: "",
-        categories: ["webseries",],
+        categories: ["webseries"],
         rank: 0,
         image: "tamilrockers.jpeg",
         telegramLink: "https://tnseries.com/nzrjz4v5",
@@ -580,7 +584,7 @@
       {
         title: "Kantara A Legend: Chapter 1 (2025) Tamil HQ PreDVD",
         description: "",
-        categories: ["action",],
+        categories: ["action"],
         rank: 0,
         image: "kantara.jpeg",
         telegramLink: "https://tnseries.com/4p8vT"
@@ -588,7 +592,7 @@
       {
         title: "Idli Kadai (2025) Tamil HQ PreDVD",
         description: "",
-        categories: ["action",],
+        categories: ["action"],
         rank: 0,
         image: "itli kadai.jpeg",
         telegramLink: "https://tnseries.com/U9e8hRi"
@@ -596,7 +600,7 @@
       {
         title: "Gandhi Kannadi (2025) Tamil",
         description: "",
-        categories: ["comedy",],
+        categories: ["comedy"],
         rank: 0,
         image: "gandhi kannadi.jpeg",
         telegramLink: "https://tnseries.com/HDD6eGx"
@@ -604,7 +608,7 @@
       {
         title: "House Mates (2025)",
         description: "",
-        categories: ["horror", "comedy",],
+        categories: ["horror", "comedy"],
         rank: 0,
         image: "house mates.jpeg",
         telegramLink: "https://tnseries.com/PAHfl"
@@ -621,7 +625,7 @@
       {
         title: "Naruto Shippuden Tamil",
         description: "",
-        categories: ["anime",],
+        categories: ["anime"],
         rank: 0,
         image: "naruto sip.jpeg",
         telegramLink: "https://tnseries.com/XTlpt87",
@@ -720,7 +724,7 @@
       {
         title: "Ben 10 Classic Season 2",
         description: "",
-        categories: ["cartoon",],
+        categories: ["cartoon"],
         rank: 0,
         image: "ben10s2.jpeg",
         telegramLink: "https://tnseries.com/rxossuic",
@@ -729,7 +733,7 @@
       {
         title: "Ben 10 Classic Season 3",
         description: "",
-        categories: ["cartoon",],
+        categories: ["cartoon"],
         rank: 0,
         image: "ben10s3.jpeg",
         telegramLink: "https://tnseries.com/Vf5hXqzq",
@@ -738,7 +742,7 @@
       {
         title: "Ben 10 Classic Season 4",
         description: "",
-        categories: ["cartoon",],
+        categories: ["cartoon"],
         rank: 0,
         image: "ben10s4.jpeg",
         telegramLink: "https://tnseries.com/TAwPuq",
@@ -747,7 +751,7 @@
       {
         title: "Krishna and Balaram season 1",
         description: "",
-        categories: ["cartoon",],
+        categories: ["cartoon"],
         rank: 0,
         image: "krishna.jpeg",
         telegramLink: "https://tnseries.com/8G38ccI",
@@ -756,7 +760,7 @@
       {
         title: "Krishna and Balaram season 2",
         description: "",
-        categories: ["cartoon",],
+        categories: ["cartoon"],
         rank: 0,
         image: "krishna.jpeg",
         telegramLink: "https://tnseries.com/sZbrn7C",
@@ -773,7 +777,7 @@
       {
         title: "Krishna Makhan chor",
         description: "",
-        categories: ["cartoon",],
+        categories: ["cartoon"],
         rank: 0,
         image: "krishna chor.jpeg",
         telegramLink: "https://tnseries.com/ZQg38wq"
@@ -781,7 +785,7 @@
       {
         title: "Krishna in Vrindavan",
         description: "",
-        categories: ["cartoon",],
+        categories: ["cartoon"],
         rank: 0,
         image: "vrindavan.jpeg",
         telegramLink: "https://tnseries.com/tkfn"
@@ -789,7 +793,7 @@
       {
         title: "Krishna and Balaram Kalavakra ",
         description: "",
-        categories: ["cartoon",],
+        categories: ["cartoon"],
         rank: 0,
         image: "kalvakra.jpeg",
         telegramLink: "https://tnseries.com/Rpfri"
@@ -797,7 +801,7 @@
       {
         title: "Krishna and Balaram the warrior Princess",
         description: "",
-        categories: ["cartoon",],
+        categories: ["cartoon"],
         rank: 0,
         image: "warrior.jpeg",
         telegramLink: "https://tnseries.com/rd5KP"
@@ -832,7 +836,7 @@
       {
         title: "Office S01 EP (01-100) Tamil",
         description: "",
-        categories: ["webseries", "comedy",],
+        categories: ["webseries", "comedy"],
         rank: 0,
         image: "office s1.jpeg",
         telegramLink: "https://tnseries.com/T3g9zeq",
@@ -841,202 +845,7 @@
       {
         title: "Vilangu (2023) S01 EP (01-08) Tamil",
         description: "",
-        categories: ["webseries", "thriller",],
-        rank: 0,
-        categories: ["anime"],
-        rank: 0,
-        image: "attack on titan.jpeg",
-        telegramLink: "https://tnseries.com/XhmoE",
-
-      },
-      {
-        title: "Dr. STONE - Season 2 Stone Wars (2021) Tamil",
-        description: "",
-        categories: ["anime"],
-        rank: 0,
-        image: "drstone2.jpeg",
-        telegramLink: "https://tnseries.com/LuH0HUc",
-
-      },
-      {
-        title: "spy x family Season 1 EP(01-25) Tamil ",
-        description: "",
-        categories: ["anime"],
-        rank: 0,
-        image: "spyfamily.jpeg",
-        telegramLink: "https://tnseries.com/5UrGFEed",
-
-      },
-      {
-        title: "Dr. STONE - Season 3 New World (2023) Tamil",
-        description: "",
-        categories: ["anime"],
-        rank: 0,
-        image: "drstone3.jpeg",
-        telegramLink: "https://tnseries.com/LuH0HUc",
-
-      },
-      {
-        title: "spy x family Season 2 EP(01-12) Tamil ",
-        description: "",
-        categories: ["anime"],
-        rank: 0,
-        image: "spyfamily.jpeg",
-        telegramLink: "https://tnseries.com/5UrGFEed",
-
-      },
-      {
-        title: "Solo levelling Season 1 and 2  Tamil ",
-        description: "",
-        categories: ["anime"],
-        rank: 0,
-        image: "sololeveling.jpeg",
-        telegramLink: "https://tnseries.com/5UrGFEed",
-
-      },
-      {
-        title: "Dr. STONE - Season 4 (2025) Tamil",
-        description: "",
-        categories: ["anime"],
-        rank: 0,
-        image: "drstone4.jpeg",
-        telegramLink: "https://tnseries.com/LuH0HUc",
-
-      },
-      {
-        title: "Ben 10 Classic Season 1",
-        description: "",
-        categories: ["cartoon"],
-        rank: 0,
-        image: "ben10s1.jpeg",
-        telegramLink: "https://tnseries.com/LmO2F",
-
-      },
-      {
-        title: "Ben 10 Classic Season 2",
-        description: "",
-        categories: ["cartoon",],
-        rank: 0,
-        image: "ben10s2.jpeg",
-        telegramLink: "https://tnseries.com/rxossuic",
-
-      },
-      {
-        title: "Ben 10 Classic Season 3",
-        description: "",
-        categories: ["cartoon",],
-        rank: 0,
-        image: "ben10s3.jpeg",
-        telegramLink: "https://tnseries.com/Vf5hXqzq",
-
-      },
-      {
-        title: "Ben 10 Classic Season 4",
-        description: "",
-        categories: ["cartoon",],
-        rank: 0,
-        image: "ben10s4.jpeg",
-        telegramLink: "https://tnseries.com/TAwPuq",
-
-      },
-      {
-        title: "Krishna and Balaram season 1",
-        description: "",
-        categories: ["cartoon",],
-        rank: 0,
-        image: "krishna.jpeg",
-        telegramLink: "https://tnseries.com/8G38ccI",
-
-      },
-      {
-        title: "Krishna and Balaram season 2",
-        description: "",
-        categories: ["cartoon",],
-        rank: 0,
-        image: "krishna.jpeg",
-        telegramLink: "https://tnseries.com/sZbrn7C",
-
-      },
-      {
-        title: "Krishna Brith Tamil",
-        description: "",
-        categories: ["cartoon"],
-        rank: 0,
-        image: "krishna birth.jpeg",
-        telegramLink: "https://tnseries.com/5Gxu3"
-      },
-      {
-        title: "Krishna Makhan chor",
-        description: "",
-        categories: ["cartoon",],
-        rank: 0,
-        image: "krishna chor.jpeg",
-        telegramLink: "https://tnseries.com/ZQg38wq"
-      },
-      {
-        title: "Krishna in Vrindavan",
-        description: "",
-        categories: ["cartoon",],
-        rank: 0,
-        image: "vrindavan.jpeg",
-        telegramLink: "https://tnseries.com/tkfn"
-      },
-      {
-        title: "Krishna and Balaram Kalavakra ",
-        description: "",
-        categories: ["cartoon",],
-        rank: 0,
-        image: "kalvakra.jpeg",
-        telegramLink: "https://tnseries.com/Rpfri"
-      },
-      {
-        title: "Krishna and Balaram the warrior Princess",
-        description: "",
-        categories: ["cartoon",],
-        rank: 0,
-        image: "warrior.jpeg",
-        telegramLink: "https://tnseries.com/rd5KP"
-      },
-      {
-        title: "Ben 10 Alien Force Season 1,2 and 3 Tamil",
-        description: "",
-        categories: ["cartoon"],
-        rank: 0,
-        image: "ben 10 AF.jpeg",
-        telegramLink: "https://tnseries.com/aiMsD",
-
-      },
-      {
-        title: "Ben 10 Ultimate Alien Season 1,2 and 3 Tamil",
-        description: "",
-        categories: ["cartoon"],
-        rank: 0,
-        image: "ben 10 U.jpeg",
-        telegramLink: "https://tnseries.com/ziSe",
-
-      },
-      {
-        title: "Ben 10 Omniverse Season 1 to 8 Tamil",
-        description: "",
-        categories: ["cartoon"],
-        rank: 0,
-        image: "ben 10 omni.jpeg",
-        telegramLink: "https://tnseries.com/JkgPS5",
-
-      },
-      {
-        title: "Office S01 EP (01-100) Tamil",
-        description: "",
-        categories: ["webseries", "comedy",],
-        rank: 0,
-        image: "office s1.jpeg",
-        telegramLink: "https://tnseries.com/T3g9zeq",
-
-      },
-      {
-        title: "Vilangu (2023) S01 EP (01-08) Tamil",
-        description: "",
-        categories: ["webseries", "thriller",],
+        categories: ["webseries", "thriller"],
         rank: 0,
         image: "vilangu.jpeg",
         telegramLink: "https://tnseries.com/kaGM",
@@ -1045,7 +854,7 @@
       {
         title: "Vadhandhi: The Fable of Velonie (2022) S01 EP (01-08) Tamil",
         description: "",
-        categories: ["webseries", "thriller",],
+        categories: ["webseries", "thriller"],
         rank: 0,
         image: "vadhandhi.jpeg",
         telegramLink: "https://tnseries.com/qOb3nQ",
@@ -1054,7 +863,7 @@
       {
         title: "Suzhal (2022) Tamil S01 EP (01-08)",
         description: "",
-        categories: ["webseries", "thriller",],
+        categories: ["webseries", "thriller"],
         rank: 0,
         image: "suzhal.jpeg",
         telegramLink: "https://tnseries.com/yrKODx",
@@ -1063,7 +872,7 @@
       {
         title: "Suzhal (2022) Tamil S02 EP (01-08)",
         description: "",
-        categories: ["webseries", "thriller",],
+        categories: ["webseries", "thriller"],
         rank: 0,
         image: "suzhal2.jpeg",
         telegramLink: "https://tnseries.com/yrKODx",
@@ -1166,26 +975,13 @@
       contentDiv.innerHTML = '';
 
       // 1. Render Hero Section
-      const featuredMovie = movies.find(m => m.rank === 1);
       const heroSection = document.createElement('section');
       heroSection.id = 'hero-section';
-      if (featuredMovie) {
-        heroSection.style.backgroundImage = `url('${IMAGE_BASE_URL + featuredMovie.image}')`;
-        heroSection.innerHTML = `
-                    <div class="hero-content">
-                        <p>#${featuredMovie.rank} in Movies Today</p>
-                        <h1>${featuredMovie.title}</h1>
-                        <div class="hero-buttons">
-                            <a href="#" class="hero-btn play-btn" onclick="event.preventDefault();openDownloadPage(movies.find(m=>m.rank===1))">
-                                <i class="material-icons">download</i> Get Link
-                            </a>
-                            <a href="#" class="hero-btn info-btn" onclick="event.preventDefault();alert('${featuredMovie.description}')">
-                                <i class="material-icons">info_outline</i> Info
-                            </a>
-                        </div>
-                    </div>`;
-      }
+
+      // Add a placeholder for hero content to be managed by the slideshow function
+      heroSection.innerHTML = `<div class="hero-content"></div>`;
       contentDiv.appendChild(heroSection);
+      startHeroSlideshow();
 
       // 2. Render all main category rows
       // Use only the primary categories for the Home view rows
@@ -1208,6 +1004,47 @@
           contentDiv.appendChild(row);
         }
       });
+    }
+
+    function startHeroSlideshow() {
+      const heroSection = document.getElementById('hero-section');
+      const heroContent = heroSection.querySelector('.hero-content');
+      const featuredMovies = movies.filter(m => m.rank > 0 && m.rank <= 5).sort((a, b) => a.rank - b.rank);
+
+      if (!featuredMovies.length) return;
+
+      let currentIndex = 0;
+
+      function updateHero() {
+        const movie = featuredMovies[currentIndex];
+        
+        // Fade out content
+        heroContent.style.opacity = 0;
+
+        setTimeout(() => {
+          heroSection.style.backgroundImage = `url('${IMAGE_BASE_URL + movie.image}')`;
+          heroContent.innerHTML = `
+            <p>#${movie.rank} in Movies Today</p>
+            <h1>${movie.title}</h1>
+            <div class="hero-buttons">
+                <a href="#" class="hero-btn play-btn" onclick="event.preventDefault();openDownloadPage(movies.find(m=>m.title==='${movie.title.replace(/'/g, "\\'")}'))">
+                   
+                    <i class="material-icons">download</i> DOWNLOAD
+                </a>
+                
+                <a href="#" class="hero-btn info-btn" onclick="event.preventDefault();alert('How to Download:\\n1. Click the DOWNLOAD button.\\n2. You will be redirected to our Telegram channel.\\n3. Find the movie and download the file.')">
+                    <i class="material-icons">help_outline</i> How to Download
+                </a>
+            </div>`;
+          // Fade in new content
+          heroContent.style.opacity = 1;
+          currentIndex = (currentIndex + 1) % featuredMovies.length;
+        }, 500); // Wait for fade-out to complete
+      }
+
+      clearInterval(heroInterval); // Clear any existing interval
+      updateHero(); // Initial call
+      heroInterval = setInterval(updateHero, 5000); // Change movie every 5 seconds
     }
 
     // Central View Router
