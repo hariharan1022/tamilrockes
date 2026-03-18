@@ -152,7 +152,8 @@ function App() {
     if (!newMovie.title || !newMovie.image) return alert('Please add at least title and image!');
     setIsSyncing(true);
 
-    const movieToSave = { ...newMovie };
+    // Omit ID to allow Title-based Upsert
+    const { id, ...movieToSave } = { ...newMovie };
 
     // Push to Supabase Global Cloud
     const { error } = await supabase
@@ -161,10 +162,11 @@ function App() {
 
     if (error) {
        console.error("Cloud Sync Failed", error);
-       alert("Sync Error: Check if you created the SQL table correctly!");
+       alert(`Global Sync Error: ${error.message} (Details: ${error.details || 'Check SQL script'})`);
     } else {
        setNewMovie({title:'',description:'',image:'',telegramLink:'',categories:[],rank:0,year:'2025',quality:'HD',rating:'98%'});
        setIsEditing(null);
+       alert("🎉 Content Published GLOBALLY! (Check on other devices now)");
     }
     setIsSyncing(false);
   };
@@ -179,6 +181,9 @@ function App() {
       
     if (error) {
       console.error("Cloud Delete Failed", error);
+      alert(`Delete Error: ${error.message}`);
+    } else {
+       alert("Asset Deleted Successfully from Cloud");
     }
     setIsSyncing(false);
   };
