@@ -765,5 +765,6 @@ export const movies = [
     rank: 0,
     image: "haikyuii.jpeg",
     telegramLink: "https://tnseries.com/RL6ap5g",
-  }
+  },
+  
 ];

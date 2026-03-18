@@ -19,8 +19,15 @@ import {
   Star,
   Sparkles
 } from 'lucide-react';
+import { createClient } from '@supabase/supabase-js';
 import { movies, categories } from './data/movies';
 import './index.css';
+
+// Initialize Global Sync Client (Supabase)
+const supabase = createClient(
+  'https://trcdmxsfovtrjzlljoyo.supabase.co',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRyY2RteHNmb3Z0cmp6bGxqb3lvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM4NTExMzYsImV4cCI6MjA4OTQyNzEzNn0.kjGAJNJcH_9Tn6GYBSzl29769DF6L0f-uGRe9o0s2vM'
+);
 
 function App() {
   const [currentView, setCurrentView] = useState('home-page');
@@ -35,24 +42,35 @@ function App() {
   const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
   const [showLoginChoices, setShowLoginChoices] = useState(false);
   const [adminUser, setAdminUser] = useState({ user: '', pass: '' });
-  
-  // Persistent Movie Database (Syncs with LocalStorage)
-  const [adminMovies, setAdminMovies] = useState(() => {
-    try {
-      const saved = localStorage.getItem('sk_movies_db');
-      if (!saved) return movies;
-      const parsed = JSON.parse(saved);
-      // Ensure all objects are valid movies
-      return Array.isArray(parsed) && parsed.length > 0 ? parsed : movies;
-    } catch(e) {
-      console.error("Local DB Corrupted, reverting to static data");
-      return movies;
-    }
-  });
+  // Global Movie Database (Real-time Cloud Sync)
+  const [adminMovies, setAdminMovies] = useState(movies);
+  const [isSyncing, setIsSyncing] = useState(false);
 
+  // Load Movies from Cloud (On Start)
   useEffect(() => {
-    localStorage.setItem('sk_movies_db', JSON.stringify(adminMovies));
-  }, [adminMovies]);
+    const fetchMovies = async () => {
+      setIsSyncing(true);
+      const { data, error } = await supabase.from('movies').select('*');
+      if (!error && data && data.length > 0) {
+        setAdminMovies(data);
+      }
+      setIsSyncing(false);
+    };
+
+    fetchMovies();
+
+    // Enable Real-time "Global Sync" Channel
+    const channel = supabase
+      .channel('public:movies')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'movies' }, () => {
+        fetchMovies(); // Re-sync on any change from other devices
+      })
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, []);
 
   const [isEditing, setIsEditing] = useState(null);
   const [newMovie, setNewMovie] = useState({ 
@@ -130,22 +148,39 @@ function App() {
     }
   };
 
-  const handleAddMovie = () => {
+  const handleAddMovie = async () => {
     if (!newMovie.title || !newMovie.image) return alert('Please add at least title and image!');
-    const movieData = { ...newMovie };
-    if (isEditing) {
-       setAdminMovies(prev => prev.map(m => m.title === isEditing ? movieData : m));
-       setIsEditing(null);
+    setIsSyncing(true);
+
+    const movieToSave = { ...newMovie };
+
+    // Push to Supabase Global Cloud
+    const { error } = await supabase
+      .from('movies')
+      .upsert(movieToSave, { onConflict: 'title' });
+
+    if (error) {
+       console.error("Cloud Sync Failed", error);
+       alert("Sync Error: Check if you created the SQL table correctly!");
     } else {
-       setAdminMovies(prev => [movieData, ...prev]);
+       setNewMovie({title:'',description:'',image:'',telegramLink:'',categories:[],rank:0,year:'2025',quality:'HD',rating:'98%'});
+       setIsEditing(null);
     }
-    setNewMovie({ title: '', description: '', image: '', telegramLink: '', categories: [], rank: 0, year: '2025', quality: 'HD', rating: '98%' });
+    setIsSyncing(false);
   };
 
-  const deleteMovie = (title) => {
-    if (window.confirm('Delete this movie from the library?')) {
-      setAdminMovies(prev => prev.filter(m => m.title !== title));
+  const deleteMovie = async (title) => {
+    if (!window.confirm(`Delete ${title} globally?`)) return;
+    setIsSyncing(true);
+    const { error } = await supabase
+      .from('movies')
+      .delete()
+      .eq('title', title);
+      
+    if (error) {
+      console.error("Cloud Delete Failed", error);
     }
+    setIsSyncing(false);
   };
 
   const editMovie = (movie) => {
@@ -528,8 +563,8 @@ function App() {
                    <div className="flex justify-between items-center mb-6">
                      <h3>Content Library</h3>
                      <div className="flex items-center gap-2 text-[10px] font-black tracking-widest uppercase opacity-40">
-                        <TrendingUp size={12} className="text-green-500 animate-pulse" />
-                        Auto-Synced to Local DB
+                        <TrendingUp size={12} className={`${isSyncing ? 'text-blue-500 animate-spin' : 'text-green-500 animate-pulse'}`} />
+                        {isSyncing ? 'Global Cloud Syncing...' : 'Live Connected to Global DB'}
                      </div>
                    </div>
                    <div className="table-scroll">
