@@ -38,8 +38,16 @@ function App() {
   
   // Persistent Movie Database (Syncs with LocalStorage)
   const [adminMovies, setAdminMovies] = useState(() => {
-    const saved = localStorage.getItem('sk_movies_db');
-    return saved ? JSON.parse(saved) : movies;
+    try {
+      const saved = localStorage.getItem('sk_movies_db');
+      if (!saved) return movies;
+      const parsed = JSON.parse(saved);
+      // Ensure all objects are valid movies
+      return Array.isArray(parsed) && parsed.length > 0 ? parsed : movies;
+    } catch(e) {
+      console.error("Local DB Corrupted, reverting to static data");
+      return movies;
+    }
   });
 
   useEffect(() => {
@@ -178,7 +186,7 @@ function App() {
       <div className="rank-wrapper">
         <div className="poster-container shadow-sm">
           {isTop10 && <span className="rank-digit">{rank}</span>}
-          <img loading="lazy" src={`/images/${movie.image}`} alt={movie.title} />
+          <img loading="lazy" src={`images/${movie.image}`} alt={movie.title} />
           <div className="poster-overlay">
             <Play fill="white" size={32} />
           </div>
@@ -278,7 +286,7 @@ function App() {
                         exit={{ opacity: 0, scale: 1.05 }}
                         transition={{ duration: 0.5 }}
                         className="hero-main-card"
-                        style={{ backgroundImage: `url("/images/${featuredMovies[heroIndex].image}")` }}
+                        style={{ backgroundImage: `url("images/${featuredMovies[heroIndex].image}")` }}
                       >
                         <div className="hero-card-overlay">
                           <div className="hero-card-content">
@@ -355,7 +363,7 @@ function App() {
                     <div className="cat-desc-line">Exploring the best in {navCategory.toUpperCase()} • 4K UHD Streaming Hub</div>
                   </header>
                   <div className="responsive-grid">
-                    {adminMovies.filter(m => m && m.categories && m.categories.includes(navCategory)).map((m, i) => (
+                    {adminMovies.filter(m => m && m.categories && Array.isArray(m.categories) && m.categories.includes(navCategory)).map((m, i) => (
                       <MovieCard key={m.title + i} movie={m} />
                     ))}
                   </div>
@@ -392,7 +400,7 @@ function App() {
             )}
           </div>
         )}        {currentView === 'admin-login' && (
-          <div className="netflix-login-container" style={{ backgroundImage: `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('/images/netflix-bg.png')` }}>
+          <div className="netflix-login-container" style={{ backgroundImage: `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('images/netflix-bg.png')` }}>
             <div className="netflix-login-box">
               <h2>Sign In</h2>
               <div className="input-group">
@@ -496,7 +504,7 @@ function App() {
                       <p className="text-[10px] opacity-30 uppercase font-black mb-4 tracking-widest">Asset Preview</p>
                       <div className="flex gap-4 items-center">
                          <div className="w-20 h-28 bg-[#222] rounded overflow-hidden shadow-2xl relative">
-                            {newMovie.image ? <img src={`/images/${newMovie.image}`} className="w-full h-full object-cover" /> : <div className="flex items-center justify-center h-full opacity-20"><Film /></div>}
+                            {newMovie.image ? <img src={`images/${newMovie.image}`} className="w-full h-full object-cover" /> : <div className="flex items-center justify-center h-full opacity-20"><Film /></div>}
                             <div className="absolute top-1 left-1 bg-red-600 text-[8px] font-black px-1 rounded-sm">SK</div>
                          </div>
                          <div className="flex flex-col">
@@ -540,7 +548,7 @@ function App() {
                            <tr key={m.title}>
                              <td>
                                 <div className="flex items-center gap-4">
-                                   <img src={`/images/${m.image}`} className="w-10 h-14 object-cover rounded shadow-lg ring-1 ring-white/10" />
+                                   <img src={`images/${m.image}`} className="w-10 h-14 object-cover rounded shadow-lg ring-1 ring-white/10" />
                                    <div className="flex flex-col">
                                       <span className="font-bold text-sm block">{m.title}</span>
                                       <span className="text-[10px] opacity-40">{m.year || '2025'} • {m.quality || 'HD'}</span>
@@ -591,7 +599,7 @@ function App() {
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
               onClick={e => e.stopPropagation()}
             >
-              <div className="modal-hero-box" style={{ backgroundImage: `linear-gradient(to top, #000 0%, rgba(0,0,0,0.5) 40%, transparent 100%), url('/images/${selectedMovie.image}')` }}>
+              <div className="modal-hero-box" style={{ backgroundImage: `linear-gradient(to top, #000 0%, rgba(0,0,0,0.5) 40%, transparent 100%), url('images/${selectedMovie.image}')` }}>
                 <button className="modal-exit" onClick={closeMovieDetails}><X /></button>
                 <motion.div 
                   initial={{ opacity: 0, y: 30 }}
@@ -669,7 +677,7 @@ function App() {
                       .slice(0, 8)
                       .map((m, i) => (
                         <div key={m.title + i} className="similar-card" onClick={() => openMovieDetails(m)}>
-                           <img src={`/images/${m.image}`} alt={m.title} />
+                           <img src={`images/${m.image}`} alt={m.title} />
                            <div className="sim-overlay">
                              <Play size={20} />
                            </div>
