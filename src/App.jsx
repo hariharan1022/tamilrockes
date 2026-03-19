@@ -302,15 +302,16 @@ function App() {
   };
 
   const activeHero = (function () {
-    if (navCategory === "movies") return null;
     if (navCategory === "home")
       return featuredMovies.length > 0
         ? featuredMovies[heroIndex % featuredMovies.length]
         : null;
+
+    const target = navCategory.toLowerCase();
     const catMovies = adminMovies.filter((m) => {
       const cats = m.categories;
       if (!cats) return false;
-      const target = navCategory.toLowerCase();
+      if (target === "movies") return true;
       if (target === "cartoons")
         return cats.some(
           (c) =>
@@ -318,6 +319,7 @@ function App() {
         );
       return cats.some((c) => c.toLowerCase() === target);
     });
+
     return catMovies.length > 0
       ? catMovies[0]
       : featuredMovies.length > 0
@@ -443,6 +445,14 @@ function App() {
                   <MovieRow title="Recently Added" catKey="recent" />
                   <MovieRow title="Action Blockbusters" catKey="action" />
                 </>
+              ) : navCategory === "movies" ? (
+                <>
+                  <MovieRow title="Re-Released Classics" catKey="rerelease" />
+                  <MovieRow title="Romance Dramas" catKey="romance" />
+                  <MovieRow title="Crime Thriller" catKey="thriller" />
+                  <MovieRow title="Family Comedies" catKey="comedy" />
+                  <MovieRow title="Horror & Supernaturals" catKey="horror" />
+                </>
               ) : (
                 <div className="grid-view-container">
                   <header className="category-section-header">
@@ -453,7 +463,7 @@ function App() {
                     {adminMovies
                       .filter((m) => {
                         const target = navCategory.toLowerCase();
-                        if (target === "movies") return true; 
+                        if (target === "movies") return true;
                         if (!m.categories) return false;
                         if (target === "cartoons") {
                           return m.categories.some(
