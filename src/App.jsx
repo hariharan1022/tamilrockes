@@ -447,11 +447,12 @@ function App() {
                 </>
               ) : navCategory === "movies" ? (
                 <>
-                  <MovieRow title="Re-Released Classics" catKey="rerelease" />
+                  <MovieRow title="Recent Movies" catKey="recent" />
+                  <MovieRow title="Comedy Movies" catKey="comedy" />
+                  <MovieRow title="Action Blockbusters" catKey="action" />
                   <MovieRow title="Romance Dramas" catKey="romance" />
                   <MovieRow title="Crime Thriller" catKey="thriller" />
-                  <MovieRow title="Family Comedies" catKey="comedy" />
-                  <MovieRow title="Horror & Supernaturals" catKey="horror" />
+                  <MovieRow title="Re-Released Classics" catKey="rerelease" />
                 </>
               ) : (
                 <div className="grid-view-container">
