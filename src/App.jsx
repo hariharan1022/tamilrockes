@@ -452,8 +452,9 @@ function App() {
                   <div className="responsive-grid">
                     {adminMovies
                       .filter((m) => {
-                        if (!m.categories) return false;
                         const target = navCategory.toLowerCase();
+                        if (target === "movies") return true; 
+                        if (!m.categories) return false;
                         if (target === "cartoons") {
                           return m.categories.some(
                             (c) =>
