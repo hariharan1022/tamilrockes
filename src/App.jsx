@@ -118,19 +118,21 @@ function App() {
 
   const openMovieDetails = (movie) => {
     setSelectedMovie(movie);
-    document.body.style.overflow = 'hidden'; // Stop background scroll
+    setCurrentView('movie-details');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const closeMovieDetails = () => {
     setSelectedMovie(null);
-    document.body.style.overflow = 'auto'; // Re-enable scroll
+    setCurrentView('home-page');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const showView = (view, cat) => {
     setCurrentView(view);
-    setNavCategory(cat);
+    if(cat) setNavCategory(cat);
     setShowLoginChoices(false);
-    closeMovieDetails();
+    setSelectedMovie(null);
     window.scrollTo({ top: 0, behavior: 'smooth' });
     if (view === 'search-page') setIsSearching(true);
     else {
@@ -228,7 +230,9 @@ function App() {
           {isTop10 && <span className="rank-digit">{rank}</span>}
           <img loading="lazy" src={`images/${movie.image}`} alt={movie.title} />
           <div className="poster-overlay">
-            <Play fill="white" size={32} />
+            <div className="poster-overlay-play">
+              <Play fill="white" size={24} style={{ marginLeft: '4px' }} />
+            </div>
           </div>
         </div>
         <p className="poster-title-overlap">{movie.title}</p>
@@ -274,17 +278,27 @@ function App() {
     );
   };
 
+  const getHeroMovie = () => {
+    if (navCategory === 'movies') return null;
+    if (navCategory === 'home') return featuredMovies.length > 0 ? featuredMovies[heroIndex] : null;
+    const catMovies = adminMovies.filter(m => m && m.categories && Array.isArray(m.categories) && m.categories.includes(navCategory));
+    return catMovies.length > 0 ? catMovies[0] : (featuredMovies.length > 0 ? featuredMovies[0] : null);
+  };
+  const activeHero = getHeroMovie();
+
   return (
     <div className="app-shell">
-      <header className={`navbar-fixed ${isScrolled || currentView !== 'home-page' || navCategory !== 'home' ? 'bg-solid' : 'bg-gradient'}`}>
+      <header className={`navbar-fixed ${isScrolled || currentView !== 'home-page' || !activeHero ? 'bg-solid' : 'bg-gradient'}`}>
         <div className="navbar-container">
-          <motion.h1 
-            className="site-logo"
-            whileTap={{ scale: 0.9 }}
-            onClick={() => showView('home-page', 'home')}
-          >
-            SK<span>MOVIES</span>
-          </motion.h1>
+          <div className="navbar-left flex items-center gap-8">
+            <motion.h1 
+              className="site-logo"
+              whileTap={{ scale: 0.9 }}
+              onClick={() => showView('home-page', 'home')}
+            >
+              SK<span>MOVIES</span>
+            </motion.h1>
+          </div>
 
           <div className="navbar-actions">
             <div className={`expanded-search ${isSearching ? 'open' : ''}`}>
@@ -307,73 +321,85 @@ function App() {
       <main className="main-viewport">
         {currentView === 'home-page' && (
           <div className="home-view">
-            {navCategory === 'home' && featuredMovies.length > 0 && (
+            {activeHero && (
               <section className="hero-landing">
-                {/* Netflix-style Top Pills */}
-                <div className="hero-top-nav">
-                  <div className="pill" onClick={() => showView('home-page', 'webseries')}>TV Shows</div>
-                  <div className="pill" onClick={() => showView('home-page', 'movies')}>Movies</div>
-                  <div className="pill" onClick={() => showView('home-page', 'home')}>Categories</div>
-                </div>
+                {/* Mobile Top Nav Pills */}
+                {navCategory === 'home' && (
+                  <div className="hero-top-nav md:hidden">
+                    <div className="pill" onClick={() => showView('home-page', 'webseries')}>TV Shows</div>
+                    <div className="pill" onClick={() => showView('home-page', 'movies')}>Movies</div>
+                    <div className="pill" onClick={() => showView('home-page', 'home')}>Categories</div>
+                  </div>
+                )}
 
                 <div className="hero-card-container">
                   <AnimatePresence mode="wait">
-                    {featuredMovies[heroIndex] && (
-                      <motion.div 
-                        key={heroIndex}
-                        initial={{ opacity: 0, scale: 0.95 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        exit={{ opacity: 0, scale: 1.05 }}
-                        transition={{ duration: 0.5 }}
-                        className="hero-main-card"
-                        style={{ backgroundImage: `url("images/${featuredMovies[heroIndex].image}")` }}
-                      >
-                        <div className="hero-card-overlay">
-                          <div className="hero-card-content">
-                            <div className="flex flex-col items-center mb-4">
-                               <div className="flex items-center gap-2 mb-1">
-                                 <div className="brand-logo-small">SK</div>
-                                 <span className="text-xs font-black tracking-[0.2em] opacity-80 uppercase mt-1">MOVIES</span>
+                    <motion.div 
+                      key={activeHero.title}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 1.2 }}
+                      className="hero-main-card"
+                      style={{ backgroundImage: `url("images/${activeHero.image}")` }}
+                    >
+                      <div className="hero-gradient-overlay">
+                        <div className="hero-content">
+                          <div className="flex flex-col items-center md:items-start mb-2 md:mb-4 w-full">
+                             <div className="flex items-center gap-2 mb-1">
+                               <div className="brand-logo-netflix">SK</div>
+                               <span className="text-[12px] md:text-[10px] font-bold tracking-[0.2em] md:tracking-[0.3em] opacity-100 md:opacity-80 text-white md:text-gray-300 uppercase mt-1">
+                                 <span className="md:hidden">MOVIES</span>
+                                 <span className="hidden md:inline">{navCategory === 'anime' ? 'ANIME' : navCategory === 'webseries' ? 'SERIES' : 'MOVIES'}</span>
+                               </span>
+                             </div>
+                             {navCategory === 'home' && (
+                               <div className="text-[12px] font-bold text-white tracking-widest mb-2 md:hidden">
+                                 TRENDING #{activeHero.rank || 1}
                                </div>
-                               <div className="text-[10px] font-bold text-red-500 tracking-wider">
-                                 TRENDING #{featuredMovies[heroIndex].rank}
-                               </div>
-                            </div>
-                            
-                            <h2 className="hero-card-title">{featuredMovies[heroIndex].title}</h2>
-                            
-                            <div className="hero-tags">
-                              {featuredMovies[heroIndex].categories.map((c, i) => (
-                                <span key={c}>{i > 0 && " • "}{c}</span>
-                              ))}
-                            </div>
-                            
-                            <div className="hero-btn-group">
-                              <motion.button 
-                                whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
-                                className="btn-netflix-play"
-                                onClick={() => openMovieDetails(featuredMovies[heroIndex])}
-                              >
-                                <Play fill="currentColor" size={24} /> Play
-                              </motion.button>
-                              <motion.button 
-                                whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
-                                className="btn-netflix-list"
-                                onClick={() => openMovieDetails(featuredMovies[heroIndex])}
-                              >
-                                <Info size={24} /> Details
-                              </motion.button>
-                            </div>
+                             )}
+                          </div>
+                          
+                          <h2 className="hero-title-massive">{activeHero.title}</h2>
+                          
+                          <div className="hero-tags">
+                            {activeHero.categories.map((c, i) => (
+                              <span key={c}>{i > 0 && " • "}{c}</span>
+                            ))}
+                          </div>
+                          
+                          <p className="hero-description-text">
+                            {activeHero.description || "An extraordinary cinematic experience that pushes the boundaries of storytelling."}
+                          </p>
+                          
+                          <div className="hero-btn-group-netflix">
+                            <motion.button 
+                              whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
+                              className="btn-netflix-play-full"
+                              onClick={() => openMovieDetails(activeHero)}
+                            >
+                              <Play fill="currentColor" size={24} /> Play
+                            </motion.button>
+                            <motion.button 
+                              whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
+                              className="btn-netflix-list-full"
+                              onClick={() => openMovieDetails(activeHero)}
+                            >
+                              <Info size={24} className="md:hidden mr-1" />
+                              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="hidden md:inline mr-1"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                              <span className="md:hidden">Details</span>
+                              <span className="hidden md:inline">My List</span>
+                            </motion.button>
                           </div>
                         </div>
-                      </motion.div>
-                    )}
+                      </div>
+                    </motion.div>
                   </AnimatePresence>
                 </div>
               </section>
             )}
 
-            <div className="rows-scroller">
+            <div className="rows-scroller" style={!activeHero ? { paddingTop: '100px' } : undefined}>
               {navCategory === 'home' ? (
                 <>
                   <MovieRow title="Top 10 Rankings" catKey="top10" isTop10 />
@@ -391,15 +417,15 @@ function App() {
                   <MovieRow title="Thriller" catKey="thriller" />
                 </>
               ) : (
-                <div className="grid-view-container">
+                <div className="grid-view-container" style={{ paddingTop: '40px' }}>
                   <header className="category-section-header">
                     <div className="cat-brand-pill">
                        {navCategory === 'anime' ? <Sparkles size={16} /> : 
                         navCategory === 'webseries' ? <Tv size={16} /> : 
                         navCategory === 'movies' ? <Film size={16} /> : <TrendingUp size={16} />}
-                       {categoryLabels.find(c => c.key === navCategory)?.label.replace(/[^a-zA-Z0-9 ]/g, '') || categoryLabels[navCategory]}
+                       {categories.find(c => c.key === navCategory)?.label.replace(/[^a-zA-Z0-9 ]/g, '') || categoryLabels[navCategory]}
                     </div>
-                    <h2>{categoryLabels.find(c => c.key === navCategory)?.label.replace(/[^a-zA-Z0-9 ]/g, '') || categoryLabels[navCategory]}</h2>
+                    <h2>{categories.find(c => c.key === navCategory)?.label.replace(/[^a-zA-Z0-9 ]/g, '') || categoryLabels[navCategory]}</h2>
                     <div className="cat-desc-line">Exploring the best in {navCategory.toUpperCase()} • 4K UHD Streaming Hub</div>
                   </header>
                   <div className="responsive-grid">
@@ -415,12 +441,12 @@ function App() {
 
         {currentView === 'search-page' && (
           <div className="search-view-container">
-            <header className="px-6 mb-8">
-              <h2 className="text-2xl font-bold opacity-60">
+            <header>
+              <h2>
                 {searchQuery ? `Results for "${searchQuery}"` : "Discover New Stories"}
               </h2>
             </header>
-            <div className="responsive-grid px-6">
+            <div className="responsive-grid">
               {filteredMovies.map((m, i) => (
                 <motion.div 
                   key={m.title + i}
@@ -433,14 +459,14 @@ function App() {
               ))}
             </div>
             {filteredMovies.length === 0 && (
-              <div className="flex flex-col items-center justify-center h-64 opacity-30">
+              <div className="search-empty">
                 <Search size={64} />
-                <p className="mt-4 text-xl">No matches found. Try another term.</p>
+                <p>No matches found. Try another term.</p>
               </div>
             )}
           </div>
         )}        {currentView === 'admin-login' && (
-          <div className="netflix-login-container" style={{ backgroundImage: `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('images/netflix-bg.png')` }}>
+          <div className="netflix-login-container" style={{ backgroundImage: `linear-gradient(to right, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.8) 100%), linear-gradient(to bottom, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.1) 40%, rgba(0,0,0,0.8) 100%), url('login background.jpeg')` }}>
             <div className="netflix-login-box">
               <h2>Sign In</h2>
               <div className="input-group">
@@ -620,116 +646,117 @@ function App() {
              </div>
           </div>
         )}
-      </main>
-
-      <AnimatePresence>
-        {selectedMovie && (
+        {currentView === 'movie-details' && selectedMovie && (
           <motion.div 
-            className="modal-backdrop"
+            className="movie-details-page fade-in"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            onClick={closeMovieDetails}
           >
-            <motion.div 
-              className="modal-body"
-              initial={{ y: "100%" }}
-              animate={{ y: 0 }}
-              exit={{ y: "100%" }}
-              transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              onClick={e => e.stopPropagation()}
-            >
-              <div className="modal-hero-box" style={{ backgroundImage: `linear-gradient(to top, #000 0%, rgba(0,0,0,0.5) 40%, transparent 100%), url('images/${selectedMovie.image}')` }}>
-                <button className="modal-exit" onClick={closeMovieDetails}><X /></button>
-                <motion.div 
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.3 }}
-                  className="modal-hero-info"
-                >
-                  <div className="flex items-center gap-2 mb-3">
-                     <div className="brand-logo-small">SK</div>
-                     <span className="text-[10px] font-black tracking-widest opacity-60 uppercase">EXCLUSIVE</span>
+            {/* Cinematic Full Bleed Hero */}
+            <div className="md-hero-box" style={{ backgroundImage: `url('images/${selectedMovie.image}')` }}>
+              <div className="md-hero-gradient"></div>
+              
+              <button className="md-back-btn" onClick={closeMovieDetails}>
+                <ArrowLeft size={18} /> Back
+              </button>
+
+              <div className="md-hero-info">
+                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="md-tagline">
+                   <div className="md-exclusive">SK EXCLUSIVE</div>
+                   <span className="md-top-rated"><Star size={12} fill="gold" className="text-yellow-400" /> TOP RATED</span>
+                </motion.div>
+                
+                <motion.h2 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="md-title">
+                  {selectedMovie.title}
+                </motion.h2>
+                
+                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="md-badges md-flex-wrap">
+                  <span className="md-badge-match">98% Match</span>
+                  <span className="md-badge-outline">{selectedMovie.year || '2024'}</span>
+                  <span className="md-badge-fill">{selectedMovie.quality || '4K UHD'}</span>
+                  <span className="md-badge-outline">5.1 Audio</span>
+                </motion.div>
+              </div>
+            </div>
+
+            <div className="md-content">
+              <div className="md-grid">
+                {/* Left Column: Plot & Actions */}
+                <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.5 }} className="md-storyline">
+                  <h3><Info size={24} style={{ marginRight: '10px' }} /> Storyline</h3>
+                  <p className="md-story-text">
+                    {selectedMovie.description || "An extraordinary cinematic experience that pushes the boundaries of storytelling. Follow the gripping journey of the lead characters as they navigate through life-altering challenges and emotional triumphs."}
+                  </p>
+                  
+                  <div className="md-action-btns">
+                    <button className="md-btn-play"><Play fill="currentColor" size={24} /> Watch Trailer</button>
+                    <button className="md-btn-icon"><TrendingUp size={24} /></button>
                   </div>
-                  <h2>{selectedMovie.title}</h2>
-                  <div className="modal-top-actions">
-                    <button className="btn-main-play"><Play fill="currentColor" size={20} /> Watch Trailer</button>
-                    <button className="btn-icon-round"><TrendingUp size={20} /></button>
-                    <button className="btn-icon-round"><Star size={20} /></button>
+                </motion.div>
+
+                {/* Right Column: Download Hub */}
+                <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.6 }}>
+                  <div className="md-download-panel">
+                    <div className="md-trim"></div>
+                    <h3 className="md-dl-title"><Download size={28} style={{ marginRight: '12px', color: '#ef4444' }} /> Download Servers</h3>
+                    
+                    <div className="md-dl-list">
+                      {[
+                        { l: '480p SD Mobile', s: '450MB', cls: 'sd' },
+                        { l: '720p HD Ready', s: '1.2GB', cls: 'hd' },
+                        { l: '1080p FHD Best', s: '2.5GB', cls: 'fhd' },
+                        { l: '4K UHD Premium', s: '8.4GB', cls: 'uhd' }
+                      ].map((d, i) => (
+                        <a 
+                          key={d.l}
+                          href={selectedMovie.telegramLink}
+                          target="_blank"
+                          rel="noreferrer"
+                          className={`md-dl-card ${d.cls}`}
+                        >
+                          <div className="md-dl-left">
+                            <span className="md-dl-label">{d.l}</span>
+                            <span className="md-dl-size">{d.s} • Direct Link</span>
+                          </div>
+                          <div className="md-dl-icon">
+                            <Download size={22} />
+                          </div>
+                        </a>
+                      ))}
+                    </div>
                   </div>
                 </motion.div>
               </div>
 
-              <div className="modal-content-scrollable">
-                <div className="modal-meta-row">
-                  <div className="meta-left">
-                    <div className="meta-badges">
-                      <span className="badge-new">98% Match</span>
-                      <span className="badge-outline">2024</span>
-                      <span className="badge-fill">UHD</span>
-                      <span className="badge-outline">5.1 Audio</span>
-                    </div>
-                    <p className="modal-plot">
-                      {selectedMovie.description || "An extraordinary cinematic experience that pushes the boundaries of storytelling. Follow the gripping journey of the lead characters as they navigate through life-altering challenges and emotional triumphs."}
-                    </p>
-                  </div>
-                </div>
-
-                <div className="download-hub">
-                  <h4><Download size={18} className="mr-2" /> Download Direct</h4>
-                  <div className="download-grid">
-                    {[
-                      { l: '480p - SD', s: '450MB' },
-                      { l: '720p - HD', s: '1.2GB' },
-                      { l: '1080p - FHD', s: '2.5GB' },
-                      { l: '2160p - 4K', s: '8.4GB' }
-                    ].map((d, i) => (
-                      <motion.a 
-                        key={d.l}
-                        href={selectedMovie.telegramLink}
-                        target="_blank"
-                        rel="noreferrer"
-                        whileHover={{ scale: 1.02, backgroundColor: 'rgba(255,255,255,0.1)' }}
-                        whileTap={{ scale: 0.98 }}
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: 0.4 + (i * 0.1) }}
-                        className="download-card"
+              {/* Similar Movies Section */}
+              <div className="md-rec-section">
+                <h3 className="md-rec-title">Recommended</h3>
+                <div className="md-rec-grid">
+                  {adminMovies && adminMovies.length > 0 && adminMovies
+                    .filter(m => m && m.categories && selectedMovie && selectedMovie.categories && 
+                                 m.categories.some(c => selectedMovie.categories.includes(c)) && 
+                                 m.title !== selectedMovie.title)
+                    .sort(() => Math.random() - 0.5)
+                    .slice(0, 8)
+                    .map((m, i) => (
+                      <motion.div 
+                        initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.1 * i }}
+                        key={m.title + i} className="md-rec-card" onClick={() => openMovieDetails(m)}
                       >
-                        <div className="dl-info">
-                          <span className="dl-label">{d.l}</span>
-                          <span className="dl-size">{d.s}</span>
-                        </div>
-                        <Download size={18} className="opacity-40" />
-                      </motion.a>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="more-like-this">
-                  <h4>More Like This</h4>
-                  <div className="similar-row">
-                    {adminMovies && adminMovies.length > 0 && adminMovies
-                      .filter(m => m && m.categories && selectedMovie && selectedMovie.categories && 
-                                   m.categories.some(c => selectedMovie.categories.includes(c)) && 
-                                   m.title !== selectedMovie.title)
-                      .sort(() => Math.random() - 0.5) // Randomize results
-                      .slice(0, 8)
-                      .map((m, i) => (
-                        <div key={m.title + i} className="similar-card" onClick={() => openMovieDetails(m)}>
-                           <img src={`images/${m.image}`} alt={m.title} />
-                           <div className="sim-overlay">
-                             <Play size={20} />
-                           </div>
-                        </div>
-                    ))}
-                  </div>
+                         <img src={`images/${m.image}`} alt={m.title} />
+                         <div className="md-rec-overlay">
+                           <div className="md-rec-play"><Play size={20} fill="white" style={{ marginLeft: '4px' }} /></div>
+                           <span className="md-rec-label">{m.title}</span>
+                         </div>
+                      </motion.div>
+                  ))}
                 </div>
               </div>
-            </motion.div>
+            </div>
           </motion.div>
         )}
-      </AnimatePresence>
+      </main>
 
       {/* Login Choice Popover */}
       <AnimatePresence>
