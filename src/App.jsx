@@ -23,10 +23,13 @@ import {
   Cloud,
   Baby,
   Languages,
+  Layout, // Added Layout icon
   Send,
   Share2,
   Bot, // Added Bot icon
   TrendingUp, // Added TrendingUp icon
+  User, // Added User icon
+  LogOut, // Added LogOut icon
 } from "lucide-react";
 import { supabase } from "./config/supabase";
 import { movies as initialLocalMovies, categories } from "./data/movies";
@@ -40,10 +43,15 @@ function App() {
   const [heroIndex, setHeroIndex] = useState(0);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
+  const [session, setSession] = useState(null);
+  const [showUserProfile, setShowUserProfile] = useState(false);
+  const [loginEmail, setLoginEmail] = useState("");
+  const [loginPass, setLoginPass] = useState("");
+  const [showRegister, setShowRegister] = useState(false);
 
   // Admin Side State
   const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
-  const [showLoginChoices, setShowLoginChoices] = useState(false);
+  const [showLoginChoices, setShowLoginChoices] = useState(false); // Used for SK Footer Portal
   const [showAIChat, setShowAIChat] = useState(false);
   const [chatInput, setChatInput] = useState("");
   const [chatMessages, setChatMessages] = useState([
@@ -61,12 +69,13 @@ function App() {
     title: "",
     description: "",
     image: "",
-    telegramLink: "",
+    telegram_link: "",
     categories: [],
     rank: 0,
     year: "2025",
     quality: "HD",
     rating: "98%",
+    landscape_image: "",
   });
 
   const fetchMovies = async () => {
@@ -89,8 +98,63 @@ function App() {
         () => fetchMovies(),
       )
       .subscribe();
-    return () => supabase.removeChannel(channel);
+
+    // Check auth session
+    supabase.auth.getSession().then(({ data: { session: curSession } }) => {
+      setSession(curSession);
+    });
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, curSession) => {
+      setSession(curSession);
+    });
+
+    return () => {
+      supabase.removeChannel(channel);
+      subscription.unsubscribe();
+    };
   }, []);
+
+  const handleAuth = async (isReg) => {
+    if (!loginEmail || !loginPass) return alert("Please fill all fields.");
+    if (isReg) {
+      const { data, error } = await supabase.auth.signUp({
+        email: loginEmail,
+        password: loginPass,
+      });
+      if (error) {
+        alert("Registration Error: " + error.message);
+      } else {
+        if (data?.session) {
+          alert("Registration successful! You are now logged in.");
+        } else {
+          alert(
+            "Registration successful! IMPORTANT: Please check your email inbox (and spam) to confirm your account before logging in.",
+          );
+          setShowRegister(false);
+          setLoginPass("");
+        }
+      }
+    } else {
+      const { error } = await supabase.auth.signInWithPassword({
+        email: loginEmail,
+        password: loginPass,
+      });
+      if (error) {
+        if (error.message.toLowerCase().includes("email not confirmed")) {
+           alert("Login Failed: Your email address hasn't been confirmed yet. Please check your inbox for the verification link.");
+        } else {
+           alert("Login Error: " + error.message);
+        }
+      }
+    }
+  };
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    setSession(null);
+  };
 
   const featuredMovies = useMemo(() => {
     // Filter for movies marked as 'top10' category
@@ -229,6 +293,7 @@ function App() {
         year: "2025",
         quality: "HD",
         rating: "98%",
+        landscape_image: "",
       });
       setIsEditing(null);
     }
@@ -302,14 +367,23 @@ function App() {
     </motion.div>
   );
 
-  const MovieRow = ({ title, catKey, isTop10 }) => {
+  const MovieRow = ({ title, catKey, mustInclude, isTop10 }) => {
     const listRef = useRef(null);
     const rowContent = useMemo(() => {
-      let f = adminMovies.filter((m) => m && m.categories?.includes(catKey));
-      if (isTop10)
-        return f.sort((a, b) => (a.rank || 0) - (b.rank || 0)).slice(0, 10);
-      return f;
-    }, [adminMovies, catKey, isTop10]);
+      let filtered = adminMovies.filter((m) => {
+        if (!m || !m.categories) return false;
+        const matchesKey = m.categories.includes(catKey);
+        if (!mustInclude) return matchesKey;
+        // Check if item belongs to both the genre AND the filter (e.g. 'anime' AND 'top10')
+        return m.categories.includes(mustInclude) && matchesKey;
+      });
+      if (isTop10) {
+        return filtered
+          .sort((a, b) => (a.rank || 0) - (b.rank || 0))
+          .slice(0, 10);
+      }
+      return filtered;
+    }, [adminMovies, catKey, mustInclude, isTop10]);
     if (rowContent.length === 0) return null;
     return (
       <div className="row-wrapper">
@@ -348,38 +422,142 @@ function App() {
     );
   };
 
-  const activeHero = (function () {
-    if (navCategory === "home")
-      return featuredMovies.length > 0
-        ? featuredMovies[heroIndex % featuredMovies.length]
-        : null;
+  const activeHero = useMemo(() => {
+    let top10s = featuredMovies;
+    if (navCategory !== "home") {
+      top10s = featuredMovies.filter((m) => {
+        if (!m || !m.categories) return false;
+        const target = navCategory.toLowerCase();
+        if (target === "movies") return true;
+        if (target === "cartoons") {
+          return m.categories.some(
+            (c) =>
+              c.toLowerCase() === "cartoon" || c.toLowerCase() === "cartoons",
+          );
+        }
+        return m.categories.some((c) => c.toLowerCase() === target);
+      });
+    }
 
-    const target = navCategory.toLowerCase();
-    const catMovies = adminMovies.filter((m) => {
-      const cats = m.categories;
-      if (!cats) return false;
-      if (target === "movies") return true;
-      if (target === "cartoons")
-        return cats.some(
-          (c) =>
-            c.toLowerCase() === "cartoon" || c.toLowerCase() === "cartoons",
-        );
-      return cats.some((c) => c.toLowerCase() === target);
-    });
+    if (top10s.length > 0) {
+      return top10s[heroIndex % top10s.length];
+    }
+    if (featuredMovies.length > 0) {
+      return featuredMovies[heroIndex % featuredMovies.length];
+    }
+    if (adminMovies.length > 0) {
+      return adminMovies[0];
+    }
+    return null;
+  }, [featuredMovies, adminMovies, heroIndex, navCategory]);
 
-    return catMovies.length > 0
-      ? catMovies[0]
-      : featuredMovies.length > 0
-        ? featuredMovies[0]
-        : null;
-  })();
+  if (currentView === "admin-login") {
+    return (
+      <div className="login-full-screen">
+        <div className="login-bg-overlay"></div>
+        <div className="admin-login-card">
+          <h2>Admin Terminal</h2>
+          <div className="admin-login-form">
+            <input
+              type="text"
+              placeholder="Access Key"
+              onChange={(e) =>
+                setAdminUser({ ...adminUser, user: e.target.value })
+              }
+            />
+            <input
+              type="password"
+              placeholder="Password"
+              onChange={(e) =>
+                setAdminUser({ ...adminUser, pass: e.target.value })
+              }
+            />
+            <button onClick={loginAdmin}>Enter Console</button>
+            <button
+              className="btn-back-to-user"
+              onClick={() => setCurrentView("home-page")}
+            >
+              Return to User Portal
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!session) {
+    return (
+      <div className="login-full-screen">
+        <div className="login-bg-overlay"></div>
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="login-card-prime"
+        >
+          <div className="login-logo-brand">
+            SK<span>CINEMA</span>
+          </div>
+          <h2>{showRegister ? "Create Account" : "Access Portal"}</h2>
+          <p>The Ultimate Cinematic Experience Awaits</p>
+
+          <div className="login-form-group">
+            <div className="input-with-icon">
+              <User size={18} />
+              <input
+                type="email"
+                placeholder="Email Address"
+                value={loginEmail}
+                onChange={(e) => setLoginEmail(e.target.value)}
+              />
+            </div>
+            <div className="input-with-icon">
+              <LogOut size={18} />
+              <input
+                type="password"
+                placeholder="Secure Password"
+                value={loginPass}
+                onChange={(e) => setLoginPass(e.target.value)}
+              />
+            </div>
+
+            <button
+              className="login-submit-btn"
+              onClick={() => handleAuth(showRegister)}
+            >
+              {showRegister ? "Register Now" : "Unlock Cinematic Access"}
+            </button>
+          </div>
+
+          <div className="login-switcher">
+            {showRegister ? (
+              <p>
+                Already have an account?{" "}
+                <span onClick={() => setShowRegister(false)}>Log In</span>
+              </p>
+            ) : (
+              <p>
+                Don't have an access key?{" "}
+                <span onClick={() => setShowRegister(true)}>Get Started</span>
+              </p>
+            )}
+            <p
+              className="admin-access-link"
+              onClick={() => setCurrentView("admin-login")}
+            >
+              Administrator Access
+            </p>
+          </div>
+        </motion.div>
+      </div>
+    );
+  }
 
   return (
     <div className="app-shell">
       <header
         className={`navbar-fixed ${isScrolled || currentView !== "home-page" || !activeHero ? "bg-solid" : "bg-gradient"}`}
       >
-        <div className="navbar-container">
+        <div className={`navbar-container ${isSearching ? "searching" : ""}`}>
           <div className="navbar-left">
             <motion.h1
               className="site-logo"
@@ -405,6 +583,16 @@ function App() {
                   autoFocus
                 />
               )}
+            </div>
+            <div
+              className="navbar-profile"
+              onClick={() => setShowUserProfile(true)}
+            >
+              <div className="profile-disc shadow-sm">
+                <span className="profile-initial">
+                  {session?.user?.email?.charAt(0).toUpperCase()}
+                </span>
+              </div>
             </div>
           </div>
         </div>
@@ -452,16 +640,18 @@ function App() {
                 <div
                   className="hero-main-card"
                   style={{
-                    backgroundImage: `url("images/${activeHero.image}")`,
+                    backgroundImage: `url("${(window.innerWidth > 768 && activeHero.landscape_image) ? "images/landscape/" + activeHero.landscape_image : "images/" + activeHero.image}")`,
                   }}
                 >
                   <div className="hero-gradient-overlay">
                     <div className="hero-content">
                       <div className="brand-logo-netflix">SK MOVIES</div>
                       <div className="trending-marker">TRENDING #1</div>
-                      <h2 className="hero-title-massive">{activeHero.title}</h2>
+                      <h2 className="hero-title-massive">
+                        {activeHero.title}
+                      </h2>
                       <div className="hero-tags">
-                        {activeHero.categories.join(" • ")}
+                        {activeHero.categories?.join(" • ") || "Cinema"}
                       </div>
                       <div className="hero-btn-group-netflix">
                         <button
@@ -494,41 +684,52 @@ function App() {
                 </>
               ) : navCategory === "movies" ? (
                 <>
-                  <MovieRow title="Recent Movies" catKey="recent" />
-                  <MovieRow title="Comedy Movies" catKey="comedy" />
-                  <MovieRow title="Action Blockbusters" catKey="action" />
-                  <MovieRow title="Romance Dramas" catKey="romance" />
-                  <MovieRow title="Crime Thriller" catKey="thriller" />
+                  <MovieRow title="Top 10 Movies" catKey="top10" mustInclude="movies" isTop10 />
+                  <MovieRow title="Recently Released" catKey="recent" />
+                  <MovieRow title="Comedy Blockbusters" catKey="comedy" />
+                  <MovieRow title="Action Packed" catKey="action" />
+                  <MovieRow title="Romance & Heart" catKey="romance" />
+                  <MovieRow title="Crime Thrillers" catKey="thriller" />
                   <MovieRow title="Re-Released Classics" catKey="rerelease" />
                 </>
               ) : (
-                <div className="grid-view-container">
-                  <header className="category-section-header">
-                    <div className="cat-brand-pill">SK CINEMA</div>
-                    <h2>{navCategory.toUpperCase()}</h2>
-                  </header>
-                  <div className="responsive-grid">
-                    {adminMovies
-                      .filter((m) => {
-                        const target = navCategory.toLowerCase();
-                        if (target === "movies") return true;
-                        if (!m.categories) return false;
-                        if (target === "cartoons") {
+                <>
+                  <MovieRow
+                    title={`${navCategory.toUpperCase()} TOP 10`}
+                    catKey="top10"
+                    mustInclude={navCategory}
+                    isTop10
+                  />
+                  <div className="grid-view-container">
+                    <header className="category-section-header">
+                      <div className="cat-brand-pill">
+                        SK {navCategory.toUpperCase()}
+                      </div>
+                      <h2>All {navCategory.replace("movies", "")}</h2>
+                    </header>
+                    <div className="responsive-grid">
+                      {adminMovies
+                        .filter((m) => {
+                          const target = navCategory.toLowerCase();
+                          if (target === "movies") return true;
+                          if (!m.categories) return false;
+                          if (target === "cartoons") {
+                            return m.categories.some(
+                              (c) =>
+                                c.toLowerCase() === "cartoon" ||
+                                c.toLowerCase() === "cartoons",
+                            );
+                          }
                           return m.categories.some(
-                            (c) =>
-                              c.toLowerCase() === "cartoon" ||
-                              c.toLowerCase() === "cartoons",
+                            (c) => c.toLowerCase() === target,
                           );
-                        }
-                        return m.categories.some(
-                          (c) => c.toLowerCase() === target,
-                        );
-                      })
-                      .map((m, i) => (
-                        <MovieCard key={m.title + i} movie={m} />
-                      ))}
+                        })
+                        .map((m, i) => (
+                          <MovieCard key={m.title + i} movie={m} />
+                        ))}
+                    </div>
                   </div>
-                </div>
+                </>
               )}
             </div>
           </div>
@@ -663,6 +864,15 @@ function App() {
                       value={newMovie.image}
                       onChange={(e) =>
                         setNewMovie({ ...newMovie, image: e.target.value })
+                      }
+                    />
+                  </div>
+                  <div className="input-box-modern">
+                    <label>Landscape Filename (Laptop Hero - e.g. m1-wide.jpg)</label>
+                    <input
+                      value={newMovie.landscape_image}
+                      onChange={(e) =>
+                        setNewMovie({ ...newMovie, landscape_image: e.target.value })
                       }
                     />
                   </div>
@@ -888,6 +1098,49 @@ function App() {
       </main>
 
       <AnimatePresence>
+        {showUserProfile && (
+          <div
+            className="login-popover-backdrop"
+            onClick={() => setShowUserProfile(false)}
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              className="user-profile-card"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="profile-header-premium">
+                <div className="profile-avatar-large">
+                  {session?.user?.email?.charAt(0).toUpperCase()}
+                </div>
+                <h3>User Profile</h3>
+                <p>{session?.user?.email}</p>
+              </div>
+              <div className="profile-detail-list">
+                <div className="detail-item">
+                  <span className="label">Account ID</span>
+                  <span className="value">
+                    {session?.user?.id?.slice(0, 12)}...
+                  </span>
+                </div>
+                <div className="detail-item">
+                  <span className="label">Status</span>
+                  <span className="value text-green-400">Verified User</span>
+                </div>
+              </div>
+              <button
+                className="c-btn-logout-alt"
+                onClick={() => {
+                  handleLogout();
+                  setShowUserProfile(false);
+                }}
+              >
+                <LogOut size={16} /> Sign Out Account
+              </button>
+            </motion.div>
+          </div>
+        )}
+
         {showLoginChoices && (
           <div
             className="login-popover-backdrop"
@@ -898,7 +1151,7 @@ function App() {
               onClick={(e) => e.stopPropagation()}
             >
               <div className="choice-buttons">
-                <h3>Portal Access</h3>
+                <h3>Cinema Portal</h3>
                 <button
                   className="c-btn-ai"
                   onClick={() => {
