@@ -25,6 +25,8 @@ import {
   Languages,
   Send,
   Share2,
+  Bot, // Added Bot icon
+  TrendingUp, // Added TrendingUp icon
 } from "lucide-react";
 import { supabase } from "./config/supabase";
 import { movies as initialLocalMovies, categories } from "./data/movies";
@@ -42,6 +44,15 @@ function App() {
   // Admin Side State
   const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
   const [showLoginChoices, setShowLoginChoices] = useState(false);
+  const [showAIChat, setShowAIChat] = useState(false);
+  const [chatInput, setChatInput] = useState("");
+  const [chatMessages, setChatMessages] = useState([
+    {
+      role: "bot",
+      content:
+        "Hello! I am your SK AI Movie Bot. 🎥 Just type a movie name, and I will find the link for you or explain why it's not available!",
+    },
+  ]);
   const [adminUser, setAdminUser] = useState({ user: "", pass: "" });
   const [adminMovies, setAdminMovies] = useState([]);
   const [isSyncing, setIsSyncing] = useState(false);
@@ -126,6 +137,42 @@ function App() {
       navigator.clipboard.writeText(window.location.href);
       alert("Link copied to clipboard!");
     }
+  };
+
+  const handleAISend = (e) => {
+    e.preventDefault();
+    if (!chatInput.trim()) return;
+
+    const currentInput = chatInput;
+    const userMsg = { role: "user", content: currentInput };
+    setChatMessages((prev) => [...prev, userMsg]);
+    setChatInput("");
+
+    // AI Processing logic
+    setTimeout(() => {
+      const query = currentInput.toLowerCase().trim();
+      const match = adminMovies.find((m) =>
+        m.title.toLowerCase().includes(query),
+      );
+
+      let botResponse = "";
+      if (match) {
+        botResponse = `Found it! 🎬 You can access "${match.title}" right here: ${match.telegramLink || "Link updating..."}`;
+      } else {
+        const reasons = [
+          "This cinematic masterpiece hasn't been released digitally yet. We'll update as soon as it's official!",
+          "Our servers are currently being prepared for this title. Please check back in a few days!",
+          "This movie is still exclusive to theaters. Stay tuned for the digital debut on SK!",
+          "We are currently negotiating for the best quality version of this film for our users.",
+        ];
+        botResponse = `Apologies, but "${currentInput}" is not in our direct library yet. ${reasons[Math.floor(Math.random() * reasons.length)]}`;
+      }
+
+      setChatMessages((prev) => [
+        ...prev,
+        { role: "bot", content: botResponse },
+      ]);
+    }, 1000);
   };
 
   const handleScroll = useCallback(() => {
@@ -853,6 +900,15 @@ function App() {
               <div className="choice-buttons">
                 <h3>Portal Access</h3>
                 <button
+                  className="c-btn-ai"
+                  onClick={() => {
+                    setShowAIChat(true);
+                    setShowLoginChoices(false);
+                  }}
+                >
+                  <Bot /> Movie AI Assistant
+                </button>
+                <button
                   className="c-btn-admin"
                   onClick={() => showView("admin-login", "admin")}
                 >
@@ -866,6 +922,57 @@ function App() {
                 </button>
               </div>
             </div>
+          </div>
+        )}
+
+        {showAIChat && (
+          <div className="ai-chat-overlay">
+            <motion.div
+              initial={{ opacity: 0, y: 50, scale: 0.9 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              className="ai-chat-window"
+            >
+              <div className="ai-chat-header">
+                <div className="flex items-center">
+                  <Bot className="text-cyan-400 mr-2" />
+                  <div>
+                    <h3>SK MOVIE AI</h3>
+                    <p>Powered by SK Cinema</p>
+                  </div>
+                </div>
+                <button
+                  className="ai-close-btn"
+                  onClick={() => setShowAIChat(false)}
+                >
+                  <X />
+                </button>
+              </div>
+
+              <div className="ai-chat-body">
+                {chatMessages.map((msg, idx) => (
+                  <div key={idx} className={`ai-message ${msg.role}`}>
+                    {msg.role === "bot" && (
+                      <div className="bot-avatar">
+                        <Bot size={16} />
+                      </div>
+                    )}
+                    <div className="message-bubble">{msg.content}</div>
+                  </div>
+                ))}
+              </div>
+
+              <form className="ai-chat-footer" onSubmit={handleAISend}>
+                <input
+                  type="text"
+                  placeholder="Ask for a movie link..."
+                  value={chatInput}
+                  onChange={(e) => setChatInput(e.target.value)}
+                />
+                <button type="submit">
+                  <Send size={18} />
+                </button>
+              </form>
+            </motion.div>
           </div>
         )}
       </AnimatePresence>
