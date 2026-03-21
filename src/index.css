@@ -1230,7 +1230,8 @@ body {
     width: 100%;
   }
   .poster-container {
-    height: 180px;
+    aspect-ratio: 2 / 3;
+    height: auto;
   }
   .movie-item, .top-10-item {
     flex: 0 0 calc(50% - 12px);
