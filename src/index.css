@@ -2411,7 +2411,9 @@ body {
   gap: 12px;
   max-height: 800px;
   overflow-y: auto;
-  padding-right: 10px;
+  overflow-x: hidden;
+  padding-right: 6px;
+  width: 100%;
 }
 
 .admin-movie-row {
@@ -2423,17 +2425,20 @@ body {
   padding: 12px 20px;
   border-radius: 12px;
   transition: 0.3s;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .admin-movie-row:hover { background: rgba(255,255,255,0.05); transform: translateX(5px); }
 
-.row-left-thumb { display: flex; align-items: center; gap: 15px; }
-.row-left-thumb img { width: 45px; height: 65px; object-fit: cover; border-radius: 6px; box-shadow: 0 4px 10px rgba(0,0,0,0.4); }
-.row-info-text h4 { font-weight: 800; font-size: 1rem; color: white; margin-bottom: 2px; }
-.row-info-text p { font-size: 0.75rem; color: #555; font-weight: 700; }
+.row-left-thumb { display: flex; align-items: center; gap: 15px; min-width: 0; flex: 1; }
+.row-left-thumb img { width: 45px; height: 65px; object-fit: cover; border-radius: 6px; box-shadow: 0 4px 10px rgba(0,0,0,0.4); flex-shrink: 0; }
+.row-info-text { min-width: 0; flex: 1; }
+.row-info-text h4 { font-weight: 800; font-size: 1rem; color: white; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.row-info-text p { font-size: 0.75rem; color: #555; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-.row-actions-btn { display: flex; gap: 10px; }
-.btn-icon-admin { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,0.1); color: #888; transition: 0.3s; cursor: pointer; }
+.row-actions-btn { display: flex; gap: 10px; flex-shrink: 0; }
+.btn-icon-admin { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,0.1); color: #888; background: rgba(255,255,255,0.03); transition: 0.3s; cursor: pointer; }
 .btn-icon-admin.edit:hover { background: #3b82f6; color: white; border-color: #3b82f6; }
 .btn-icon-admin.del:hover { background: #ef4444; color: white; border-color: #ef4444; }
 
