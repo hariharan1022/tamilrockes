@@ -597,40 +597,7 @@ function App() {
       <main className="main-viewport">
         {currentView === "home-page" && (
           <div className="home-view">
-            {currentView === "home-page" && (
-              <div className="hero-top-nav">
-                <button
-                  className={`pill ${navCategory === "home" ? "active" : ""}`}
-                  onClick={() => showView("home-page", "home")}
-                >
-                  Home
-                </button>
-                <button
-                  className={`pill ${navCategory === "movies" ? "active" : ""}`}
-                  onClick={() => showView("home-page", "movies")}
-                >
-                  Movies
-                </button>
-                <button
-                  className={`pill ${navCategory === "kdrama" ? "active" : ""}`}
-                  onClick={() => showView("home-page", "kdrama")}
-                >
-                  K-Drama
-                </button>
-                <button
-                  className={`pill ${navCategory === "anime" ? "active" : ""}`}
-                  onClick={() => showView("home-page", "anime")}
-                >
-                  Anime
-                </button>
-                <button
-                  className={`pill ${navCategory === "webseries" ? "active" : ""}`}
-                  onClick={() => showView("home-page", "webseries")}
-                >
-                  Series
-                </button>
-              </div>
-            )}
+
             {activeHero && (
               <section className="hero-landing">
                 <div
@@ -1087,7 +1054,7 @@ function App() {
             <div
               className="md-hero-box"
               style={{
-                backgroundImage: `url('${getImgSrc(selectedMovie.image)}')`,
+                backgroundImage: `url('${(window.innerWidth > 768 && selectedMovie.landscape_image) ? (selectedMovie.landscape_image.startsWith('data:') ? selectedMovie.landscape_image : 'images/landscape/' + selectedMovie.landscape_image) : getImgSrc(selectedMovie.image)}')`,
               }}
             >
               <div className="md-hero-gradient"></div>
