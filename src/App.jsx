@@ -28,12 +28,43 @@ import {
   Share2,
   Bot, // Added Bot icon
   TrendingUp, // Added TrendingUp icon
-  User, // Added User icon
-  LogOut, // Added LogOut icon
+  ThumbsUp,
 } from "lucide-react";
 import { supabase } from "./config/supabase";
-import { movies as initialLocalMovies, categories } from "./data/movies";
+import { categories } from "./data/movies";
 import "./index.css";
+
+const getImgSrc = (img) => {
+  if (!img) return '';
+  return img.startsWith('data:') ? img : `images/${img}`;
+};
+
+const compressImage = (file, maxWidth, callback) => {
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement("canvas");
+      let width = img.width;
+      let height = img.height;
+
+      if (width > maxWidth) {
+        height = Math.round((height * maxWidth) / width);
+        width = maxWidth;
+      }
+
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext("2d");
+      ctx.drawImage(img, 0, 0, width, height);
+      
+      const dataUrl = canvas.toDataURL("image/jpeg", 0.7);
+      callback(dataUrl);
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+};
 
 function App() {
   const [currentView, setCurrentView] = useState("home-page");
@@ -43,12 +74,6 @@ function App() {
   const [heroIndex, setHeroIndex] = useState(0);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
-  const [session, setSession] = useState(null);
-  const [showUserProfile, setShowUserProfile] = useState(false);
-  const [loginEmail, setLoginEmail] = useState("");
-  const [loginPass, setLoginPass] = useState("");
-  const [showRegister, setShowRegister] = useState(false);
-
   // Admin Side State
   const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
   const [showLoginChoices, setShowLoginChoices] = useState(false); // Used for SK Footer Portal
@@ -58,7 +83,7 @@ function App() {
     {
       role: "bot",
       content:
-        "Hello! I am your SK AI Movie Bot. 🎥 Just type a movie name, and I will find the link for you or explain why it's not available!",
+        "Hello! I am your TamilMob AI Bot. 🎥 Just type a movie name, and I will find the link for you or explain why it's not available!",
     },
   ]);
   const [adminUser, setAdminUser] = useState({ user: "", pass: "" });
@@ -69,7 +94,7 @@ function App() {
     title: "",
     description: "",
     image: "",
-    telegram_link: "",
+    telegramLink: "",
     categories: [],
     rank: 0,
     year: "2025",
@@ -77,6 +102,8 @@ function App() {
     rating: "98%",
     landscape_image: "",
   });
+  const [adminSearchQuery, setAdminSearchQuery] = useState("");
+  const [adminCategoryFilter, setAdminCategoryFilter] = useState("all");
 
   const fetchMovies = async () => {
     setIsSyncing(true);
@@ -99,62 +126,10 @@ function App() {
       )
       .subscribe();
 
-    // Check auth session
-    supabase.auth.getSession().then(({ data: { session: curSession } }) => {
-      setSession(curSession);
-    });
-
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, curSession) => {
-      setSession(curSession);
-    });
-
     return () => {
       supabase.removeChannel(channel);
-      subscription.unsubscribe();
     };
   }, []);
-
-  const handleAuth = async (isReg) => {
-    if (!loginEmail || !loginPass) return alert("Please fill all fields.");
-    if (isReg) {
-      const { data, error } = await supabase.auth.signUp({
-        email: loginEmail,
-        password: loginPass,
-      });
-      if (error) {
-        alert("Registration Error: " + error.message);
-      } else {
-        if (data?.session) {
-          alert("Registration successful! You are now logged in.");
-        } else {
-          alert(
-            "Registration successful! IMPORTANT: Please check your email inbox (and spam) to confirm your account before logging in.",
-          );
-          setShowRegister(false);
-          setLoginPass("");
-        }
-      }
-    } else {
-      const { error } = await supabase.auth.signInWithPassword({
-        email: loginEmail,
-        password: loginPass,
-      });
-      if (error) {
-        if (error.message.toLowerCase().includes("email not confirmed")) {
-           alert("Login Failed: Your email address hasn't been confirmed yet. Please check your inbox for the verification link.");
-        } else {
-           alert("Login Error: " + error.message);
-        }
-      }
-    }
-  };
-
-  const handleLogout = async () => {
-    await supabase.auth.signOut();
-    setSession(null);
-  };
 
   const featuredMovies = useMemo(() => {
     // Filter for movies marked as 'top10' category
@@ -186,10 +161,23 @@ function App() {
       .slice(0, 10);
   }, [adminMovies, selectedMovie]);
 
+  const filteredAdminMovies = useMemo(() => {
+    return adminMovies.filter((m) => {
+      const matchesSearch =
+        !adminSearchQuery.trim() ||
+        m.title?.toLowerCase().includes(adminSearchQuery.toLowerCase().trim()) ||
+        m.description?.toLowerCase().includes(adminSearchQuery.toLowerCase().trim());
+      const matchesCategory =
+        adminCategoryFilter === "all" ||
+        m.categories?.includes(adminCategoryFilter);
+      return matchesSearch && matchesCategory;
+    });
+  }, [adminMovies, adminSearchQuery, adminCategoryFilter]);
+
   const handleShare = () => {
     const shareData = {
-      title: selectedMovie?.title || "SK MOVIES",
-      text: `Watch ${selectedMovie?.title || ""} on SK MOVIES!`,
+      title: selectedMovie?.title || "Tamil Mob",
+      text: `Watch ${selectedMovie?.title || ""} on Tamil Mob!`,
       url: window.location.href,
     };
     if (navigator.share) {
@@ -226,7 +214,7 @@ function App() {
         const reasons = [
           "This cinematic masterpiece hasn't been released digitally yet. We'll update as soon as it's official!",
           "Our servers are currently being prepared for this title. Please check back in a few days!",
-          "This movie is still exclusive to theaters. Stay tuned for the digital debut on SK!",
+          "This movie is still exclusive to theaters. Stay tuned for the digital debut on TamilMob!",
           "We are currently negotiating for the best quality version of this film for our users.",
         ];
         botResponse = `Apologies, but "${currentInput}" is not in our direct library yet. ${reasons[Math.floor(Math.random() * reasons.length)]}`;
@@ -267,10 +255,31 @@ function App() {
   };
 
   const loginAdmin = () => {
-    if (adminUser.user === "admin" && adminUser.pass === "admin") {
+    if (adminUser.user === "hariharanmahesh34@gmail.com" && adminUser.pass === "123harimahesh") {
       setIsAdminLoggedIn(true);
       showView("admin-dashboard", "admin");
     } else alert("Invalid Credentials!");
+  };
+
+  const handleLogOut = () => {
+    setIsAdminLoggedIn(false);
+    showView("home-page", "home");
+  };
+
+  const handleResetForm = () => {
+    setNewMovie({
+      title: "",
+      description: "",
+      image: "",
+      telegramLink: "",
+      categories: [],
+      rank: 0,
+      year: "2025",
+      quality: "HD",
+      rating: "98%",
+      landscape_image: "",
+    });
+    setIsEditing(null);
   };
 
   const handleAddMovie = async () => {
@@ -297,22 +306,6 @@ function App() {
       });
       setIsEditing(null);
     }
-    setIsSyncing(false);
-  };
-
-  const syncLocalToCloud = async () => {
-    if (!window.confirm("Push all movies from local backup file to Cloud?"))
-      return;
-    setIsSyncing(true);
-    let successCount = 0;
-    for (const m of initialLocalMovies) {
-      const { error } = await supabase
-        .from("movies")
-        .upsert(m, { onConflict: "title" });
-      if (!error) successCount++;
-    }
-    alert(`Successfully synced ${successCount} movies to Cloud!`);
-    fetchMovies();
     setIsSyncing(false);
   };
 
@@ -347,22 +340,26 @@ function App() {
   const MovieCard = ({ movie, rank, isTop10 }) => (
     <motion.div
       className={isTop10 ? "top-10-item" : "movie-item"}
-      whileHover={{ scale: 1.04, y: -4, zIndex: 50 }}
       whileTap={{ scale: 0.96 }}
       layout
       onClick={() => openMovieDetails(movie)}
     >
-      <div className="rank-wrapper">
-        <div className="poster-container shadow-sm">
-          {isTop10 && <span className="rank-digit">{rank}</span>}
-          <img loading="lazy" src={`images/${movie.image}`} alt={movie.title} />
-          <div className="poster-overlay">
-            <div className="poster-overlay-play">
-              <Play fill="white" size={24} style={{ marginLeft: "4px" }} />
+      <div className={isTop10 ? "top-10-card-content" : "rank-wrapper"}>
+        {isTop10 && (
+          <div className={`top-10-rank-number ${rank >= 10 ? "double-digit" : ""}`}>
+            {rank}
+          </div>
+        )}
+        <div className="poster-hover-group">
+          <div className="poster-container shadow-sm">
+            <img loading="lazy" src={getImgSrc(movie.image)} alt={movie.title} />
+            <div className="poster-play-overlay">
+              <div className="play-icon-circle">
+                <Download size={22} />
+              </div>
             </div>
           </div>
         </div>
-        <p className="poster-title-overlap">{movie.title}</p>
       </div>
     </motion.div>
   );
@@ -390,11 +387,11 @@ function App() {
         <div className="row-info">
           <h3>{title}</h3>
         </div>
-        <div className="relative group">
+        <div className="row-list-container">
           <button
             className="row-arrow left"
             onClick={() =>
-              listRef.current?.scrollBy({ left: -400, behavior: "smooth" })
+              listRef.current?.scrollBy({ left: -600, behavior: "smooth" })
             }
           >
             <ChevronLeft />
@@ -412,7 +409,7 @@ function App() {
           <button
             className="row-arrow right"
             onClick={() =>
-              listRef.current?.scrollBy({ left: 400, behavior: "smooth" })
+              listRef.current?.scrollBy({ left: 600, behavior: "smooth" })
             }
           >
             <ChevronRight />
@@ -485,73 +482,6 @@ function App() {
     );
   }
 
-  if (!session) {
-    return (
-      <div className="login-full-screen">
-        <div className="login-bg-overlay"></div>
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className="login-card-prime"
-        >
-          <div className="login-logo-brand">
-            SK<span>CINEMA</span>
-          </div>
-          <h2>{showRegister ? "Create Account" : "Access Portal"}</h2>
-          <p>The Ultimate Cinematic Experience Awaits</p>
-
-          <div className="login-form-group">
-            <div className="input-with-icon">
-              <User size={18} />
-              <input
-                type="email"
-                placeholder="Email Address"
-                value={loginEmail}
-                onChange={(e) => setLoginEmail(e.target.value)}
-              />
-            </div>
-            <div className="input-with-icon">
-              <LogOut size={18} />
-              <input
-                type="password"
-                placeholder="Secure Password"
-                value={loginPass}
-                onChange={(e) => setLoginPass(e.target.value)}
-              />
-            </div>
-
-            <button
-              className="login-submit-btn"
-              onClick={() => handleAuth(showRegister)}
-            >
-              {showRegister ? "Register Now" : "Unlock Cinematic Access"}
-            </button>
-          </div>
-
-          <div className="login-switcher">
-            {showRegister ? (
-              <p>
-                Already have an account?{" "}
-                <span onClick={() => setShowRegister(false)}>Log In</span>
-              </p>
-            ) : (
-              <p>
-                Don't have an access key?{" "}
-                <span onClick={() => setShowRegister(true)}>Get Started</span>
-              </p>
-            )}
-            <p
-              className="admin-access-link"
-              onClick={() => setCurrentView("admin-login")}
-            >
-              Administrator Access
-            </p>
-          </div>
-        </motion.div>
-      </div>
-    );
-  }
-
   return (
     <div className="app-shell">
       <header
@@ -559,13 +489,13 @@ function App() {
       >
         <div className={`navbar-container ${isSearching ? "searching" : ""}`}>
           <div className="navbar-left">
-            <motion.h1
-              className="site-logo"
-              whileTap={{ scale: 0.9 }}
+            <motion.img
+              src={`${import.meta.env.BASE_URL}tamil_mob_logo.png`}
+              alt="TamilMob Logo"
+              className="site-logo-img"
+              whileTap={{ scale: 0.95 }}
               onClick={() => showView("home-page", "home")}
-            >
-              SK<span>MOVIES</span>
-            </motion.h1>
+            />
           </div>
           <div className="navbar-actions">
             <div className={`expanded-search ${isSearching ? "open" : ""}`}>
@@ -584,16 +514,7 @@ function App() {
                 />
               )}
             </div>
-            <div
-              className="navbar-profile"
-              onClick={() => setShowUserProfile(true)}
-            >
-              <div className="profile-disc shadow-sm">
-                <span className="profile-initial">
-                  {session?.user?.email?.charAt(0).toUpperCase()}
-                </span>
-              </div>
-            </div>
+
           </div>
         </div>
       </header>
@@ -640,12 +561,12 @@ function App() {
                 <div
                   className="hero-main-card"
                   style={{
-                    backgroundImage: `url("${(window.innerWidth > 768 && activeHero.landscape_image) ? "images/landscape/" + activeHero.landscape_image : "images/" + activeHero.image}")`,
+                    backgroundImage: `url("${(window.innerWidth > 768 && activeHero.landscape_image) ? (activeHero.landscape_image.startsWith('data:') ? activeHero.landscape_image : 'images/landscape/' + activeHero.landscape_image) : getImgSrc(activeHero.image)}")`,
                   }}
                 >
                   <div className="hero-gradient-overlay">
                     <div className="hero-content">
-                      <div className="brand-logo-netflix">SK MOVIES</div>
+                      <div className="brand-logo-netflix">Tamil Mob</div>
                       <div className="trending-marker">TRENDING #1</div>
                       <h2 className="hero-title-massive">
                         {activeHero.title}
@@ -658,7 +579,7 @@ function App() {
                           className="btn-netflix-play-full"
                           onClick={() => openMovieDetails(activeHero)}
                         >
-                          <Play fill="currentColor" size={22} /> Play
+                          <Download size={22} /> Download
                         </button>
                         <button
                           className="btn-netflix-list-full"
@@ -703,7 +624,7 @@ function App() {
                   <div className="grid-view-container">
                     <header className="category-section-header">
                       <div className="cat-brand-pill">
-                        SK {navCategory.toUpperCase()}
+                        TamilMob {navCategory.toUpperCase()}
                       </div>
                       <h2>All {navCategory.replace("movies", "")}</h2>
                     </header>
@@ -750,48 +671,37 @@ function App() {
           </div>
         )}
 
-        {currentView === "admin-login" && (
-          <div className="admin-login-container">
-            <div className="login-box">
-              <h2>System Login</h2>
-              <input
-                placeholder="Username"
-                onChange={(e) =>
-                  setAdminUser({ ...adminUser, user: e.target.value })
-                }
-              />
-              <input
-                type="password"
-                placeholder="Password"
-                onChange={(e) =>
-                  setAdminUser({ ...adminUser, pass: e.target.value })
-                }
-              />
-              <button onClick={loginAdmin}>Enter Console</button>
-            </div>
-          </div>
-        )}
-
         {currentView === "admin-dashboard" && isAdminLoggedIn && (
           <div className="admin-dashboard-view">
             <div className="admin-header-prime">
               <div className="admin-title-group">
-                <p>Management</p>
+                <p>Management Portal</p>
                 <h2>Console 2.0</h2>
               </div>
-              <div className="sync-status">
-                <div className="pulse-dot"></div>
-                {isSyncing ? "SYNCING..." : "CLOUD CONNECTED"}
+              <div className="admin-header-actions">
+                <div className="sync-status">
+                  <div className="pulse-dot"></div>
+                  {isSyncing ? "SYNCING..." : "CLOUD CONNECTED"}
+                </div>
+                <button className="btn-exit-console" onClick={handleLogOut}>
+                  <ArrowLeft size={16} /> Exit Console
+                </button>
               </div>
             </div>
 
             <div className="admin-stats-grid">
-              <div className="stat-card-mini">
-                <span className="lab">Total Library</span>
+              <div className="stat-card-mini animate-hover">
+                <div className="stat-card-header">
+                  <span className="lab">Total Library</span>
+                  <Cloud size={20} className="text-cyan-400" />
+                </div>
                 <span className="val">{adminMovies.length}</span>
               </div>
-              <div className="stat-card-mini">
-                <span className="lab">Top 10 Spots</span>
+              <div className="stat-card-mini animate-hover">
+                <div className="stat-card-header">
+                  <span className="lab">Top 10 Spots</span>
+                  <TrendingUp size={20} className="text-amber-400" />
+                </div>
                 <span className="val">
                   {
                     adminMovies.filter((m) => m.categories?.includes("top10"))
@@ -800,11 +710,32 @@ function App() {
                   /10
                 </span>
               </div>
-              <div className="stat-card-mini">
-                <span className="lab">Actions</span>
-                <button className="pill" onClick={syncLocalToCloud}>
-                  <RefreshCw size={14} /> Import Local Data
-                </button>
+              <div className="stat-card-mini animate-hover">
+                <div className="stat-card-header">
+                  <span className="lab">Movies</span>
+                  <Film size={20} className="text-red-500" />
+                </div>
+                <span className="val">
+                  {adminMovies.filter((m) => m.categories?.includes("movies")).length}
+                </span>
+              </div>
+              <div className="stat-card-mini animate-hover">
+                <div className="stat-card-header">
+                  <span className="lab">Series</span>
+                  <Tv size={20} className="text-violet-400" />
+                </div>
+                <span className="val">
+                  {adminMovies.filter((m) => m.categories?.includes("webseries")).length}
+                </span>
+              </div>
+              <div className="stat-card-mini animate-hover">
+                <div className="stat-card-header">
+                  <span className="lab">Anime</span>
+                  <Sparkles size={20} className="text-green-400" />
+                </div>
+                <span className="val">
+                  {adminMovies.filter((m) => m.categories?.includes("anime")).length}
+                </span>
               </div>
             </div>
 
@@ -819,6 +750,7 @@ function App() {
                       onChange={(e) =>
                         setNewMovie({ ...newMovie, title: e.target.value })
                       }
+                      placeholder="Enter movie title"
                     />
                   </div>
                   <div className="input-box-modern">
@@ -832,6 +764,7 @@ function App() {
                           description: e.target.value,
                         })
                       }
+                      placeholder="Write brief description..."
                     />
                   </div>
                   <div className="grid grid-cols-2 gap-4">
@@ -852,29 +785,95 @@ function App() {
                         onChange={(e) =>
                           setNewMovie({
                             ...newMovie,
-                            rank: parseInt(e.target.value),
+                            rank: parseInt(e.target.value) || 0,
                           })
                         }
                       />
                     </div>
                   </div>
-                  <div className="input-box-modern">
-                    <label>Poster Filename (e.g. m1.jpg)</label>
-                    <input
-                      value={newMovie.image}
-                      onChange={(e) =>
-                        setNewMovie({ ...newMovie, image: e.target.value })
-                      }
-                    />
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="input-box-modern">
+                      <label>Quality</label>
+                      <input
+                        value={newMovie.quality}
+                        onChange={(e) =>
+                          setNewMovie({ ...newMovie, quality: e.target.value })
+                        }
+                        placeholder="e.g. HD, 4K UHD"
+                      />
+                    </div>
+                    <div className="input-box-modern">
+                      <label>Rating</label>
+                      <input
+                        value={newMovie.rating}
+                        onChange={(e) =>
+                          setNewMovie({ ...newMovie, rating: e.target.value })
+                        }
+                        placeholder="e.g. 98%"
+                      />
+                    </div>
                   </div>
                   <div className="input-box-modern">
-                    <label>Landscape Filename (Laptop Hero - e.g. m1-wide.jpg)</label>
-                    <input
-                      value={newMovie.landscape_image}
-                      onChange={(e) =>
-                        setNewMovie({ ...newMovie, landscape_image: e.target.value })
-                      }
-                    />
+                    <label>Poster Image</label>
+                    <div className="custom-file-dropzone">
+                      <Plus size={24} className="dropzone-icon" />
+                      <span>Choose Poster</span>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => {
+                          const file = e.target.files[0];
+                          if (file) {
+                            compressImage(file, 400, (compressedBase64) => {
+                              setNewMovie((prev) => ({ ...prev, image: compressedBase64 }));
+                            });
+                          }
+                        }}
+                      />
+                    </div>
+                    {newMovie.image && (
+                      <div className="preview-container-admin">
+                        <img
+                          src={getImgSrc(newMovie.image)}
+                          alt="preview"
+                          className="admin-img-preview"
+                        />
+                        <button type="button" className="btn-remove-preview" onClick={() => setNewMovie(prev => ({ ...prev, image: "" }))}>
+                          <X size={14} /> Remove
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                  <div className="input-box-modern">
+                    <label>Landscape Image</label>
+                    <div className="custom-file-dropzone">
+                      <Plus size={24} className="dropzone-icon" />
+                      <span>Choose Landscape</span>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => {
+                          const file = e.target.files[0];
+                          if (file) {
+                            compressImage(file, 800, (compressedBase64) => {
+                              setNewMovie((prev) => ({ ...prev, landscape_image: compressedBase64 }));
+                            });
+                          }
+                        }}
+                      />
+                    </div>
+                    {newMovie.landscape_image && (
+                      <div className="preview-container-admin">
+                        <img
+                          src={getImgSrc(newMovie.landscape_image)}
+                          alt="preview"
+                          className="admin-img-preview"
+                        />
+                        <button type="button" className="btn-remove-preview" onClick={() => setNewMovie(prev => ({ ...prev, landscape_image: "" }))}>
+                          <X size={14} /> Remove
+                        </button>
+                      </div>
+                    )}
                   </div>
                   <div className="input-box-modern">
                     <label>Telegram Link</label>
@@ -886,6 +885,7 @@ function App() {
                           telegramLink: e.target.value,
                         })
                       }
+                      placeholder="https://t.me/yourchannel"
                     />
                   </div>
                   <div className="cat-picker">
@@ -896,6 +896,7 @@ function App() {
                       {categories.map((c) => (
                         <button
                           key={c.key}
+                          type="button"
                           className={`admin-cat-pill ${newMovie.categories.includes(c.key) ? "active" : ""}`}
                           onClick={() => {
                             const cats = newMovie.categories.includes(c.key)
@@ -916,50 +917,90 @@ function App() {
                         {isEditing ? "Update Server" : "Publish to Cloud"}
                       </span>
                     </button>
-                    {isEditing && (
-                      <button
-                        className="btn-cancel"
-                        onClick={() => setIsEditing(null)}
-                      >
-                        Cancel
-                      </button>
-                    )}
+                    <button
+                      className="btn-reset-form"
+                      type="button"
+                      onClick={handleResetForm}
+                    >
+                      <RefreshCw size={16} />
+                      <span>{isEditing ? "Cancel" : "Clear"}</span>
+                    </button>
                   </div>
                 </div>
               </div>
 
-              <div className="admin-glass-card">
-                <h3>Library Overview</h3>
+              <div className="admin-glass-card library-card">
+                <div className="library-header-premium">
+                  <h3>Library Overview</h3>
+                  <div className="library-controls-grid">
+                    <div className="admin-search-wrapper">
+                      <Search size={16} className="search-icon" />
+                      <input
+                        type="text"
+                        placeholder="Search publications..."
+                        value={adminSearchQuery}
+                        onChange={(e) => setAdminSearchQuery(e.target.value)}
+                      />
+                      {adminSearchQuery && (
+                        <button className="clear-search-btn" onClick={() => setAdminSearchQuery("")}>
+                          <X size={14} />
+                        </button>
+                      )}
+                    </div>
+                    
+                    <div className="admin-filter-wrapper">
+                      <select
+                        value={adminCategoryFilter}
+                        onChange={(e) => setAdminCategoryFilter(e.target.value)}
+                      >
+                        <option value="all">All Categories</option>
+                        {categories.map((c) => (
+                          <option key={c.key} value={c.key}>
+                            {c.label}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
                 <div className="admin-visual-list mt-6">
-                  {adminMovies.map((m) => (
-                    <div className="admin-movie-row" key={m.title}>
-                      <div className="row-left-thumb">
-                        <img src={`images/${m.image}`} alt="" />
-                        <div className="row-info-text">
-                          <h4>{m.title}</h4>
-                          <p>{m.categories?.join(" • ") || "No Category"}</p>
+                  {filteredAdminMovies.length === 0 ? (
+                    <div className="admin-no-results">
+                      <Info size={36} />
+                      <p>No publications match your search criteria.</p>
+                    </div>
+                  ) : (
+                    filteredAdminMovies.map((m) => (
+                      <div className="admin-movie-row" key={m.title}>
+                        <div className="row-left-thumb">
+                          <img src={getImgSrc(m.image)} alt="" />
+                          <div className="row-info-text">
+                            <h4>{m.title}</h4>
+                            <p>{m.categories?.join(" • ") || "No Category"}</p>
+                          </div>
+                        </div>
+                        <div className="row-actions-btn">
+                          <button
+                            className="btn-icon-admin edit"
+                            onClick={() => {
+                              setNewMovie(m);
+                              setIsEditing(m.title);
+                              window.scrollTo(0, 0);
+                            }}
+                          >
+                            <Edit3 size={16} />
+                          </button>
+                          <button
+                            className="btn-icon-admin del"
+                            onClick={() => deleteMovie(m.title)}
+                          >
+                            <Trash2 size={16} />
+                          </button>
                         </div>
                       </div>
-                      <div className="row-actions-btn">
-                        <button
-                          className="btn-icon-admin edit"
-                          onClick={() => {
-                            setNewMovie(m);
-                            setIsEditing(m.title);
-                            window.scrollTo(0, 0);
-                          }}
-                        >
-                          <Edit3 size={16} />
-                        </button>
-                        <button
-                          className="btn-icon-admin del"
-                          onClick={() => deleteMovie(m.title)}
-                        >
-                          <Trash2 size={16} />
-                        </button>
-                      </div>
-                    </div>
-                  ))}
+                    ))
+                  )}
                 </div>
               </div>
             </div>
@@ -971,7 +1012,7 @@ function App() {
             <div
               className="md-hero-box"
               style={{
-                backgroundImage: `url('images/${selectedMovie.image}')`,
+                backgroundImage: `url('${getImgSrc(selectedMovie.image)}')`,
               }}
             >
               <div className="md-hero-gradient"></div>
@@ -980,7 +1021,7 @@ function App() {
               </button>
               <div className="md-hero-info">
                 <div className="md-tagline">
-                  <span className="md-exclusive">SK EXCLUSIVE</span>
+                  <span className="md-exclusive">TAMILMOB EXCLUSIVE</span>
                   <span className="md-top-rated">
                     <BarChart3 size={14} /> Trending #
                     {featuredMovies.findIndex(
@@ -1005,7 +1046,7 @@ function App() {
                   <h3>Storyline</h3>
                   <p className="md-story-text">
                     {selectedMovie.description ||
-                      "An epic journey into the cinematic world of SK. High-speed action meets deep narrative in this blockbuster release."}
+                      "An epic journey into the cinematic world of TamilMob. High-speed action meets deep narrative in this blockbuster release."}
                   </p>
                   <div className="md-action-btns">
                     <a
@@ -1098,49 +1139,6 @@ function App() {
       </main>
 
       <AnimatePresence>
-        {showUserProfile && (
-          <div
-            className="login-popover-backdrop"
-            onClick={() => setShowUserProfile(false)}
-          >
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              className="user-profile-card"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="profile-header-premium">
-                <div className="profile-avatar-large">
-                  {session?.user?.email?.charAt(0).toUpperCase()}
-                </div>
-                <h3>User Profile</h3>
-                <p>{session?.user?.email}</p>
-              </div>
-              <div className="profile-detail-list">
-                <div className="detail-item">
-                  <span className="label">Account ID</span>
-                  <span className="value">
-                    {session?.user?.id?.slice(0, 12)}...
-                  </span>
-                </div>
-                <div className="detail-item">
-                  <span className="label">Status</span>
-                  <span className="value text-green-400">Verified User</span>
-                </div>
-              </div>
-              <button
-                className="c-btn-logout-alt"
-                onClick={() => {
-                  handleLogout();
-                  setShowUserProfile(false);
-                }}
-              >
-                <LogOut size={16} /> Sign Out Account
-              </button>
-            </motion.div>
-          </div>
-        )}
-
         {showLoginChoices && (
           <div
             className="login-popover-backdrop"
@@ -1189,8 +1187,8 @@ function App() {
                 <div className="flex items-center">
                   <Bot className="text-cyan-400 mr-2" />
                   <div>
-                    <h3>SK MOVIE AI</h3>
-                    <p>Powered by SK Cinema</p>
+                    <h3>TamilMob AI</h3>
+                    <p>Powered by TamilMob</p>
                   </div>
                 </div>
                 <button
@@ -1259,7 +1257,7 @@ function App() {
             onClick={() => setShowLoginChoices(true)}
           >
             <div className="sk-inner-disc">
-              <span className="sk-logo-text">SK</span>
+              <span className="sk-logo-text">TM</span>
             </div>
           </div>
           <div
