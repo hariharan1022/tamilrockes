@@ -1124,7 +1124,7 @@ body {
 
 .row-list {
   display: flex;
-  gap: 6px;
+  gap: 4px;
   overflow-x: auto;
   padding: 10px 0 20px;
   scroll-behavior: smooth;
@@ -1161,16 +1161,18 @@ body {
 /* Uniform Movie Items */
 /* Uniform Movie Items */
 .movie-item {
-  flex: 0 0 110px;
-  width: 110px;
+  flex: 0 0 132px;
+  width: 132px;
+  padding-right: 22px;
   scroll-snap-align: start;
   cursor: pointer;
   transition: transform 0.2s;
 }
 
 .top-10-item {
-  flex: 0 0 160px;
-  width: 160px;
+  flex: 0 0 182px;
+  width: 182px;
+  padding-right: 22px;
   scroll-snap-align: start;
   cursor: pointer;
   transition: transform 0.2s;
