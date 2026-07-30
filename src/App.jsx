@@ -598,7 +598,7 @@ function App() {
         {currentView === "home-page" && (
           <div className="home-view">
 
-            {activeHero && (
+            {navCategory === "home" && activeHero && (
               <section className="hero-landing">
                 <div
                   className="hero-main-card"
@@ -635,10 +635,7 @@ function App() {
                 </div>
               </section>
             )}
-            <div
-              className="rows-scroller"
-              style={!activeHero ? { paddingTop: "100px" } : undefined}
-            >
+            <div className="rows-scroller">
               {navCategory === "home" ? (
                 <>
                   <MovieRow title="Top 10 Today" catKey="top10" isTop10 />

@@ -1503,7 +1503,7 @@ body {
 
 /* Grid View */
 .grid-view-container {
-  padding: 120px 5% 40px;
+  padding: 20px 5% 40px;
 }
 
 .search-view-container {
@@ -3295,4 +3295,65 @@ body {
 .nav-item svg {
   width: 24px;
   height: 24px;
+}
+
+/* ADMIN PANEL MOBILE OVERFLOW FIXES */
+@media (max-width: 480px) {
+  .admin-category-pill-grid {
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)) !important;
+    gap: 8px !important;
+  }
+  
+  .admin-cat-pill {
+    padding: 8px 10px !important;
+    font-size: 11px !important;
+  }
+  
+  .admin-form-premium .flex.gap-4 {
+    flex-direction: column !important;
+    gap: 10px !important;
+  }
+  
+  .btn-add-cloud, .btn-reset-form {
+    width: 100% !important;
+    max-width: none !important;
+    justify-content: center !important;
+  }
+  
+  .admin-movie-row {
+    padding: 10px 8px !important;
+    gap: 8px !important;
+  }
+  
+  .row-left-thumb {
+    gap: 10px !important;
+  }
+  
+  .row-left-thumb img {
+    width: 38px !important;
+    height: 54px !important;
+  }
+  
+  .row-info-text h4 {
+    font-size: 0.9rem !important;
+  }
+  
+  .row-info-text p {
+    font-size: 0.65rem !important;
+  }
+  
+  .btn-icon-admin {
+    width: 32px !important;
+    height: 32px !important;
+  }
+  
+  .btn-icon-admin svg {
+    width: 14px !important;
+    height: 14px !important;
+  }
+  
+  .library-controls-grid {
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+  }
 }
