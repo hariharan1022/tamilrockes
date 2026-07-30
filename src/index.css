@@ -3369,3 +3369,35 @@ body {
     gap: 10px !important;
   }
 }
+
+/* UNIFIED BOTTOM TAB BAR MOBILE SCALING */
+@media (max-width: 540px) {
+  .bottom-nav {
+    height: 68px !important;
+  }
+  
+  .nav-item {
+    gap: 3px !important;
+  }
+  
+  .nav-item svg {
+    width: 21px !important;
+    height: 21px !important;
+  }
+  
+  .nav-item span {
+    font-size: 8px !important;
+    letter-spacing: 0px !important;
+    white-space: nowrap !important;
+  }
+  
+  .sk-logo-btn {
+    transform: translateY(-14px) !important;
+  }
+  
+  .sk-inner-disc {
+    width: 52px !important;
+    height: 52px !important;
+    border-width: 2px !important;
+  }
+}
