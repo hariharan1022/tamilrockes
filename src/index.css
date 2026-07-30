@@ -1143,6 +1143,8 @@ body {
 .flex-col { flex-direction: column; }
 .items-center { align-items: center; }
 .justify-center { justify-content: center; }
+.grid { display: grid; }
+.grid-cols-2 { grid-template-columns: repeat(2, 1fr); }
 .gap-2 { gap: 8px; }
 .gap-3 { gap: 12px; }
 .gap-4 { gap: 16px; }
@@ -2465,6 +2467,55 @@ body {
   .admin-header-prime { flex-direction: column; align-items: flex-start; gap: 20px; }
   .admin-title-group h2 { font-size: 1.8rem; }
   .admin-glass-card { padding: 20px; }
+}
+
+@media (max-width: 480px) {
+  .admin-header-actions {
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+    gap: 12px;
+  }
+  .btn-exit-console, .sync-status {
+    width: 100%;
+    justify-content: center;
+  }
+  .grid-cols-2 {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* Stat Grid Mobile Optimization */
+@media (max-width: 576px) {
+  .admin-stats-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 12px !important;
+  }
+  .stat-card-mini {
+    padding: 16px !important;
+    border-radius: 16px !important;
+  }
+  .stat-card-mini .val {
+    font-size: 1.6rem !important;
+  }
+}
+
+/* Admin Movie Row Mobile Truncation */
+.admin-movie-row {
+  min-width: 0;
+}
+.row-left-thumb {
+  min-width: 0;
+  flex: 1;
+}
+.row-info-text {
+  min-width: 0;
+  flex: 1;
+}
+.row-info-text h4, .row-info-text p {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* Netflix Style Login & SK Branding */
