@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@400;500;700;900&display=swap');
 
 :root {
   --primary: #e50914;
@@ -1124,7 +1124,7 @@ body {
 
 .row-list {
   display: flex;
-  gap: 12px;
+  gap: 6px;
   overflow-x: auto;
   padding: 10px 0 20px;
   scroll-behavior: smooth;
@@ -1160,9 +1160,17 @@ body {
 
 /* Uniform Movie Items */
 /* Uniform Movie Items */
-.movie-item, .top-10-item {
+.movie-item {
   flex: 0 0 110px;
   width: 110px;
+  scroll-snap-align: start;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.top-10-item {
+  flex: 0 0 160px;
+  width: 160px;
   scroll-snap-align: start;
   cursor: pointer;
   transition: transform 0.2s;
@@ -1245,68 +1253,117 @@ body {
   height: 2.8em;
 }
 
-/* Simplified Top 10 Layout */
+/* ── Netflix-style Top 10 Layout ── */
 .rank-wrapper {
   display: flex;
   flex-direction: column;
   width: 130px;
 }
 
+/* Each top-10 card: big number on the left, poster offset right */
 .top-10-card-content {
   position: relative;
   display: flex;
-  flex-direction: column;
-  width: 130px;
-  gap: 10px;
+  flex-direction: row;
+  align-items: flex-end;        /* poster sits at bottom, number bleeds up */
+  width: 160px;                 /* wider to accommodate the number + poster overlap */
+  gap: 0;
+  flex-shrink: 0;
 }
 
+/* The giant outlined rank digit */
 .top-10-rank-number {
-  position: absolute;
-  top: 8px;
-  left: -8px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 42px;
-  height: 42px;
-  padding: 0 12px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.12);
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  color: #fff;
-  font-size: 1.05rem;
+  position: relative;
+  z-index: 1;
+  /* Push poster over it so number peeks from behind */
+  flex-shrink: 0;
+  width: 72px;               /* number column width */
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end; /* right-align so it hugs the poster edge */
+  padding-bottom: 4px;
+
+  /* Giant bold stroke typography */
+  font-family: 'Bebas Neue', 'Impact', 'Anton', 'Arial Black', sans-serif;
+  font-size: 8.5rem;
   font-weight: 900;
-  letter-spacing: -0.03em;
-  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.45);
-  z-index: 4;
-  backdrop-filter: blur(10px);
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.35);
-  transition: transform 0.3s ease, background 0.3s ease, color 0.3s ease;
+  line-height: 1;
+  letter-spacing: -4px;
+
+  /* Netflix-style: dark fill + solid visible gray stroke */
+  color: #111111;                          /* same as page bg → "hollow" cut-out look */
+  -webkit-text-stroke: 3.5px #686868;      /* solid medium-gray border */
+  text-stroke: 3.5px #686868;
+  text-shadow:
+    4px 4px 8px rgba(0,0,0,0.95),          /* strong depth shadow */
+    -2px -2px 4px rgba(0,0,0,0.6);
+
+  /* Smooth on hover */
+  transition: -webkit-text-stroke-color 0.3s ease, text-shadow 0.3s ease;
+  user-select: none;
+  pointer-events: none;
 }
 
+/* Double-digit numbers: slightly smaller to keep proportion */
 .top-10-rank-number.double-digit {
-  padding: 0 10px;
+  font-size: 6.2rem;
+  letter-spacing: -3px;
+  -webkit-text-stroke-width: 3px;
+  text-stroke-width: 3px;
+  width: 88px;
 }
 
-.top-10-item:hover .top-10-rank-number {
-  transform: translateY(-1px) scale(1.05);
-  background: rgba(255, 255, 255, 0.22);
+/* Poster pulled slightly left to overlap the number */
+.top-10-card-content .poster-hover-group {
+  position: relative;
+  z-index: 2;       /* sits ON TOP of the rank number */
+  margin-left: -14px; /* overlap: poster overlaps the right side of the number */
+  flex: 1;
 }
 
 .top-10-card-content .poster-container {
-  box-shadow: 0 6px 18px rgba(0,0,0,0.5);
+  width: 100px;
+  aspect-ratio: 2 / 3;
+  border-radius: 8px;
+  box-shadow: -6px 0 20px rgba(0,0,0,0.75), 0 8px 24px rgba(0,0,0,0.6);
+}
+
+/* Hover: stroke brightens slightly */
+.top-10-item:hover .top-10-rank-number {
+  -webkit-text-stroke-color: #909090;
+  text-shadow:
+    4px 4px 10px rgba(0,0,0,1),
+    0 0 25px rgba(255,255,255,0.04);
 }
 
 @media (max-width: 480px) {
-  .movie-item, .top-10-item, .poster-container, .rank-wrapper {
+  .movie-item, .poster-container, .rank-wrapper {
     width: 100%;
   }
   .poster-container {
     aspect-ratio: 2 / 3;
     height: auto;
   }
-  .movie-item, .top-10-item {
+  .movie-item {
     flex: 0 0 calc(33.33% - 10px);
+  }
+  .top-10-item {
+    flex: 0 0 120px;
+    width: 120px;
+  }
+  .top-10-card-content {
+    width: 120px;
+  }
+  .top-10-rank-number {
+    font-size: 5.5rem;
+    width: 52px;
+  }
+  .top-10-rank-number.double-digit {
+    font-size: 4rem;
+    width: 66px;
+  }
+  .top-10-card-content .poster-container {
+    width: 72px;
   }
   .poster-title-overlap {
     font-size: 0.65rem;
