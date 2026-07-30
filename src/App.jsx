@@ -74,6 +74,8 @@ function App() {
   const [heroIndex, setHeroIndex] = useState(0);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const searchRef = useRef(null);
   // Admin Side State
   const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
   const [showLoginChoices, setShowLoginChoices] = useState(false); // Used for SK Footer Portal
@@ -152,6 +154,26 @@ function App() {
         m.categories?.some((cat) => cat.toLowerCase().includes(query)),
     );
   }, [searchQuery, adminMovies]);
+
+  // Live suggestions — top 8 matches while typing
+  const searchSuggestions = useMemo(() => {
+    if (!searchQuery.trim() || searchQuery.length < 1) return [];
+    const q = searchQuery.toLowerCase().trim();
+    return adminMovies
+      .filter((m) => m.title?.toLowerCase().includes(q))
+      .slice(0, 8);
+  }, [searchQuery, adminMovies]);
+
+  // Close suggestions when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (searchRef.current && !searchRef.current.contains(e.target)) {
+        setShowSuggestions(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   const randomRecommendations = useMemo(() => {
     if (!adminMovies.length) return [];
@@ -452,26 +474,32 @@ function App() {
     return (
       <div className="login-full-screen">
         <div className="login-bg-overlay"></div>
-        <div className="admin-login-card">
+        <div className="login-card-prime">
+          <div className="login-logo-brand">Tamil<span>Mob</span></div>
           <h2>Admin Terminal</h2>
-          <div className="admin-login-form">
-            <input
-              type="text"
-              placeholder="Access Key"
-              onChange={(e) =>
-                setAdminUser({ ...adminUser, user: e.target.value })
-              }
-            />
-            <input
-              type="password"
-              placeholder="Password"
-              onChange={(e) =>
-                setAdminUser({ ...adminUser, pass: e.target.value })
-              }
-            />
-            <button onClick={loginAdmin}>Enter Console</button>
+          <p>Please enter your access key and password to manage TamilMob.</p>
+          <div className="login-form-group">
+            <div className="input-with-icon">
+              <input
+                type="text"
+                placeholder="Access Key"
+                onChange={(e) =>
+                  setAdminUser({ ...adminUser, user: e.target.value })
+                }
+              />
+            </div>
+            <div className="input-with-icon">
+              <input
+                type="password"
+                placeholder="Password"
+                onChange={(e) =>
+                  setAdminUser({ ...adminUser, pass: e.target.value })
+                }
+              />
+            </div>
+            <button className="login-submit-btn" onClick={loginAdmin}>Enter Console</button>
             <button
-              className="btn-back-to-user"
+              className="login-submit-btn btn-back-to-user"
               onClick={() => setCurrentView("home-page")}
             >
               Return to User Portal
@@ -498,20 +526,67 @@ function App() {
             />
           </div>
           <div className="navbar-actions">
-            <div className={`expanded-search ${isSearching ? "open" : ""}`}>
+            <div
+              className={`expanded-search ${isSearching ? "open" : ""}`}
+              ref={searchRef}
+            >
               <Search
                 size={22}
                 className="s-icon"
                 onClick={() => showView("search-page", "search")}
               />
               {isSearching && (
-                <input
-                  type="text"
-                  placeholder="Search..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  autoFocus
-                />
+                <>
+                  <input
+                    type="text"
+                    placeholder="Search movies..."
+                    value={searchQuery}
+                    onChange={(e) => {
+                      setSearchQuery(e.target.value);
+                      setShowSuggestions(true);
+                    }}
+                    onFocus={() => setShowSuggestions(true)}
+                    autoFocus
+                  />
+                  {/* Live Autocomplete Dropdown */}
+                  {showSuggestions && searchSuggestions.length > 0 && (
+                    <div className="search-suggestions-dropdown">
+                      {searchSuggestions.map((movie, i) => (
+                        <a
+                          key={i}
+                          className="suggestion-item"
+                          href={movie.telegramLink || "#"}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={() => {
+                            setShowSuggestions(false);
+                            setSearchQuery("");
+                          }}
+                        >
+                          <img
+                            src={movie.image}
+                            alt={movie.title}
+                            className="suggestion-poster"
+                            onError={(e) => { e.target.style.display = 'none'; }}
+                          />
+                          <div className="suggestion-info">
+                            <span className="suggestion-title">{movie.title}</span>
+                            <span className="suggestion-meta">
+                              {movie.year && <span>{movie.year}</span>}
+                              {movie.quality && <span className="suggestion-quality">{movie.quality}</span>}
+                            </span>
+                          </div>
+                          <span className="suggestion-link-icon">↗</span>
+                        </a>
+                      ))}
+                    </div>
+                  )}
+                  {showSuggestions && searchQuery.trim().length > 0 && searchSuggestions.length === 0 && (
+                    <div className="search-suggestions-dropdown">
+                      <div className="suggestion-empty">No results found for "{searchQuery}"</div>
+                    </div>
+                  )}
+                </>
               )}
             </div>
 
@@ -1257,7 +1332,7 @@ function App() {
             onClick={() => setShowLoginChoices(true)}
           >
             <div className="sk-inner-disc">
-              <span className="sk-logo-text">TM</span>
+              <img src="tamil_mob_logo.png" alt="TamilMob Logo" className="sk-logo-image" />
             </div>
           </div>
           <div
