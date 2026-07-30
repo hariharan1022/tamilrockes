@@ -1252,28 +1252,49 @@ body {
   width: 130px;
 }
 
-.rank-digit {
+.top-10-card-content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 130px;
+  gap: 10px;
+}
+
+.top-10-rank-number {
   position: absolute;
-  top: 5px;
-  left: 5px;
-  background: rgba(229, 9, 20, 0.9);
-  color: white;
-  padding: 2px 8px;
-  border-radius: 4px;
-  font-size: 0.8rem;
+  top: 8px;
+  left: -8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 42px;
+  height: 42px;
+  padding: 0 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: #fff;
+  font-size: 1.05rem;
   font-weight: 900;
-  z-index: 5;
-  margin: 0;
+  letter-spacing: -0.03em;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.45);
+  z-index: 4;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.35);
+  transition: transform 0.3s ease, background 0.3s ease, color 0.3s ease;
 }
 
-.top-10-item:hover .rank-digit {
-  transform: scale(1.1);
-  background: white;
-  color: var(--primary);
+.top-10-rank-number.double-digit {
+  padding: 0 10px;
 }
 
-.rank-wrapper .poster-container {
-  box-shadow: 0 4px 12px rgba(0,0,0,0.6);
+.top-10-item:hover .top-10-rank-number {
+  transform: translateY(-1px) scale(1.05);
+  background: rgba(255, 255, 255, 0.22);
+}
+
+.top-10-card-content .poster-container {
+  box-shadow: 0 6px 18px rgba(0,0,0,0.5);
 }
 
 @media (max-width: 480px) {
